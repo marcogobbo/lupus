@@ -14,7 +14,4 @@ function onTimer() {
     setTimeout(onTimer, 1000);
   }
 }
-
-
-//test commit
 window.onload = onTimer;
