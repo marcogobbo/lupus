@@ -14,4 +14,7 @@ function onTimer() {
     setTimeout(onTimer, 1000);
   }
 }
+
+
+
 window.onload = onTimer;
