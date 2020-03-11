@@ -3,10 +3,9 @@ const express = require('express');
 const socketio = require('socket.io');
 
 const clientPath = __dirname + '/../client';
-
 const app = express();
 
-app.use(express.static(clientPath))
+// app.use(express.static(clientPath));
 
 const server = http.createServer(app);
 
@@ -25,5 +24,5 @@ server.on('error', (err) => {
     alert('server error: ', err);
 })
 server.listen(8080, () => {
-    console.log('rps started');
+    console.log('Lupus Server started');
 });
