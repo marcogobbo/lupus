@@ -6,11 +6,22 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+/* Animazione per il movimento delle nuvole */
 @keyframes animateCloud {
   0%{margin-left: -30%;}
   100%{margin-left: 100%;}
 }
 
+/*
+   Creazione delle nuvole per classi, potete aggiungerne di nuove mettendo nuovi div nell'HTML
+   Il modello base è
+   .xn {
+     animation: animateCloud TEMPO CHE CI METTEs linear infinite;
+     transform: scale(FATTORE DI RISCALAMENTO);
+     position: absolute !important;
+     top: A CHE ALTEZZA VUOI METTERLA
+   }
+*/
 .x1 {
   animation: animateCloud 35s linear infinite;
   transform: scale(0.45);
@@ -72,6 +83,7 @@ body {
   position: absolute !important;
 }
 
+/* MODELLO BASE NUVOLA */
 .cloud {
   background: white;
   background: linear-gradient(top, white 5%, #F1F1F1 100%);
@@ -84,6 +96,7 @@ body {
   transition: 1s linear;
 }
 
+/* Elementi aggiuntivi nuvola */
 .cloud:after, .cloud:before {
   background: #FFF;
   content: '';
