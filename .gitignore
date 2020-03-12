@@ -207,5 +207,6 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/java,linux,macos,python,windows,java-web
 
 
-.gitignore
 node_modules
+package-lock.json
+package.json
