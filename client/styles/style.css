@@ -161,3 +161,22 @@ body {
   border-radius: 15px;
   padding: 20px 20px;
 }
+
+nav {
+    margin: -40px -20px;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+    background-color: #F1C40F;
+}
+
+#Timer {
+  background-color: #F39C12;
+  width: 10%;
+  text-align: center;
+  color: #ECF0F1;
+  margin: auto;
+}
+
+#SubContent {
+  margin-top: 6%;
+}

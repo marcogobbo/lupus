@@ -4,17 +4,33 @@ var moon = new Audio('./assets/sounds/moon.mp3');
 
 // Imposto timer da 15 secondi
 var timer = 15;
-var day = true;
+var isDay = true;
+var min = Math.floor(timer/60);
+var sec = timer-min*60;
+
+// Per non ripetere 30 volte il calcolo
+function computeTime() {
+  min = Math.floor(timer/60);
+  sec = timer-min*60;
+}
+
 
 // Timer
 function onTimer() {
     // Inserisce timer nel h1 con id Timer
-    // document.getElementById("Timer").innerHTML = timer;
+    if (sec < 10) {
+      document.getElementById("Timer").innerHTML = min + ":0" + sec;
+    }
+    else {
+      document.getElementById("Timer").innerHTML = min + ":" + sec;
+    }
+
     timer--;
+    computeTime()
     console.log(timer)
     // Se il timer è a zero eseguo la transizione
     if (timer < 0) {
-        if (day) {
+        if (isDay) {
 
             // Faccio transizione giorno -> notte cambiando posizione sole e luna
             document.getElementById("Sun").style = "top: 50%;";
@@ -23,15 +39,25 @@ function onTimer() {
             // Cambio sfondo
             document.body.style = "background: #2C3E50;"
             // Avvio suono lupo
-            // moon.play();
+            //moon.play();
         }
         else {
+
+            // Faccio transizione notte -> giorno cambiando posizione luna e sole
             document.getElementById("Moon").style = "top: 50%;";
             document.getElementById("Sun").style = "top: 10%;";
-            document.body.style = "background: #00B4FF;"
+
+            // Cambio sfondo
+            document.body.style = "background: #00B4FF;";
+
+            // Avvio suono
+            //sun.play();
         }
-        day = !day;
+        // Cambio la giornata
+        isDay = !isDay;
+        // Resetto il timer
         timer = 15;
+        computeTime()
         setTimeout(onTimer, 1000);
     }
     // Decremento di un secondo
