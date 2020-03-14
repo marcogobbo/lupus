@@ -18,6 +18,7 @@ var userConnected = [];
 
 io.on('connection', (sock) => {
     console.log('someone connected');
+    
     sock.emit('message', 'Hi, you are connected');
 
     sock.on('message', (text) => {
