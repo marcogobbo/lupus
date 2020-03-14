@@ -1,6 +1,16 @@
-// document
-//     .querySelector('#btn')
-//     .addEventListener('submit', goToLobby);
+const sock = io();
+
+function _(el) {
+    return document.getElementById(el);
+}
+
+goToLobby = () => {
+    user = _('username').value;
+    window.sessionStorage.setItem('user', user);
+    console.log('SEND lobby: ',user)
+    sock.emit('lobby', user);
+    window.location.href = 'pages/lobby/lobby.html';
+}
 
 
 const writeEvent = (text) => {
@@ -21,12 +31,11 @@ const onFormSubmited = (e) => {
     const text = input.value;
     input.value = '';
 
+    //crea un messaggio con label 'message'
     sock.emit('message', text);
 }
 
-writeEvent('welome')
-
-const sock = io();
+//quando arriva un messaggio in socket con label 'message'
 sock.on('message', (text) => {
     writeEvent(text);
 });
