@@ -14,12 +14,20 @@ const server = http.createServer(app);
 
 const io = socketio(server);
 
+var userConnected = [];
+
 io.on('connection', (sock) => {
     console.log('someone connected');
     sock.emit('message', 'Hi, you are connected');
 
     sock.on('message', (text) => {
         io.emit('message', text);
+    })
+
+    sock.on('lobby', (username) => {
+        userConnected.push(username);
+        console.log('RECEIVED LOBBY:', username);
+        io.emit('usersInLobby', userConnected);
     })
 });
 
@@ -32,19 +40,17 @@ server.listen(8080, () => {
 
 
 
-
-
 // ROUTING
-app.get('/lobby', (req, res) => {
+// app.get('/lobby', (req, res) => {
+//     //aggiungere controllo nome vuoto
+//     res.redirect('/pages/lobby/lobby.html')
+// })
 
-    //aggiungere controllo nome vuoto
+// app.get('/game', (req, res) => {
+//     //aggiungere controllo nome vuoto
+//     res.redirect('pages/game/game.html')
+// })
 
-    res.redirect('/pages/lobby/lobby.html')
-})
-
-app.get('/game', (req, res) => {
-
-    //aggiungere controllo nome vuoto
-
-    res.redirect('pages/game/game.html')
-})
+app.get('/users', (req, res) => {
+    res.send(userConnected);
+});
