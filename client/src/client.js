@@ -1,3 +1,7 @@
+// document
+//     .querySelector('#btn')
+//     .addEventListener('submit', goToLobby);
+
 
 const writeEvent = (text) => {
     //<ul> element
