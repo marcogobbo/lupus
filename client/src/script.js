@@ -1,6 +1,6 @@
 // Carico file audio
-var sun = new Audio('./assets/sounds/sun.mp3');
-var moon = new Audio('./assets/sounds/moon.mp3');
+var sun = new Audio('./sounds/sun.mp3');
+var moon = new Audio('./sounds/moon.mp3');
 
 // Imposto timer da 15 secondi
 var timer = 15;
@@ -18,40 +18,41 @@ function computeTime() {
 // Timer
 function onTimer() {
     // Inserisce timer nel h1 con id Timer
+    document.getElementById("min").innerHTML = "0" + min;
     if (sec < 10) {
-      document.getElementById("Timer").innerHTML = min + ":0" + sec;
+      document.getElementById("sec").innerHTML = "0" + sec;
     }
     else {
-      document.getElementById("Timer").innerHTML = min + ":" + sec;
+      document.getElementById("sec").innerHTML = sec;
     }
 
     timer--;
-    computeTime()
-    console.log(timer)
+    computeTime();
+    console.log(timer);
     // Se il timer è a zero eseguo la transizione
     if (timer < 0) {
         if (isDay) {
 
             // Faccio transizione giorno -> notte cambiando posizione sole e luna
-            document.getElementById("Sun").style = "top: 50%;";
-            document.getElementById("Moon").style = "top: 10%;";
+            document.getElementById("sun").style = "top: 18%;";
+            document.getElementById("moon").style = "top: -2%;";
 
             // Cambio sfondo
-            document.body.style = "background: #2C3E50;"
+            document.getElementById("sky").style = "background: #2C3E50;"
             // Avvio suono lupo
-            //moon.play();
+            moon.play();
         }
         else {
 
             // Faccio transizione notte -> giorno cambiando posizione luna e sole
-            document.getElementById("Moon").style = "top: 50%;";
-            document.getElementById("Sun").style = "top: 10%;";
+            document.getElementById("moon").style = "top: 17%;";
+            document.getElementById("sun").style = "top: 1%;";
 
             // Cambio sfondo
-            document.body.style = "background: #00B4FF;";
+            document.getElementById("sky").style = "background: #B2EBF2;";
 
             // Avvio suono
-            //sun.play();
+            sun.play();
         }
         // Cambio la giornata
         isDay = !isDay;
