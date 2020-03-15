@@ -27,7 +27,7 @@ io.on('connection', (sock) => {
     });
 
     sock.on('updateSocketId', (username)=>{
-        console.log('update of '+username+': [ old:'+connections[username]+' -> new: '+sock.id+']');
+        console.log('update of '+username+': [old:'+connections[username]+' -> new:'+sock.id+']');
         connections[username]=sock.id;
     });
 
@@ -38,9 +38,7 @@ io.on('connection', (sock) => {
         connections[username]=sock.id;
 
         if(userConnected.length==2){
-            console.log('Invia solo al primo cazzo! ' + connections[userConnected[0]]);
-            //connections[userConnected[0]].emit('test',["stronzo1","stronzo2"]);
-
+            console.log('Invia solo al primo utente: ' + connections[userConnected[0]]);
             io.to(`${connections[userConnected[0]]}`).emit('test', 'I just met you');
         }
     });
