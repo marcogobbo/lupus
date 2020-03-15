@@ -1,11 +1,11 @@
-const LupusGame = require('./lupus-game');
+const LupusGame = require('./server/lupus-game');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 var path = require('path');
 
 
-const clientPath = __dirname + '/../client';
+const clientPath = __dirname + '/client';
 const app = express();
 
 // serve di tutte cartelle e sottocartelle di /client/
