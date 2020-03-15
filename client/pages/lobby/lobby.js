@@ -1,8 +1,19 @@
 const sock = io();
+//const sock = require ('../../src/connection');
 var myUser;
 var players;
 
+sock.on("set-session-acknowledgement", function(data) {
+    window.sessionStorage.setItem('sessionId', data.sessionId);
+  
+});
+
 window.onload = () => {
+
+    // Get saved data from sessionStorage
+    let data = window.sessionStorage.getItem('sessionId');
+    console.log(data)
+    sock.emit('start-session', {  sessionId: data });
 
     myUser = sessionStorage.getItem('user');
     // _('myUserName').innerHTML = myUser;
@@ -26,6 +37,10 @@ window.addEventListener("close", function (event) {
 sock.on('usersInLobby', (user) => {
     console.log('usersInLobby', user);
     addUserInLobby(user);
+})
+
+sock.on('test', (user) => {
+    console.log('TESTTT!', user);
 })
 
 sock.on('uno', (role) => {

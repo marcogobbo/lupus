@@ -15,11 +15,35 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 var userConnected = [];
+var connections= [];
 var settings;
 
 io.on('connection', (sock) => {
-    console.log('someone connected');
+    console.log('Someone connected: '+sock.id);
+    /*COPIED FROM STACK*/
+    sock.on('start-session', function(data) {
+        console.log("============start-session event================")
+        console.log(data)
+        if (data.sessionId == null) {
+            var session_id = sock.id; //generating the sessions_id and then binding that socket to that sessions 
+            sock.emit("set-session-acknowledgement", { sessionId: session_id });
 
+            // sock.room = session_id;
+            // sock.join(sock.room, function(res) {
+            //     console.log("joined successfully ")
+            //     sock.emit("set-session-acknowledgement", { sessionId: session_id });
+            // });
+     } else {
+        sock.emit("set-session-acknowledgement", { sessionId: data.sessionId })
+
+            // sock.room = data.sessionId;  //this time using the same session 
+            // sock.join(socket.room, function(res) {
+            //     console.log("joined successfully ")
+            //     sock.emit("set-session-acknowledgement", { sessionId: data.sessionId })
+            // })
+        }
+    });
+    
     sock.emit('message', 'Hi, you are connected');
 
     sock.on('message', (text) => {
@@ -28,8 +52,16 @@ io.on('connection', (sock) => {
 
     sock.on('lobby', (username) => {
         userConnected.push(username);
-        // console.log('RECEIVED LOBBY:', username);
+        console.log('RECEIVED LOBBY:', username);
         io.emit('usersInLobby', userConnected);
+        connections[username]=sock.id;
+
+        if(userConnected.length==2){
+            console.log('Invia solo al primo cazzo! ' + connections[userConnected[0]]);
+            //connections[userConnected[0]].emit('test',["stronzo1","stronzo2"]);
+
+            io.to(`${connections[userConnected[0]]}`).emit('test', 'I just met you');
+        }
     });
 
     //evento chiamato quando viene abbanonata la partita dalla pagina LOBBY
@@ -86,8 +118,6 @@ server.on('error', (err) => {
 server.listen(8080, () => {
     console.log('Lupus Server started');
 });
-
-
 
 // ROUTING
 // app.get('/lobby', (req, res) => {

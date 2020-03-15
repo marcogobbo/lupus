@@ -1,8 +1,23 @@
-const sock = io();
+sock = io();
+
+//HEREEEE
+window.onload = () => {
+    var session_id;
+    // Get saved data from sessionStorage
+    let data = window.sessionStorage.getItem('sessionId');
+    console.log(data)
+    sock.emit('start-session', {  sessionId: data });
+}
+
+sock.on("set-session-acknowledgement", function(data) {
+    window.sessionStorage.setItem('sessionId', data.sessionId);
+  
+});
 
 function _(el) {
     return document.getElementById(el);
 }
+
 
 goToLobby = () => {
 
@@ -46,6 +61,7 @@ const writeEvent = (text) => {
     parent.appendChild(el);
 };
 
+
 const onFormSubmited = (e) => {
     e.preventDefault();
 
@@ -61,6 +77,10 @@ const onFormSubmited = (e) => {
 sock.on('message', (text) => {
     writeEvent(text);
 });
+
+sock.on('test', (user) => {
+    console.log('TESTTT!', user);
+})
 
 document
     .querySelector('#chat-form')
