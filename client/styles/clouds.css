@@ -109,7 +109,7 @@
 }
 
 #sun {
-  background: url("img/sun.png") no-repeat;
+  background: url("../assets/images/sun.png") no-repeat;
   position: absolute;
   top: 1%;
   right: 10%;
@@ -121,9 +121,9 @@
 }
 
 #moon {
-  background: url("img/moon.png") no-repeat;
+  background: url("../assets/images/moon.png") no-repeat;
   position: absolute;
-  top: 15%;
+  top: 17%;
   left: 10%;
   width: 150px;
   height: 150px;

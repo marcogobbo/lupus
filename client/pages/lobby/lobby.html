@@ -9,10 +9,6 @@
     </link>
     <!-- <script type="text/javascript" src="/src/script.js"></script> -->
     <style>
-        .content {
-            padding: 25px;
-        }
-
         .number {
             text-align: center;
             width: 30px;
@@ -48,19 +44,24 @@
     </div>
 
     <div id="main_container">
-        <div id="Content">
-            <nav>
-                <h1>Lobby</h1>
-            </nav>
-            <div class="content">
-                <h1 id="myUserName"></h1>
-                <div id="SubContent">
+        <div id="list_users">
+            <div id="list_users_fill">
+
+            </div>
+        </div>
+
+
+        <div>
+            <!-- <div class="content">
+                 <h1 id="myUserName"></h1> -->
+            <!-- <div id="SubContent">
                     <h3>Giocatori Connessi</h3>
                     <ul id="events"></ul>
                 </div>
-            </div>
+            </div>  -->
 
-            <div id="settings">
+            <!--    visibile solo se primo della lista   -->
+            <div id="settings" class="content">
                 <nav>
                     <h1>Impostazioni</h1>
                 </nav>
@@ -70,7 +71,7 @@
                     </div>
                     <div>
                         <button onclick="decrease('lupi')">-</button>
-                        <input id="nLupi" min="0" class="number" value="0">
+                        <input id="nLupi" min="0" class="number">
                         <button onclick="increase('lupi')">+</button>
                     </div>
                     <br>
@@ -79,7 +80,7 @@
                     </div>
                     <div>
                         <button onclick="decrease('contadini')">-</button>
-                        <input id="nContadini" min="0" class="number" value="0">
+                        <input id="nContadini" min="0" class="number">
                         <button onclick="increase('contadini')">+</button>
                     </div>
                     <br>
@@ -88,7 +89,7 @@
                     </div>
                     <div>
                         <button onclick="decrease('gdc')">-</button>
-                        <input id="nGdc" min="0" class="number" value="0">
+                        <input id="nGdc" min="0" class="number">
                         <button onclick="increase('gdc')">+</button>
                     </div>
                     <br>
@@ -97,12 +98,19 @@
                     </div>
                     <div>
                         <button onclick="decrease('veggente')">-</button>
-                        <input id="nVeggent" min="0" class="number" value="0">
+                        <input id="nVeggente" min="0" class="number">
                         <button onclick="increase('veggente')">+</button>
                     </div>
                 </div>
             </div>
+
+            <button id="giochiamoBTN" onclick="goPlay()">Giochiamo</button>
+
+            <div id="missingPlayers" style="color: red;"> </div>
         </div>
+    </div>
+
+    <div id="footer">
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

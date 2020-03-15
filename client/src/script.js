@@ -28,7 +28,8 @@ function onTimer() {
 
     timer--;
     computeTime();
-    console.log(timer);
+    // console.log(timer);
+    
     // Se il timer è a zero eseguo la transizione
     if (timer < 0) {
         if (isDay) {

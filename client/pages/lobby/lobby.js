@@ -1,7 +1,11 @@
 const sock = io();
 var myUser;
+var players;
 
 window.onload = () => {
+
+    myUser = sessionStorage.getItem('user');
+    // _('myUserName').innerHTML = myUser;
     //get giocatori connessi
     var xhr = new XMLHttpRequest();
     xhr.addEventListener('loadend', (e) => {
@@ -11,55 +15,122 @@ window.onload = () => {
     xhr.open('GET', '/users');
     xhr.send();
 
-    myUser = sessionStorage.getItem('user');
-    _('myUserName').innerHTML = myUser;
 }
-
+//! NON FUNZIONA
+window.addEventListener("close", function (event) {
+    sock.emit('userClose', myUser);
+    // make the close button ineffective
+    event.preventDefault();
+});
 
 sock.on('usersInLobby', (user) => {
     console.log('usersInLobby', user);
     addUserInLobby(user);
 })
 
+sock.on('uno', (role) => {
+    alert('sei un ', role.toUpperString())
+});
+
 const addUserInLobby = (users) => {
-    //<ul> element
-    const parent = document.querySelector('#events');
+
+    players = users;
+
+    initNumRoles();
+
+    checkMissingPlayers();
+
+
+    const parent = document.querySelector('#list_users_fill');
     parent.innerHTML = '';
-    //<li> element
+
     users.forEach(element => {
-        const el = document.createElement('li');
-        el.innerHTML = element;
-        parent.appendChild(el);
+        // <div class="character" id="me">
+        //    <div class="user_img"><img src="../../assets/images/avatar.jpg"></div>
+        //    <div class="user_name">Marco</div>
+        // </div>
+        const charac = document.createElement('div');
+        charac.className = 'character';
+        if (element == myUser)
+            charac.id = 'me';
+
+        const userimg = document.createElement('div');
+        userimg.className = 'user_img';
+
+        const img = document.createElement('img');
+        img.src = '../../assets/images/avatar.jpg';
+
+        const un = document.createElement('div');
+        un.className = 'user_name'; un.innerHTML = element;
+
+
+        charac.appendChild(userimg);
+        userimg.appendChild(img);
+        charac.appendChild(un);
+
+        parent.appendChild(charac);
+
+        // console.log(parent);
     });
 
+    // const parent2 = document.querySelector('#events');
+    // parent2.innerHTML = '';
+    // //<li> element
+    // users.forEach(element => {
+    //     const el = document.createElement('li');
+    //     el.innerHTML = element;
+    //     parent2.appendChild(el);
+    // });
+
 };
+
+function checkMissingPlayers() {
+    missingPlayersN = 8 - players.length;
+    if (players.length < 8) {
+        _('missingPlayers').innerHTML = 'SERVONO ALTRI <b>' + missingPlayersN + '</b> GIOCATORI PER GIOCARE!!!';
+        _('giochiamoBTN').disabled = true;
+    }
+    else {
+        _('missingPlayers').innerHTML = '';
+        _('giochiamoBTN').disabled = false;
+    }
+}
+
+function initNumRoles() {
+    if (players.length >= 8 && players.length < 14) {
+        settings.lupi = 2;
+    }
+    else if (players.length >= 14) {
+        settings.lupi = 3;
+    }
+
+    _('nLupi').value = settings.lupi;
+    _('nGdc').value = settings.gdc;
+    _('nVeggente').value = settings.veggente;
+
+    updateContadini();
+}
 
 
 var settings = {
     'lupi': 0,
     'contadini': 0,
     'gdc': 0,
-    'veggente': 0,
+    'veggente': 1,
 };
 
 function decrease(el) {
     //non so come farlo quindi lo faccio così... so che è una mera
     switch (el) {
-        case 'lupi':
-            if (_('nLupi').value > 0)
-                _('nLupi').value--;
-            break;
-        case 'contadini':
-            if (_('nContadini').value > 0)
-                _('nContadini').value--;
-            break;
         case 'gdc':
             if (_('nGdc').value > 0)
                 _('nGdc').value--;
+            updateContadini();
             break;
         case 'veggente':
-            if (_('nVeggent').value > 0)
-                _('nVeggent').value--;
+            if (_('nVeggente').value > 0)
+                _('nVeggente').value--;
+            updateContadini();
             break;
     }
 }
@@ -67,21 +138,31 @@ function decrease(el) {
 function increase(el) {
     //non so come farlo quindi lo faccio così... so che è una mera
     switch (el) {
-        case 'lupi':
-            _('nLupi').value++;
-            break;
-        case 'contadini':
-            _('nContadini').value++;
-            break;
         case 'gdc':
             _('nGdc').value++;
+            updateContadini();
             break;
         case 'veggente':
-            _('nVeggent').value++;
+            _('nVeggente').value++;
+            updateContadini();
             break;
     }
 }
 
 function _(el) {
     return document.getElementById(el);
+}
+
+function updateContadini() {
+    var nCont = players.length - _('nLupi').value - _('nGdc').value - _('nVeggente').value;
+    _('nContadini').value = nCont;
+    settings.contadini = nCont;
+}
+
+
+function goPlay() {
+    sock.emit('clientSettings', settings);
+    // window.location.href='pages/game/game.html';
+
+
 }

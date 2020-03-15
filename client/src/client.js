@@ -5,11 +5,33 @@ function _(el) {
 }
 
 goToLobby = () => {
+
     user = _('username').value;
-    window.sessionStorage.setItem('user', user);
-    console.log('SEND lobby: ',user)
-    sock.emit('lobby', user);
-    window.location.href = 'pages/lobby/lobby.html';
+    if (user) {
+        //controllo se username è già presente
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener('loadend', (res) => {
+            // console.log(res.target)
+            if (!res.target.response.includes(user)) {
+                // se non c'è, inserisco e cambio pagina
+                window.sessionStorage.setItem('user', user);
+                console.log('SEND lobby: ', user)
+                sock.emit('lobby', user);
+                window.location.href = 'pages/lobby/lobby.html';
+            }
+            else {
+                // se c'è già, avviso e faccio cambiare
+                alert('Nome già selezionato!');
+                _('username').focus();
+                _('username').select();
+            }
+
+        });
+        xhr.open('GET', '/users');
+        xhr.send();
+
+    }
+
 }
 
 
