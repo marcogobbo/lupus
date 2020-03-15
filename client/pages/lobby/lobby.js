@@ -110,11 +110,11 @@ function checkMissingPlayers() {
     missingPlayersN = 8 - players.length;
     if (players.length < 8) {
         _('missingPlayers').innerHTML = 'SERVONO ALTRI <b>' + missingPlayersN + '</b> GIOCATORI PER GIOCARE!!!';
-        _('giochiamoBTN').disabled = true;
+        // _('giochiamoBTN').disabled = true;
     }
     else {
         _('missingPlayers').innerHTML = '';
-        _('giochiamoBTN').disabled = false;
+        // _('giochiamoBTN').disabled = false;
     }
 }
 

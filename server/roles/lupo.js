@@ -1,6 +1,6 @@
 const Role = require("./role");
 
-class Wolf extends Role{
+class Lupo extends Role{
     constructor(){
         super("Lupo", "Tu sei il cattivo. Uccidi chi vuoi nella notte", "lupi", 1, "night");
     }
@@ -10,4 +10,4 @@ class Wolf extends Role{
     }
 }
 
-module.exports = Wolf;
+module.exports = Lupo;
