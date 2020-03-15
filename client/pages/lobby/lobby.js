@@ -164,12 +164,14 @@ function increase(el) {
 
             if (_('nGdc').value < 1)
                 _('nGdc').value++;
+            settings.gdc=_('nGdc').value;
             updateContadini();
             break;
         case 'veggente':
 
             if (_('nVeggente').value < 1)
                 _('nVeggente').value++;
+            settings.veggente=_('nVeggente').value;
             updateContadini();
             break;
     }

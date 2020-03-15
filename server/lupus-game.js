@@ -38,26 +38,12 @@ class LupusGame {
             // get indice del ruolo
             var i = Math.floor(Math.random() * rolesArr.length);
             this._roles[pl] = rolesArr[i];  //array di Roles()
+            //console.log(i,this._roles);
 
             rolesArr.splice(i, 1);
         });
         // this._roles.splice(0, 1);
-        console.log(this._roles)
-
-        //invio ai player il proprio ruolo sulla socket identificata dal proprio username
-
-        // var i=0;
-        // for(var j=0;j<settings["lupi"];j++){
-        //     this._roles[this._players[i]]= new Wolf();
-        //     i++;
-        // }
-        // for(var j=0;j<settings["contadini"];j++){
-        //     this._roles[this._players[i]]= new Farmer();
-        //     i++;
-        // }
-
-        // console.log(this._roles);
-        // //this._roles.forEach(role=>{console.log("")});
+        //console.log("finale",this._roles);
         this._testActInTiming("day");
         this._testActInTiming("night");
     }
