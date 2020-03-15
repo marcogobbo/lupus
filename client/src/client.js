@@ -1,19 +1,5 @@
 sock = io();
 
-//HEREEEE
-window.onload = () => {
-    var session_id;
-    // Get saved data from sessionStorage
-    let data = window.sessionStorage.getItem('sessionId');
-    console.log(data)
-    sock.emit('start-session', {  sessionId: data });
-}
-
-sock.on("set-session-acknowledgement", function(data) {
-    window.sessionStorage.setItem('sessionId', data.sessionId);
-  
-});
-
 function _(el) {
     return document.getElementById(el);
 }

@@ -20,34 +20,15 @@ var settings;
 
 io.on('connection', (sock) => {
     console.log('Someone connected: '+sock.id);
-    /*COPIED FROM STACK*/
-    sock.on('start-session', function(data) {
-        console.log("============start-session event================")
-        console.log(data)
-        if (data.sessionId == null) {
-            var session_id = sock.id; //generating the sessions_id and then binding that socket to that sessions 
-            sock.emit("set-session-acknowledgement", { sessionId: session_id });
-
-            // sock.room = session_id;
-            // sock.join(sock.room, function(res) {
-            //     console.log("joined successfully ")
-            //     sock.emit("set-session-acknowledgement", { sessionId: session_id });
-            // });
-     } else {
-        sock.emit("set-session-acknowledgement", { sessionId: data.sessionId })
-
-            // sock.room = data.sessionId;  //this time using the same session 
-            // sock.join(socket.room, function(res) {
-            //     console.log("joined successfully ")
-            //     sock.emit("set-session-acknowledgement", { sessionId: data.sessionId })
-            // })
-        }
-    });
-    
     sock.emit('message', 'Hi, you are connected');
 
     sock.on('message', (text) => {
         io.emit('message', text);
+    });
+
+    sock.on('updateSocketId', (username)=>{
+        console.log('update of '+username+': [ old:'+connections[username]+' -> new: '+sock.id+']');
+        connections[username]=sock.id;
     });
 
     sock.on('lobby', (username) => {

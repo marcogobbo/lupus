@@ -10,12 +10,11 @@ sock.on("set-session-acknowledgement", function(data) {
 
 window.onload = () => {
 
-    // Get saved data from sessionStorage
-    let data = window.sessionStorage.getItem('sessionId');
-    console.log(data)
-    sock.emit('start-session', {  sessionId: data });
-
     myUser = sessionStorage.getItem('user');
+
+    //send the update!
+    sock.emit("updateSocketId",myUser);
+
     // _('myUserName').innerHTML = myUser;
     //get giocatori connessi
     var xhr = new XMLHttpRequest();
