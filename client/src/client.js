@@ -7,16 +7,18 @@ function _(el) {
 
 goToLobby = () => {
 
-    user = _('username').value;
+    user = _('username').value.toUpperCase();
+    console.log(user)
     if (user) {
         //controllo se username è già presente
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('loadend', (res) => {
-            // console.log(res.target)
-            if (!res.target.response.includes(user)) {
+            console.log(res.target.response)            
+
+            if (!JSON.parse(res.target.response).includes(user)) {
                 // se non c'è, inserisco e cambio pagina
                 window.sessionStorage.setItem('user', user);
-                console.log('SEND lobby: ', user)
+                // console.log('SEND lobby: ', user)
                 sock.emit('lobby', user);
                 window.location.href = 'pages/lobby/lobby.html';
             }

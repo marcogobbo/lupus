@@ -161,11 +161,15 @@ function increase(el) {
     //non so come farlo quindi lo faccio così... so che è una mera
     switch (el) {
         case 'gdc':
-            _('nGdc').value++;
+
+            if (_('nGdc').value < 1)
+                _('nGdc').value++;
             updateContadini();
             break;
         case 'veggente':
-            _('nVeggente').value++;
+
+            if (_('nVeggente').value < 1)
+                _('nVeggente').value++;
             updateContadini();
             break;
     }
