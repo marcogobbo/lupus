@@ -23,3 +23,7 @@ Luca
 *15.03 h15:03*
 Luca
 - aggiunto controllo: SOLO IL PRIMO GIOCATORE PUO' FAR INIZIARE LA PARTITA
+
+*15.03 h17:17*
+Filippo
+- inizio stesura classe game e ruoli

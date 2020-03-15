@@ -1,3 +1,4 @@
+const LupusGame = require('./lupus-game');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
@@ -40,6 +41,7 @@ io.on('connection', (sock) => {
         if(userConnected.length==2){
             console.log('Invia solo al primo utente: ' + connections[userConnected[0]]);
             io.to(`${connections[userConnected[0]]}`).emit('test', 'I just met you');
+            runGameTest();
         }
     });
 
@@ -51,7 +53,7 @@ io.on('connection', (sock) => {
         io.emit('usersInLobby', userConnected);
     });
 
-    //* ricevo allo start del game
+    // ricevo allo start del game
     // creo ruoli, mando ruoli
     // poi parte il gioco (rederit su page game)
     sock.on('clientSettings', (imp) => {
@@ -108,6 +110,16 @@ server.listen(8080, () => {
 //     //aggiungere controllo nome vuoto
 //     res.redirect('pages/game/game.html')
 // })
+
+const runGameTest = ()=>{
+    console.log("Testing the game from server...")
+    var players=["Fil", "Ceck", "Mark", "Guglie"];
+    var settings=[];
+    settings["lupi"]=2;
+    settings["contadini"]=2;
+    var game = new LupusGame(players,[],settings);
+    game.runTest();
+};
 
 app.get('/users', (req, res) => {
     res.send(userConnected);
