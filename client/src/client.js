@@ -36,6 +36,7 @@ goToLobby = () => {
 }
 
 
+/*
 const writeEvent = (text) => {
     //<ul> element
     const parent = document.querySelector('#events');
@@ -46,6 +47,7 @@ const writeEvent = (text) => {
 
     parent.appendChild(el);
 };
+*/
 
 
 const onFormSubmited = (e) => {
@@ -60,6 +62,8 @@ const onFormSubmited = (e) => {
 }
 
 //quando arriva un messaggio in socket con label 'message'
+/*
+
 sock.on('message', (text) => {
     writeEvent(text);
 });
@@ -80,3 +84,4 @@ document.querySelector('#combo').addEventListener('change', (event) => {
     else
         chat.style.display = 'none';
 });
+*/
