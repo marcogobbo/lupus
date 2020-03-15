@@ -19,3 +19,7 @@ Luca
     - **TODO: aggiungere controllo nome != socket**
 - ho provato a costruire la funzione per l'assegnazione dei ruoli ma non funge
 - metodo di rimozione utente quando viene chiusa la finestra: NON FUNZIONA
+
+*15.03 h15:03*
+Luca
+- aggiunto controllo: SOLO IL PRIMO GIOCATORE PUO' FAR INIZIARE LA PARTITA

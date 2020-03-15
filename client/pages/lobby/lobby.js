@@ -3,9 +3,9 @@ const sock = io();
 var myUser;
 var players;
 
-sock.on("set-session-acknowledgement", function(data) {
+sock.on("set-session-acknowledgement", function (data) {
     window.sessionStorage.setItem('sessionId', data.sessionId);
-  
+
 });
 
 window.onload = () => {
@@ -13,7 +13,7 @@ window.onload = () => {
     myUser = sessionStorage.getItem('user');
 
     //send the update!
-    sock.emit("updateSocketId",myUser);
+    sock.emit("updateSocketId", myUser);
 
     // _('myUserName').innerHTML = myUser;
     //get giocatori connessi
@@ -21,11 +21,19 @@ window.onload = () => {
     xhr.addEventListener('loadend', (e) => {
         console.log(e.target.response);
         addUserInLobby(JSON.parse(e.target.response));
+
+        console.log(players)
+        if (players[0] != myUser) {
+            _('settings').innerHTML = '';
+        }
     });
     xhr.open('GET', '/users');
     xhr.send();
 
+
 }
+
+
 //! NON FUNZIONA
 window.addEventListener("close", function (event) {
     sock.emit('userClose', myUser);
