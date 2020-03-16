@@ -32,7 +32,6 @@ goToLobby = () => {
         });
         xhr.open('GET', '/users');
         xhr.send();
-
     }
 
 }

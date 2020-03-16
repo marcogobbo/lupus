@@ -17,7 +17,6 @@ window.onload = () => {
     // xhr.addEventListener('loadend', (e) => {
     //     console.log(e.target.response);
     //     addUserInLobby(JSON.parse(e.target.response));
-
     //     console.log(players)
     //     if (players[0] != myUser) {
     //         _('settings').innerHTML = '';
@@ -25,5 +24,4 @@ window.onload = () => {
     // });
     // xhr.open('GET', '/users');
     // xhr.send();
-
 }
