@@ -16,7 +16,7 @@ const server = http.createServer(app);
 global.io = socketio(server);
 
 var userConnected = [];
-var connections= [];
+var connections = [];
 var settings;
 
 //game object;
@@ -24,16 +24,16 @@ var LG;
 var playing = false;
 
 io.on('connection', (sock) => {
-    console.log('Someone connected: '+sock.id);
+    console.log('Someone connected: ' + sock.id);
 
     // sock.on('message', (text) => {
     //     io.emit('message', text);
     // });
 
-    sock.on('updateSocketId', (username)=>{
-        console.log('update of '+username+': [old:'+connections[username]+' -> new:'+sock.id+']');
-        connections[username]=sock.id;
-        if(playing)
+    sock.on('updateSocketId', (username) => {
+        console.log('update of ' + username + ': [old:' + connections[username] + ' -> new:' + sock.id + ']');
+        connections[username] = sock.id;
+        if (playing)
             LG.updateSocketID(connections);
     });
 
@@ -41,7 +41,7 @@ io.on('connection', (sock) => {
         userConnected.push(username);
         console.log('RECEIVED LOBBY:', username);
         io.emit('usersInLobby', userConnected);
-        connections[username]=sock.id;
+        connections[username] = sock.id;
 
         // if(userConnected.length==2){
         //     console.log('Invia solo al primo utente: ' + connections[userConnected[0]]);
@@ -62,16 +62,16 @@ io.on('connection', (sock) => {
     // poi parte il gioco (rederit su page game)
     sock.on('clientSettings', (imp) => {
         settings = imp;
-        LG = new LupusGame(userConnected,connections,imp);
-        playing=true;
+        LG = new LupusGame(userConnected, connections, imp);
+        playing = true;
     });
 });
 
 server.on('error', (err) => {
     alert('server error: ', err);
 })
-server.listen(8080, () => {
-    console.log('Lupus Server started');
+server.listen(process.env.PORT, () => {
+    console.log('Lupus Server started', process.env.PORT);
 });
 
 // ROUTING
@@ -85,13 +85,13 @@ server.listen(8080, () => {
 //     res.redirect('pages/game/game.html')
 // })
 
-const runGameTest = ()=>{
+const runGameTest = () => {
     console.log("Testing the game from server...")
-    var players=["Fil", "Ceck", "Mark", "Guglie"];
-    var settings=[];
-    settings["lupi"]=2;
-    settings["contadini"]=2;
-    var game = new LupusGame(players,[],settings);
+    var players = ["Fil", "Ceck", "Mark", "Guglie"];
+    var settings = [];
+    settings["lupi"] = 2;
+    settings["contadini"] = 2;
+    var game = new LupusGame(players, [], settings);
     game.runTest();
 };
 
