@@ -3,11 +3,12 @@ var myUser;
 var myRole;
 var players;
 
+console.log('on load');
 window.onload = () => {
 
     myUser = sessionStorage.getItem('user');
     myRole = JSON.parse(sessionStorage.getItem('role'));
-    players= JSON.parse(sessionStorage.getItem('players'));
+    players = JSON.parse(sessionStorage.getItem('players'));
     _setPlayers();
     _setRole();
 
@@ -15,18 +16,19 @@ window.onload = () => {
     sock.emit("updateSocketId", myUser);
 }
 
-const _setRole = ()=>{
-    document.getElementById("#user_role_card").innerHTML+="<span>"+myRole.name+"</span>";
+const _setRole = () => {
+    document.getElementById("user_role_card").innerHTML += "<span>" + myRole.name + "</span>";
 
 }
 
-const _setPlayers = ()=>{
+const _setPlayers = () => {
+    const parent = document.querySelector('#list_users_fill');
+
     players.forEach(element => {
         // <div class="character" id="me">
         //    <div class="user_img"><img src="../../assets/images/avatar.jpg"></div>
         //    <div class="user_name">Marco</div>
         // </div>
-        const parent = document.querySelector('#list_users_fill');
         const charac = document.createElement('div');
         charac.className = 'character';
         if (element == myUser)
@@ -39,7 +41,7 @@ const _setPlayers = ()=>{
         img.src = '../../assets/images/avatar.jpg';
 
         const un = document.createElement('div');
-        un.className = 'user_name'; 
+        un.className = 'user_name';
         un.innerHTML = element;
 
         charac.appendChild(userimg);

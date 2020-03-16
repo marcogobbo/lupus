@@ -41,7 +41,7 @@ function onTimer() {
             // Cambio sfondo
             document.getElementById("sky").style = "background: #2C3E50;"
             // Avvio suono lupo
-            moon.play();
+            // moon.play();
         }
         else {
 
