@@ -1,6 +1,6 @@
 /*ABSTRACT class: it is a temporary version. */
 class Role{
-    constructor(name, description, squad, color, timing){
+    constructor(name, description, squad, color){
         if (this.constructor === Role) {
             throw new Error('Cannot instanciate directly the class Role');
         }
@@ -8,7 +8,6 @@ class Role{
         this._description=description;
         this._squad=squad;
         this._color=color;
-        this._timing=timing;
     }
 
     act(){
@@ -19,10 +18,6 @@ class Role{
     vote(){
         //this method is used during the day to select pepole
         console(this._name+" is voting");
-    }
-
-    getTiming(){
-        return this._timing;
     }
 
     getName(){
@@ -40,11 +35,14 @@ class Role{
     getColor(){
         return this._color;
     }
-
-    checkTiming(currentTiming){
-        return currentTiming == this.getTiming();
-    }
     
+    setSquad(squad){
+        this._squad=squad;
+    }
+
+    setColor(color){
+        this._color=color;
+    }
 }
 
 module.exports = Role;

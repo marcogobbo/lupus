@@ -46,8 +46,8 @@ sock.on('usersInLobby', (user) => {
     addUserInLobby(user);
 })
 
-sock.on('test', (user) => {
-    console.log('TESTTT!', user);
+sock.on('role', (role) => {
+    console.log('Your role', role);
 })
 
 sock.on('uno', (role) => {
@@ -191,6 +191,4 @@ function updateContadini() {
 function goPlay() {
     sock.emit('clientSettings', settings);
     // window.location.href='pages/game/game.html';
-
-
 }

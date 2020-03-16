@@ -7,14 +7,22 @@ const GuardiaDelCorpo = require('./roles/guardiaDelCorpo');
 
 class LupusGame {
     constructor(players, connections, settings) {
-        // this._players=[];
-        // for(var i=0;i<players.length;i++){
-        //     this._players[i]=players[i];
-        // }
         this._players = players;
         this._connections = connections;
         this._roles = [];
         this._computeRoles(settings);
+        
+        this._sendRoles();
+    }
+
+    _sendRoles(){
+        this._players.forEach(pl=>{
+            io.to(`${this._connections[pl]}`).emit('role', {
+                name: this._roles[pl].getName(),
+                description: this._roles[pl].getDescription(),
+                color: this._roles[pl].getColor()
+             });
+        });
     }
 
     _computeRoles(settings) {
@@ -38,23 +46,16 @@ class LupusGame {
             // get indice del ruolo
             var i = Math.floor(Math.random() * rolesArr.length);
             this._roles[pl] = rolesArr[i];  //array di Roles()
-            //console.log(i,this._roles);
-
             rolesArr.splice(i, 1);
         });
-        // this._roles.splice(0, 1);
-        //console.log("finale",this._roles);
-        this._testActInTiming("day");
-        this._testActInTiming("night");
+        this._testAct();
     }
 
-    _testActInTiming(curTiming) {
-        console.log("Whose playing during '" + curTiming + "'?");
+    _testAct() {
+        console.log("Test acting:");
         this._players.forEach(player => {
-            if (this._roles[player].checkTiming(curTiming)) {
-                console.log("[" + player + "]");
+            console.log("[" + player + "]");
                 this._roles[player].act();
-            }
         });
     }
 
@@ -71,10 +72,11 @@ class LupusGame {
         */
     }
 
-    updateSocketID(username) {
+    updateSocketID(connections) {
         /*
         This method is used to recall the socketID update
         */
+       this._connections=connections;
     }
 }
 module.exports = LupusGame;

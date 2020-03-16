@@ -13,19 +13,22 @@ app.use(express.static(path.join(clientPath)));
 
 const server = http.createServer(app);
 
-const io = socketio(server);
+global.io = socketio(server);
 
 var userConnected = [];
 var connections= [];
 var settings;
 
+//game object;
+var LG;
+var playing = false;
+
 io.on('connection', (sock) => {
     console.log('Someone connected: '+sock.id);
-    sock.emit('message', 'Hi, you are connected');
 
-    sock.on('message', (text) => {
-        io.emit('message', text);
-    });
+    // sock.on('message', (text) => {
+    //     io.emit('message', text);
+    // });
 
     sock.on('updateSocketId', (username)=>{
         console.log('update of '+username+': [old:'+connections[username]+' -> new:'+sock.id+']');
@@ -54,14 +57,11 @@ io.on('connection', (sock) => {
     });
 
     // ricevo allo start del game
-    // creo ruoli, mando ruoli
     // poi parte il gioco (rederit su page game)
     sock.on('clientSettings', (imp) => {
-
         settings = imp;
-
-        var LG = new LupusGame(userConnected,connections,imp)
-        
+        LG = new LupusGame(userConnected,connections,imp);
+        playing=true;
     });
 });
 
