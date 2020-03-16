@@ -66,46 +66,45 @@
                     <h1>Impostazioni</h1>
                 </nav>
                 <div class="content">
-                    <div>
+                    <div style="float:left">
                         <label>Lupi</label>
                     </div>
-                    <div>
-                        <button onclick="decrease('lupi')">-</button>
+                    <div style="margin-left: 25%">
                         <input id="nLupi" min="0" class="number">
                         <button onclick="increase('lupi')">+</button>
+                        <button onclick="decrease('lupi')">-</button>
                     </div>
                     <br>
-                    <div>
+                    <div style="float:left">
                         <label>Contadini</label>
                     </div>
-                    <div>
-                        <button onclick="decrease('contadini')">-</button>
+                    <div style="margin-left: 25%">
                         <input id="nContadini" min="0" class="number">
                         <button onclick="increase('contadini')">+</button>
+                        <button onclick="decrease('contadini')">-</button>
                     </div>
                     <br>
-                    <div>
+                    <div style="float:left">
                         <label>Guardia Del Corpo</label>
                     </div>
-                    <div>
-                        <button onclick="decrease('gdc')">-</button>
+                    <div style="margin-left: 25%">
                         <input id="nGdc" min="0" class="number">
                         <button onclick="increase('gdc')">+</button>
+                        <button onclick="decrease('gdc')">-</button>
                     </div>
                     <br>
-                    <div>
+                    <div style="float:left">
                         <label>Veggente</label>
                     </div>
-                    <div>
-                        <button onclick="decrease('veggente')">-</button>
+                    <div style="margin-left: 25%">
                         <input id="nVeggente" min="0" class="number">
                         <button onclick="increase('veggente')">+</button>
+                        <button onclick="decrease('veggente')">-</button>
                     </div>
                 </div>
                 <button id="giochiamoBTN" onclick="goPlay()">Giochiamo</button>
+                <div id="missingPlayers"></div>
             </div>
-            
-            <div id="missingPlayers" style="color: red;"> </div>
         </div>
     </div>
 

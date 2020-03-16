@@ -27,3 +27,9 @@ Luca
 *15.03 h17:17*
 Filippo
 - inizio stesura classe game e ruoli
+
+*16.03 h14:15*
+Marco
+- update css per lobby.html: ho sistemato la parte delle impostazioni del primo utente che entra, dovrebbe essere a posto (in teoria)
+- update css per index.html: abbastanza rapido per rendere più responsive la login-page
+- **TODO: appena la lobby è pronta provvederò a ristemare bene l'HTML con CSS annesso, per ora accontentiamoci
