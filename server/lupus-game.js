@@ -19,18 +19,18 @@ class LupusGame {
         this._roles = [];
         this._computeRoles(settings);
         this._sendRoles();
-        
-        this._time='night';
-        this._vote=[];
+
+        this._time = 'day';
+        this._vote = [];
     }
 
-    _sendRoles(){
-        this._players.forEach(pl=>{
+    _sendRoles() {
+        this._players.forEach(pl => {
             io.to(`${this._connections[pl]}`).emit('role', {
                 name: this._roles[pl].getName(),
                 description: this._roles[pl].getDescription(),
                 color: this._roles[pl].getColor()
-             });
+            });
         });
     }
 
@@ -60,20 +60,20 @@ class LupusGame {
         this._testAct();
     }
 
-    _enableVotingTime(){
+    _enableVotingTime() {
         /**
          * This method is used to send the control to enable the selection of players
          */
         console.log("## Enable voting ##");
-        this._vote=[];
-        io.emit("control_selection","enabled");
+        this._vote = [];
+        io.emit("control_selection", "enabled");
     }
 
     _testAct() {
         console.log("Test acting:");
         this._players.forEach(player => {
             console.log("[" + player + "]");
-                this._roles[player].act();
+            this._roles[player].act();
         });
     }
 
@@ -87,34 +87,57 @@ class LupusGame {
         /*
         This method is used to recall the socketID update
         */
-       this._connections=connections;
+        this._connections = connections;
     }
 
-    onPlayerSelected(player, selectedPlayer){
+    onPlayerSelected(player, selectedPlayer) {
         /**
          * this method is used to propagate the selection of a player: if "day"=> vote, otherwise => "player role effect"
          */
-        if(this._time=="day"){
+
+        //!
+        //?
+        //todo
+        //* grassetto
+        // //asd
+        if (this._time == "day") {
             console.log("## Brodcast the vote ##");
-            this._vote[player]= selectedPlayer;
-            io.emit("vote", {
+            this._vote[this._players.indexOf(player)] = selectedPlayer;      //! array da inviare NON accetta indice string ma SOLO num
+            // this._vote[player] = selectedPlayer;
+            io.emit("writeLog", this.calculateVoti(this._vote), {
                 whoVoted: player,
                 selected: selectedPlayer
             });
-            _checkEndVote();
+            console.log(this._vote)
+            // this._checkEndVote();
         }
     }
 
-    _checkEndVote(){
+    calculateVoti(array) {
+        var result = [];
+
+        this._players.forEach((pl, i) => {
+            let occ = 0;
+            array.forEach(v => {
+                occ += v == pl ? 1 : 0;
+            })
+            result[i] = occ;
+        })
+
+        return result;
+    };
+
+
+    _checkEndVote() {
         /**
          * This method checks if the vote array is full.
          */
-        var cond=true;
-        this._players.forEach(pl=>{
-            if(!this._vote.keys().includes(pl))
-                cond=false;
+        var cond = true;
+        this._players.forEach(pl => {
+            if (!this._vote.keys().includes(pl))
+                cond = false;
         });
-        if(cond){
+        if (cond) {
             console.log("## Vote ended ##");
             //handle the dead of the player
             _killPlayer(_mostVotedPlayer());
@@ -122,32 +145,32 @@ class LupusGame {
         }
     }
 
-    _mostVotedPlayer(){
+    _mostVotedPlayer() {
         /**
          * This method returns the most voted player
          */
-        console.log("[DEBUG] Vote: "+this._vote);
-        var leaderboard=[];
-        this._vote.forEach(selected=>{
-            if(leaderboard.keys().includes(selected))
+        console.log("[DEBUG] Vote: " + this._vote);
+        var leaderboard = [];
+        this._vote.forEach(selected => {
+            if (leaderboard.keys().includes(selected))
                 leaderboard[selected]++;
             else
-                leaderboard[selected]=1;
+                leaderboard[selected] = 1;
         });
-        leaderboard.sort((a,b)=>a-b);
-        console.log("[DEBUG] Leaderboard: "+this.leaderboard);
+        leaderboard.sort((a, b) => a - b);
+        console.log("[DEBUG] Leaderboard: " + this.leaderboard);
         return leaderboard.keys()[0];
     }
 
-    _killPlayer(player){
+    _killPlayer(player) {
         /**
          * This method is used to kill a player
          */
-        console.log("[DEBUG] Killed: "+player);
+        console.log("[DEBUG] Killed: " + player);
     }
 
-    runTestGame(){
-        this._time="day";
+    runTestGame() {
+        this._time = "day";
         _enableVotingTime();
     }
 }

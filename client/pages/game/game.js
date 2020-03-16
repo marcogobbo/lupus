@@ -45,6 +45,7 @@ const _setPlayers = () => {
 
         const un = document.createElement('div');
         un.className = 'user_name';
+
         un.innerHTML = element;
 
         charac.appendChild(userimg);
@@ -95,16 +96,19 @@ function notteToGiorno() {
     // sun.play();
 }
 
+var votoConfirmed = false;
 var lastClicked = '';
 function clickOther(userClicked) {
-    if (lastClicked != userClicked) {
-        sock.emit('logDay', myUser + ' cliccato su ' + userClicked)
-        lastClicked = userClicked;
-    }
+    if (!votoConfirmed)
+        if (lastClicked != userClicked) {
+            sock.emit('logDay', myUser, userClicked)
+            lastClicked = userClicked;
+        }
 }
 
-sock.on('writeLog', (text) => {
-    writeLog(text);
+sock.on('writeLog', (voteArr,voteObj) => {
+    writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
+    console.log(voteArr)
 })
 const writeLog = (text) => {
     //<ul> element
@@ -117,3 +121,7 @@ const writeLog = (text) => {
     tr.appendChild(td);
     parent.appendChild(tr);
 };
+
+function confermaVoto() {
+    votoConfirmed = true;
+}
