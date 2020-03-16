@@ -3,7 +3,8 @@ var myUser;
 var myRole;
 var players;
 
-console.log('on load');
+var time = 'giorno';
+
 window.onload = () => {
 
     myUser = sessionStorage.getItem('user');
@@ -33,6 +34,8 @@ const _setPlayers = () => {
         charac.className = 'character';
         if (element == myUser)
             charac.id = 'me';
+        else
+            charac.setAttribute('onclick', `clickOther('${element}')`)
 
         const userimg = document.createElement('div');
         userimg.className = 'user_img';
@@ -50,4 +53,65 @@ const _setPlayers = () => {
 
         parent.appendChild(charac);
     });
+};
+
+
+function _(el) {
+    return document.getElementById(el);
+}
+
+function switchDay() {
+    if (time == 'giorno') {
+        time = 'notte';
+        giornoToNotte();
+        _('log_board').hidden = true;
+    }
+    else {
+        time = 'giorno';
+        notteToGiorno();
+        _('log_board').hidden = false;
+    }
+};
+
+function giornoToNotte() {
+    // Faccio transizione giorno -> notte cambiando posizione sole e luna
+    document.getElementById("sun").style = "top: 18%;";
+    document.getElementById("moon").style = "top: -2%;";
+
+    // Cambio sfondo
+    document.getElementById("sky").style = "background: #2C3E50;"
+    // Avvio suono lupo
+    // moon.play();      
+}
+function notteToGiorno() {
+    // Faccio transizione notte -> giorno cambiando posizione luna e sole
+    document.getElementById("moon").style = "top: 17%;";
+    document.getElementById("sun").style = "top: 1%;";
+
+    // Cambio sfondo
+    document.getElementById("sky").style = "background: #B2EBF2;";
+
+    // Avvio suono
+    // sun.play();
+}
+
+function clickOther(userClicked) {
+    // console.log('click')
+    sock.emit('logDay', myUser + ' cliccato su ' + userClicked)
+}
+
+sock.on('writeLog', (text) => {
+    writeLog(text);
+})
+
+const writeLog = (text) => {
+    //<ul> element
+    const parent = document.querySelector('#log_table');
+
+    //<li> element
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.innerHTML = text;
+    tr.appendChild(td);
+    parent.appendChild(tr);
 };

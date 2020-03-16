@@ -65,6 +65,11 @@ io.on('connection', (sock) => {
         LG = new LupusGame(userConnected, connections, imp);
         playing = true;
     });
+
+    sock.on('logDay', (text) => {
+        io.emit('writeLog', text);
+    })
+
 });
 
 server.on('error', (err) => {
