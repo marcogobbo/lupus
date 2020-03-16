@@ -32,4 +32,4 @@ Filippo
 Marco
 - update css per lobby.html: ho sistemato la parte delle impostazioni del primo utente che entra, dovrebbe essere a posto (in teoria)
 - update css per index.html: abbastanza rapido per rendere più responsive la login-page
-- **TODO: appena la lobby è pronta provvederò a ristemare bene l'HTML con CSS annesso, per ora accontentiamoci
+- **TODO: appena la lobby è pronta provvederò a ristemare bene l'HTML con CSS annesso, per ora accontentiamoci**
