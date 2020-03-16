@@ -41,7 +41,8 @@ sock.on('usersInLobby', (user) => {
 sock.on('role', (role) => {
     console.log('Your role', role);
     window.sessionStorage.setItem('role', JSON.stringify(role));
-    window.location.href='pages/game/game.html';
+    window.sessionStorage.setItem('players', JSON.stringify(players));
+    window.location.href='../game/game.html';
 })
 
 const addUserInLobby = (users) => {
