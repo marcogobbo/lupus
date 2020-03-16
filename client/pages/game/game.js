@@ -95,15 +95,17 @@ function notteToGiorno() {
     // sun.play();
 }
 
+var lastClicked = '';
 function clickOther(userClicked) {
-    // console.log('click')
-    sock.emit('logDay', myUser + ' cliccato su ' + userClicked)
+    if (lastClicked != userClicked) {
+        sock.emit('logDay', myUser + ' cliccato su ' + userClicked)
+        lastClicked = userClicked;
+    }
 }
 
 sock.on('writeLog', (text) => {
     writeLog(text);
 })
-
 const writeLog = (text) => {
     //<ul> element
     const parent = document.querySelector('#log_table');
