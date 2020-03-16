@@ -70,8 +70,8 @@ io.on('connection', (sock) => {
 server.on('error', (err) => {
     alert('server error: ', err);
 })
-server.listen(8069, () => {
-    console.log('Lupus Server started on PORT: ',);
+server.listen(8080, () => {
+    console.log('Lupus Server started');
 });
 
 // ROUTING
