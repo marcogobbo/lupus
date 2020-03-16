@@ -1,4 +1,4 @@
-const LupusGame = require('./lupus-game');
+const LupusGame = require('server/lupus-game');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
