@@ -1,11 +1,11 @@
-const LupusGame = require('./lupus-game');
+const LupusGame = require('./server/lupus-game');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 var path = require('path');
 
 
-const clientPath = __dirname + '/../client';
+const clientPath = __dirname + '/client';
 const app = express();
 
 // serve di tutte cartelle e sottocartelle di /client/
@@ -33,6 +33,8 @@ io.on('connection', (sock) => {
     sock.on('updateSocketId', (username)=>{
         console.log('update of '+username+': [old:'+connections[username]+' -> new:'+sock.id+']');
         connections[username]=sock.id;
+        if(playing)
+            LG.updateSocketID(connections);
     });
 
     sock.on('lobby', (username) => {

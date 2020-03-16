@@ -1,12 +1,6 @@
 const sock = io();
-//const sock = require ('../../src/connection');
 var myUser;
 var players;
-
-sock.on("set-session-acknowledgement", function (data) {
-    window.sessionStorage.setItem('sessionId', data.sessionId);
-
-});
 
 window.onload = () => {
 
@@ -29,10 +23,7 @@ window.onload = () => {
     });
     xhr.open('GET', '/users');
     xhr.send();
-
-
 }
-
 
 //! NON FUNZIONA
 window.addEventListener("close", function (event) {
@@ -46,13 +37,12 @@ sock.on('usersInLobby', (user) => {
     addUserInLobby(user);
 })
 
+//When each client received the role, go to the game page
 sock.on('role', (role) => {
     console.log('Your role', role);
+    window.sessionStorage.setItem('role', JSON.stringify(role));
+    window.location.href='pages/game/game.html';
 })
-
-sock.on('uno', (role) => {
-    alert('sei un ', role.toUpperString())
-});
 
 const addUserInLobby = (users) => {
 
@@ -61,7 +51,6 @@ const addUserInLobby = (users) => {
     initNumRoles();
 
     checkMissingPlayers();
-
 
     const parent = document.querySelector('#list_users_fill');
     parent.innerHTML = '';
@@ -103,7 +92,6 @@ const addUserInLobby = (users) => {
     //     el.innerHTML = element;
     //     parent2.appendChild(el);
     // });
-
 };
 
 function checkMissingPlayers() {
@@ -187,8 +175,6 @@ function updateContadini() {
     settings.contadini = nCont;
 }
 
-
 function goPlay() {
     sock.emit('clientSettings', settings);
-    // window.location.href='pages/game/game.html';
 }
