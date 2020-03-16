@@ -1,4 +1,4 @@
-const LupusGame = require('./server/lupus-game');
+const LupusGame = require('./lupus-game');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
@@ -68,7 +68,7 @@ io.on('connection', (sock) => {
 server.on('error', (err) => {
     alert('server error: ', err);
 })
-server.listen(8080, () => {
+server.listen(process.env.PORT, () => {
     console.log('Lupus Server started');
 });
 
