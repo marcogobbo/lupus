@@ -3,7 +3,14 @@ const Role = require('./roles/role');
 const Lupo = require('./roles/lupo');
 const Contadino = require('./roles/contadino');
 const Veggente = require('./roles/veggente');
+const Medium = require('./roles/medium');
 const GuardiaDelCorpo = require('./roles/guardiaDelCorpo');
+const Gufo = require('./roles/gufo');
+const Romeo = require('./roles/romeo');
+const RoseMary = require('./roles/roseMary');
+const Scemo = require('./roles/scemo');
+const Massone = require('./roles/massone');
+const MagaCirce = require('./roles/magaCirce');
 
 class LupusGame {
     constructor(players, connections, settings) {

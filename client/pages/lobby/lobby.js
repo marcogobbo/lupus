@@ -48,9 +48,10 @@ const addUserInLobby = (users) => {
 
     players = users;
 
-    initNumRoles();
-
-    checkMissingPlayers();
+    if (players[0] == myUser) {
+        initNumRoles();
+        checkMissingPlayers();
+    }
 
     const parent = document.querySelector('#list_users_fill');
     parent.innerHTML = '';
