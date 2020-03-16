@@ -36,6 +36,13 @@ const _setPlayers = () => {
             charac.id = 'me';
         else
             charac.setAttribute('onclick', `clickOther('${element}')`)
+        charac.setAttribute('name', element);
+
+        const em = document.createElement('em');
+        em.innerHTML = 0;
+        em.className = 'voted';
+        em.hidden = true;
+
 
         const userimg = document.createElement('div');
         userimg.className = 'user_img';
@@ -48,6 +55,7 @@ const _setPlayers = () => {
 
         un.innerHTML = element;
 
+        charac.appendChild(em);
         charac.appendChild(userimg);
         userimg.appendChild(img);
         charac.appendChild(un);
@@ -101,14 +109,28 @@ var lastClicked = '';
 function clickOther(userClicked) {
     if (!votoConfirmed)
         if (lastClicked != userClicked) {
+            if (lastClicked) {
+                document.getElementsByName(lastClicked)[0].removeAttribute('id');
+            }
             sock.emit('logDay', myUser, userClicked)
             lastClicked = userClicked;
+            document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
         }
 }
 
-sock.on('writeLog', (voteArr,voteObj) => {
+sock.on('writeLog', (voteObj) => {
     writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
-    console.log(voteArr)
+})
+sock.on('voteConfirmed', voteArr => {
+    console.log(voteArr);
+
+    //update badges
+    players.forEach((pl, i) => {
+        let em = document.getElementsByName(pl)[0].children[0];
+        console.log(em)
+        em.hidden = voteArr[i] > 0 ? false : true;
+        em.innerHTML = voteArr[i];
+    })
 })
 const writeLog = (text) => {
     //<ul> element
@@ -123,5 +145,7 @@ const writeLog = (text) => {
 };
 
 function confermaVoto() {
+    sock.emit('confermaVoto');
+
     votoConfirmed = true;
 }

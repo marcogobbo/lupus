@@ -104,13 +104,18 @@ class LupusGame {
             console.log("## Brodcast the vote ##");
             this._vote[this._players.indexOf(player)] = selectedPlayer;      //! array da inviare NON accetta indice string ma SOLO num
             // this._vote[player] = selectedPlayer;
-            io.emit("writeLog", this.calculateVoti(this._vote), {
+            io.emit("writeLog", {
                 whoVoted: player,
                 selected: selectedPlayer
             });
-            console.log(this._vote)
-            // this._checkEndVote();
+            // console.log(this._vote)
+
+            //? this._checkEndVote();
         }
+    }
+
+    onVoteConfirmed() {
+        io.emit('voteConfirmed', this.calculateVoti(this._vote));
     }
 
     calculateVoti(array) {

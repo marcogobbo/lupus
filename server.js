@@ -52,7 +52,7 @@ io.on('connection', (sock) => {
 
     //evento chiamato quando viene abbanonata la partita dalla pagina LOBBY
     //! NON FUNZIONA LATO CLIENT
-    sock.on('userClose', (username,) => {
+    sock.on('userClose', (username, ) => {
         console.log("ABBANDONATO DA ", username)
         userConnected.splice(userConnected.indexOf.call(username), 1);
         io.emit('usersInLobby', userConnected);
@@ -67,9 +67,11 @@ io.on('connection', (sock) => {
     });
 
     sock.on('logDay', (userVoting, userVoted) => {
-        LG.onPlayerSelected(userVoting,userVoted);
+        LG.onPlayerSelected(userVoting, userVoted);
     })
-
+    sock.on('confermaVoto', () => {
+        LG.onVoteConfirmed();
+    })
 });
 
 server.on('error', (err) => {
