@@ -19,7 +19,8 @@ window.onload = () => {
 
 const _setRole = () => {
     document.getElementById("user_role_card").innerHTML += "<span>" + myRole.name + "</span>";
-
+    document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
+    document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
 }
 
 const _setPlayers = () => {
