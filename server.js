@@ -75,7 +75,7 @@ io.on('connection', (sock) => {
 });
 
 server.on('error', (err) => {
-    alert('server error: ', err);
+    console.log('server error: ', err);
 })
 server.listen(process.env.PORT || 8080, () => {
     console.log('Lupus Server started', process.env.PORT || 8080);
