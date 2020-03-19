@@ -242,7 +242,7 @@ h3 {
   padding-left: 2%;
 }
 
-#giochiamoBtn {
+#giochiamoBTN {
   color: #FFF;
   padding: 1%;
   border-radius: 5px;
@@ -254,7 +254,7 @@ h3 {
   margin-left: 15%;
 }
 
-#giochiamoBtn:active {
+#giochiamoBTN:active {
   background: #8a281e;
 }
 
