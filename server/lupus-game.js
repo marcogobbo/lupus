@@ -117,7 +117,7 @@ class LupusGame {
             io.emit("writeLog", {
                 whoVoted: player,
                 selected: selectedPlayer
-            });
+            }, this.calculateVoti(this._vote));
             console.log(this._vote)
 
             //? this._checkEndVote();
