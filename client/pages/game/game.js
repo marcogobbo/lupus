@@ -119,12 +119,8 @@ function clickOther(userClicked) {
         }
 }
 
-sock.on('writeLog', (voteObj) => {
+sock.on('writeLog', (voteObj, voteArr) => {
     writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
-})
-sock.on('voteConfirmed', voteArr => {
-    console.log(voteArr);
-
     //update badges
     players.forEach((pl, i) => {
         let em = document.getElementsByName(pl)[0].children[0];
@@ -133,6 +129,7 @@ sock.on('voteConfirmed', voteArr => {
         em.innerHTML = voteArr[i];
     })
 })
+
 const writeLog = (text) => {
     //<ul> element
     const parent = document.querySelector('#log_table');
@@ -146,7 +143,7 @@ const writeLog = (text) => {
 };
 
 function confermaVoto() {
-    sock.emit('confermaVoto');
+    sock.emit('confermaVoto',myUser);
 
     votoConfirmed = true;
 }

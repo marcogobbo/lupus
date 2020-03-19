@@ -125,7 +125,7 @@ class LupusGame {
     }
 
     //!così ogni volta che un giocatore cambia voto viene inviato agli altri (da confermare)
-    onVoteConfirmed() {
+    onVoteConfirmed(user) {
         io.emit('voteConfirmed', this.calculateVoti(this._vote));
         
         //all player now... deads?
