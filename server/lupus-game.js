@@ -24,8 +24,12 @@ class LupusGame {
         this._vote = [];
 
         this._dayTime = 'vote';
-        this._ballotPlayers = [];
+        this._votablePlayers = [];
+        this._hasConfirmed = [];
         this._ballotVote = [];
+
+        //this._deadPlayers = [];
+        this._enableVotingTime();
     }
 
     _sendRoles() {
@@ -59,7 +63,7 @@ class LupusGame {
         //! aggiugere ruoli
 
         this._players.forEach(pl => {
-            // get indice del ruolo
+            //get indice del ruolo
             var i = Math.floor(Math.random() * rolesArr.length);
             this._roles[pl] = rolesArr[i];  //array di Roles()
             rolesArr.splice(i, 1);
@@ -73,10 +77,19 @@ class LupusGame {
          */
         console.log("## Enable voting ##");
         this._vote = [];
-        this._dayTime='vote';
-        
-        //todo
-        io.emit("control_selection", "enabled");
+        this._dayTime = 'vote';
+        this._votablePlayers=[];
+        this._hasConfirmed=[];
+        this._players.forEach((pl)=>{
+            if(this._roles[pl].isAlive()){
+                this._votablePlayers.push(pl);
+            }
+        });
+        for(let i=0;i<this._votablePlayers.length;i++){
+            this._hasConfirmed[i]=false;
+        }
+
+        this._selectionControl(1,this._votablePlayers);
     }
 
     _testAct() {
@@ -117,7 +130,7 @@ class LupusGame {
             io.emit("writeLog", {
                 whoVoted: player,
                 selected: selectedPlayer
-            });
+            }, this.calculateVoti(this._vote));
             console.log(this._vote)
 
             //? this._checkEndVote();
@@ -125,15 +138,23 @@ class LupusGame {
     }
 
     //!così ogni volta che un giocatore cambia voto viene inviato agli altri (da confermare)
-    onVoteConfirmed() {
+    onVoteConfirmed(user) {
         io.emit('voteConfirmed', this.calculateVoti(this._vote));
-        
+        console.log(user);
+        this._votablePlayers.forEach((pl,i)=>{
+            console.log(pl,user);
+            if(pl==user){
+                this._hasConfirmed[i]=true;
+            }
+        });
+
         //all player now... deads?
-        if(this._checkEndVote(this._vote,this._players));
+        console.log(this._hasConfirmed,this._votablePlayers);
+        if(this._checkEndVote(this._hasConfirmed,this._votablePlayers))
         {
             console.log("## Vote ended ##");
-            this._disableControls();
-            
+            this._selectionControl(0,this._players);
+            this._handleBallot();
             //ballot!
             //handle the dead of the player
             //this._killPlayer(this._mostVotedPlayers());
@@ -141,17 +162,25 @@ class LupusGame {
         }
     }
 
-     calculateVoti(array) {
-         var result = [];
-         this._players.forEach((pl, i) => {
-             let occ = 0;
-             array.forEach(v => {
-                 occ += v == pl ? 1 : 0;
-             })
-             result[i] = occ;
-         })
-         return result;
-     };
+    calculateVoti(array) {
+        var result = [];
+        this._players.forEach((pl, i) => {
+            let occ = 0;
+            array.forEach(v => {
+                occ += v == pl ? 1 : 0;
+            })
+            result[i] = occ;
+        })
+        return result;
+    };
+
+    _handleBallot(){
+        //what players?
+
+        //after computed
+        this._vote=[];
+
+    }
 
     _checkEndVote(array, target) {
         /**
@@ -159,12 +188,13 @@ class LupusGame {
          */
         var cond = true;
         for(let i=0;i<array.length;i++){
-            if(array[i]==undefined)
+            if(array[i]!=true){
                 cond = false;
+                console.log(cond);
+            }
         }
         //console.log(target);
         return cond&&array.length==target.length;
-
     }
 
     _mostVotedPlayers() {
@@ -195,8 +225,13 @@ class LupusGame {
         return indexes;
     }
 
-    _disableControls(){
-        io.emit("control_selection", "disabled");
+    _selectionControl(i,whoCanPlay){
+        /**
+         * 0 = disabled
+         */
+        whoCanPlay.forEach(pl=>{
+            io.to(`${this._connections[pl]}`).emit("control_selection", i!=0);
+        })
     }
 
     _killPlayer(indexes) {
