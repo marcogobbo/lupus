@@ -153,6 +153,7 @@ class LupusGame {
         if(this._checkEndVote(this._hasConfirmed,this._votablePlayers))
         {
             console.log("## Vote ended ##");
+            this._dayTime='ballot';
             this._selectionControl(0,this._players);
             this._handleBallot();
             //ballot!
@@ -179,7 +180,6 @@ class LupusGame {
 
         //after computed
         this._vote=[];
-
     }
 
     _checkEndVote(array, target) {
