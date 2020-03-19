@@ -5,6 +5,8 @@ var players;
 
 var time = 'giorno';
 
+var canVote = true;
+
 window.onload = () => {
 
     myUser = sessionStorage.getItem('user');
@@ -108,16 +110,20 @@ function notteToGiorno() {
 var votoConfirmed = false;
 var lastClicked = '';
 function clickOther(userClicked) {
-    if (!votoConfirmed)
-        if (lastClicked != userClicked) {
-            if (lastClicked) {
-                document.getElementsByName(lastClicked)[0].removeAttribute('id');
+    if (canVote)
+        if (!votoConfirmed)
+            if (lastClicked != userClicked) {
+                if (lastClicked) {
+                    document.getElementsByName(lastClicked)[0].removeAttribute('id');
+                }
+                sock.emit('logDay', myUser, userClicked)
+                lastClicked = userClicked;
+                document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
             }
-            sock.emit('logDay', myUser, userClicked)
-            lastClicked = userClicked;
-            document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
-        }
 }
+sock.on('control_selection', val => {
+    canVote = val;
+})
 
 sock.on('writeLog', (voteObj, voteArr) => {
     writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
@@ -143,7 +149,7 @@ const writeLog = (text) => {
 };
 
 function confermaVoto() {
-    sock.emit('confermaVoto',myUser);
+    sock.emit('confermaVoto', myUser);
 
     votoConfirmed = true;
 }
