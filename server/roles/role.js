@@ -8,6 +8,7 @@ class Role{
         this._description=description;
         this._squad=squad;
         this._color=color;
+        this._alive=true;
     }
 
     act(){
@@ -42,6 +43,10 @@ class Role{
 
     setColor(color){
         this._color=color;
+    }
+
+    isAlive(){
+        return this._alive;
     }
 }
 
