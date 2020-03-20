@@ -164,4 +164,6 @@ function confermaVoto() {
     sock.emit('confermaVoto', myUser);
 
     votoConfirmed = true;
+    document.getElementById("selected").setAttribute('id', 'confirmed');
+    document.querySelector('#box input[type="button"]').style.display = "none";
 }
