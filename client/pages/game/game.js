@@ -121,6 +121,15 @@ function clickOther(userClicked) {
                 document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
             }
 }
+
+sock.on('voting_time',()=>{
+    writeLog('VOTAZIONI APERTE');
+})
+
+sock.on('ballot_time', (players)=>{
+    writeLog('BALLOTTAGGIO '+players);
+})
+
 sock.on('control_selection', val => {
     canVote = val;
 })
