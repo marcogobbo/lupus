@@ -127,6 +127,9 @@ sock.on('control_selection', val => {
 
 sock.on('writeLog', (voteObj, voteArr) => {
     writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
+    const parent = document.querySelector('#logs');
+    parent.scrollTop = parent.scrollHeight;
+
     //update badges
     players.forEach((pl, i) => {
         let em = document.getElementsByName(pl)[0].children[0];
