@@ -135,23 +135,45 @@ sock.on('voting_time', () => {
     writeLog('VOTAZIONI APERTE');
 })
 
-sock.on('ballot_time', (players) => {
-    writeLog('BALLOTTAGGIO ' + players);
+sock.on('dead_player', (i, chiEMorto) => {
+    writeLog('E\' MORTO QUALCUNO');
+    alert(chiEMorto);
+
+    document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
+    document.getElementsByClassName('character')[i].classList.add('death');
 })
 
-sock.on('control_selection', (val, chiPossoVotare) => {
+sock.on('ballot_time', (players) => {
+    writeLog('BALLOTTAGGIO ' + players);
+    console.log('ballot_time');
+    console.log('players:', players);
+
+    var elements = document.getElementsByClassName('character');
+    players.forEach(i => {
+        console.log(elements[i])
+        elements[i].classList.remove('disabled');
+        elements[i].classList.add('ballottaggio');
+    });
+
+})
+
+sock.on('control_selection', (val, stato, chiPossoVotare) => {
     console.log('control_selection');
     console.log('val:', val);
-    console.log('chipossovotare', chiPossoVotare);
-    resetView();
+    console.log('chipossovotare:', chiPossoVotare);
+    console.log('stato:', stato)
+    abilitaPlayers();
 
     // ARRIVA ALL'APERTURA DELLA VOTAZIONE (giorno, ballottaggio, notte)
     canVote = val;
+    // if (stato == 'ballot') {
+    var elements = document.getElementsByClassName('character');
     if (canVote) {
-        var elements = document.getElementsByClassName('character');
 
-        console.log(val.length, chiPossoVotare.length);
+        document.querySelector('#box input[type="button"]').style.display = "inline";
 
+        votoConfirmed = false;
+        lastClicked = '';
 
         for (let i = 0; i < elements.length; i++) {
             // console.log(elements[i]);
@@ -160,17 +182,36 @@ sock.on('control_selection', (val, chiPossoVotare) => {
                     if (elements[i].id != 'me') {
                         elements[i].classList.add('disabled');
                         elements[i].setAttribute('onclick', 'null')
-                        console.log(elements[i].classList);
+
+                        // console.log(elements[i].classList);
                         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
                     }
         }
+    } else {        // vuol dire che sono al ballottaggio
+        for (let i = 0; i < elements.length; i++) {
+            if (!deadPlayers[i])
+                if (elements[i].id != 'me') {
+                    elements[i].classList.add('disabled');
+                    elements[i].setAttribute('onclick', 'null')
+                    console.log(elements[i].classList);
+                    //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
+                }
+        }
     }
+    // }
 })
-function resetView() {
+
+function abilitaPlayers() {
     var elements = document.getElementsByClassName('character');
 
+    var ems = document.getElementsByClassName('voted');
+    for (let i = 0; i < ems.length; i++) {
+        ems[i].hidden = true;
+        ems[i].innerHTML = '';
+    }
+
     for (let i = 0; i < elements.length; i++) {
-        elements[i].classList.remove('disabled', 'ballottaggio');
+        elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
         if (elements[i].id != 'me')
             elements[i].id = null;

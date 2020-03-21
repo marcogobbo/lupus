@@ -193,10 +193,10 @@ class LupusGame {
                     //todo
                     //handle the dead of the player
 
-                    var arr=this._mostVotedPlayers(this._vote);
-                    if(arr.length>1){
+                    var arr = this._mostVotedPlayers(this._vote);
+                    if (arr.length > 1) {
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
-                    }else if(arr.length==1){
+                    } else if (arr.length == 1) {
                         this._killPlayer(arr[0]);
                     }
                     //go on with the game.
@@ -342,8 +342,8 @@ class LupusGame {
          * This method is used to kill a player
          */
         console.log("[DEBUG] Killed: " + index);
-        this._roles[this._players[i]].kill();
-        io.emit("dead_player", index,this._players[i]);
+        this._roles[this._players[index]].kill();
+        io.emit("dead_player", index, this._players[index]);
     }
 
     runTestGame() {
