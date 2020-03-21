@@ -279,7 +279,7 @@ class LupusGame {
             //selectable: all but not me
             var temp = [];
             for (let j = 0; j < this._players.length; j++) {
-                temp = indexes.includes(j);
+                temp[j] = indexes.includes(j);
             }
             this._handlePlayerSelection(true, this._whoCanVote[i], temp);
             console.log("Sent ballot to: " + this._whoCanVote[i]);
@@ -333,6 +333,7 @@ class LupusGame {
         else {
             //selectable[1] = false;
             io.to(`${this._connections[player]}`).emit("control_selection", status, selectable);
+            console.log(selectable);
         }
     }
 
