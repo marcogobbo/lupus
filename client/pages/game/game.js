@@ -2,6 +2,7 @@ const sock = io();
 var myUser;
 var myRole;
 var players;
+var deadPlayers = [];
 
 var time = 'giorno';
 
@@ -14,10 +15,18 @@ window.onload = () => {
     players = JSON.parse(sessionStorage.getItem('players'));
     _setPlayers();
     _setRole();
+    _setDeadPlayers();
 
     //send the update!
     sock.emit("updateSocketId", myUser);
 }
+
+const _setDeadPlayers = () => {
+    players.forEach(() => {
+        deadPlayers.push(false);
+    });
+}
+
 
 const _setRole = () => {
     document.getElementById("user_role_card").innerHTML += "<span>" + myRole.name + "</span>";
@@ -122,16 +131,36 @@ function clickOther(userClicked) {
             }
 }
 
-sock.on('voting_time',()=>{
+sock.on('voting_time', () => {
     writeLog('VOTAZIONI APERTE');
 })
 
-sock.on('ballot_time', (players)=>{
-    writeLog('BALLOTTAGGIO '+players);
+sock.on('ballot_time', (players) => {
+    writeLog('BALLOTTAGGIO ' + players);
 })
 
-sock.on('control_selection', val => {
+sock.on('control_selection', (val, chiPossoVotare) => {
+    // console.log('control.selection');
     canVote = val;
+    if (canVote) {
+        var elements = document.getElementsByClassName('character');
+
+
+
+        // chipossovotare   [0,0,1,1,1,0,1]
+        // dead             [1,0,0,0,0,0,0]
+
+        for (let i = 0; i < elements.length; i++) {
+            // console.log(elements[i]);
+            if (!chiPossoVotare[i])
+                if (!deadPlayers[i]) {
+                    elements[i].classList.add('disabled');
+                    elements[i].setAttribute('onclick', 'null')
+                    //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
+                }
+        }
+    }
+
 })
 
 sock.on('writeLog', (voteObj, voteArr) => {
@@ -142,7 +171,7 @@ sock.on('writeLog', (voteObj, voteArr) => {
     //update badges
     players.forEach((pl, i) => {
         let em = document.getElementsByName(pl)[0].children[0];
-        console.log(em)
+        // console.log(em)
         em.hidden = voteArr[i] > 0 ? false : true;
         em.innerHTML = voteArr[i];
     })
@@ -161,9 +190,11 @@ const writeLog = (text) => {
 };
 
 function confermaVoto() {
-    sock.emit('confermaVoto', myUser);
+    if (lastClicked != '') {
+        sock.emit('confermaVoto', myUser);
 
-    votoConfirmed = true;
-    document.getElementById("selected").setAttribute('id', 'confirmed');
-    document.querySelector('#box input[type="button"]').style.display = "none";
+        votoConfirmed = true;
+        document.getElementById("selected").setAttribute('id', 'confirmed');
+        document.querySelector('#box input[type="button"]').style.display = "none";
+    }
 }
