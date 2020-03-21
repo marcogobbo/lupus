@@ -332,7 +332,7 @@ class LupusGame {
         if (!status) io.to(`${this._connections[player]}`).emit("control_selection", status);
         else {
             //selectable[1] = false;
-            io.to(`${this._connections[player]}`).emit("control_selection", status, selectable);
+            io.to(`${this._connections[player]}`).emit("control_selection", status, this._dayTime, selectable);
             console.log(selectable);
         }
     }
