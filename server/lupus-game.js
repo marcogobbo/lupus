@@ -185,9 +185,6 @@ class LupusGame {
                     });
                     this._handleBallot();
                     //ballot!
-                    //handle the dead of the player
-                    //this._killPlayer(this._mostVotedPlayers(this._vote));
-                    //go on with the game.
                 }
             }
             else if( this._dayTime='ballot'){
@@ -196,6 +193,15 @@ class LupusGame {
                 {
                     console.log("## Ballot ended ##");
                     //todo
+                    //handle the dead of the player
+
+                    var arr=this._mostVotedPlayers(this._vote);
+                    if(arr.length>1){
+                        console.log("FUCK BALLOTTAGGIO. PAREGGIO");
+                    }else if(arr.length==1){
+                        this._killPlayer(arr[0]);
+                    }
+                    //go on with the game.
                     console.log(this._vote);
                 }
             }
@@ -330,11 +336,13 @@ class LupusGame {
         }
     }
 
-    _killPlayer(indexes) {
+    _killPlayer(index) {
         /**
          * This method is used to kill a player
          */
-        console.log("[DEBUG] Killed: " + indexes);
+        console.log("[DEBUG] Killed: " + index);
+        this._roles[this._players[i]].kill();
+        io.emit("dead_player", index,this._players[i]);
     }
 
     runTestGame() {
