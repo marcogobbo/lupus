@@ -12,26 +12,48 @@ const Scemo = require('./roles/scemo');
 const Massone = require('./roles/massone');
 const MagaCirce = require('./roles/magaCirce');
 
+const ActionCollector = require ('./action-collector');
+
 class LupusGame {
     constructor(players, connections, settings) {
+        /**
+         * Players and socket attributes
+         */
         this._players = players;
         this._connections = connections;
         this._roles = [];
-        this._computeRoles(settings);
-        this._sendRoles();
 
-        this._time = 'day';
+        /**
+         * Game time attributes
+         */
+        this._time = '';
+        this._dayTime = '';
+        this._turnCount = 0;//night count
+        this._nightActions= new ActionCollector();
+        
+        /**
+         * Vote structure
+         */
         this._vote = [];
-
         this._whoCanVote = [];
         this._hasConfirmed = [];
         this._ballotVote = [];
 
+        /**
+         * Parameters used to wait until all players have been loaded inn the game page.
+         */
         this._started=false;
         this._updateCount=0;
+
+        //set up the game
+        this._computeRoles(settings);
+        this._sendRoles();
     }
 
     _start(){
+        //not correct now since we are testing the day behaviour
+        this._time = 'day';
+        this._sendTimeUpdate();
         this._enableVotingTime();
     }
 
@@ -73,16 +95,18 @@ class LupusGame {
         });
     }
 
+    _sendTimeUpdate(){
+        io.emit('game_time',this._time);
+    }
+
     _enableVotingTime() {
         /**
          * This method is used to send the control to enable the selection of players
          */
         console.log("## Enable voting ##");
+        this._resetVote();
         io.emit("voting_time","");
-        this._vote = [];
         this._dayTime = 'vote';
-        this._whoCanVote=[];
-        this._hasConfirmed=[];
         this._players.forEach((pl)=>{
             if(this._roles[pl].isAlive()){
                 this._whoCanVote.push(pl);
@@ -98,7 +122,13 @@ class LupusGame {
                     temp.push(i);
                 }
             });
-            this._handlePlayerSelection(true,this._whoCanVote[i],temp);
+
+            var array=[];
+            this._players.forEach((pl,i)=>{
+                array[i]=this._whoCanVote.includes(pl);
+            });
+
+            this._handlePlayerSelection(true,this._whoCanVote[i],array);
         }
     }
 
@@ -127,19 +157,12 @@ class LupusGame {
         if (this._time == "day") {
             console.log("## Brodcast the vote ##");
             var array;
-            if(this._dayTime=='vote'){
-                this._vote[this._players.indexOf(player)] = selectedPlayer;      //! array da inviare NON accetta indice string ma SOLO num
-                array=this._vote;
-            } else if( this._dayTime=="ballot"){
-                this._ballotVote[this._players.indexOf(player)] = selectedPlayer;
-                array=this._ballotVote;
-            }
-            //this._vote[player] = selectedPlayer;
+            this._vote[this._players.indexOf(player)] = selectedPlayer;      //! array da inviare NON accetta indice string ma SOLO num
             io.emit("writeLog", {
                 whoVoted: player,
                 selected: selectedPlayer
-            }, this.calculateVoti(array));
-            console.log(array)
+            }, this.calculateVoti(this._vote));
+            console.log(this._vote)
         }
     }
 
@@ -173,7 +196,7 @@ class LupusGame {
                 {
                     console.log("## Ballot ended ##");
                     //todo
-                    console.log(this._ballotVote);
+                    console.log(this._vote);
                 }
             }
         }
@@ -195,7 +218,6 @@ class LupusGame {
         this._vote = [];
         this._whoCanVote = [];
         this._hasConfirmed = [];
-        this._ballotVote = [];
     }
 
     _handleBallot(){
@@ -252,7 +274,10 @@ class LupusGame {
             this._hasConfirmed[i]=false;
             //selectable: all but not me
             var temp=[];
-            this._handlePlayerSelection(true,this._whoCanVote[i],indexes);
+            for(var i =0; i<this._players.length;i++){
+                temp=indexes.includes(i);
+            }
+            this._handlePlayerSelection(true,this._whoCanVote[i],temp);
         }
     }
 
