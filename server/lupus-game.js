@@ -179,6 +179,7 @@ class LupusGame {
             if (this._dayTime == 'vote') {
                 if (this._checkEndVote(this._hasConfirmed, this._whoCanVote)) {
                     console.log("## Vote ended ##");
+                    this._dayTime = 'ballot';
                     this._players.forEach(pl => {
                         this._handlePlayerSelection(false, pl, null);
                     });
@@ -192,7 +193,7 @@ class LupusGame {
                     console.log("## Ballot ended ##");
                     //todo
                     //handle the dead of the player
-
+                    
                     var arr=this._mostVotedPlayers(this._vote);
                     if(arr.length>1){
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
@@ -225,7 +226,6 @@ class LupusGame {
     }
 
     _handleBallot() {
-        this._dayTime = 'ballot';
         console.log("## BALLOT TIME ##");
         //what players?
         //1) compute the due max values max1,max2; 2) check how many players has been voted max1 times; 3) if <2 send also all of max2 
@@ -329,10 +329,10 @@ class LupusGame {
     }
 
     _handlePlayerSelection(status, player, selectable) {
-        if (!status) io.to(`${this._connections[player]}`).emit("control_selection", status);
+        if (!status) io.to(`${this._connections[player]}`).emit("control_selection", status,this._time=='night'?this._time:this._dayTime);
         else {
             //selectable[1] = false;
-            io.to(`${this._connections[player]}`).emit("control_selection", status, this._dayTime, selectable);
+            io.to(`${this._connections[player]}`).emit("control_selection", status, this._time=='night'?this._time:this._dayTime, selectable);
             console.log(selectable);
         }
     }
