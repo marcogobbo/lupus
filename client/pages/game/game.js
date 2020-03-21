@@ -6,7 +6,7 @@ var deadPlayers = [];
 
 var time = 'giorno';
 
-var canVote = true;
+var canVote = false;
 
 window.onload = () => {
 
@@ -145,10 +145,8 @@ sock.on('control_selection', (val, chiPossoVotare) => {
     if (canVote) {
         var elements = document.getElementsByClassName('character');
 
+        console.log(val.length, chiPossoVotare.length);
 
-
-        // chipossovotare   [0,0,1,1,1,0,1]
-        // dead             [1,0,0,0,0,0,0]
 
         for (let i = 0; i < elements.length; i++) {
             // console.log(elements[i]);
@@ -190,11 +188,12 @@ const writeLog = (text) => {
 };
 
 function confermaVoto() {
-    if (lastClicked != '') {
-        sock.emit('confermaVoto', myUser);
+    if (canVote)
+        if (lastClicked != '') {
+            sock.emit('confermaVoto', myUser);
 
-        votoConfirmed = true;
-        document.getElementById("selected").setAttribute('id', 'confirmed');
-        document.querySelector('#box input[type="button"]').style.display = "none";
-    }
+            votoConfirmed = true;
+            document.getElementById("selected").setAttribute('id', 'confirmed');
+            document.querySelector('#box input[type="button"]').style.display = "none";
+        }
 }
