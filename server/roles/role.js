@@ -48,6 +48,10 @@ class Role{
     isAlive(){
         return this._alive;
     }
+    
+    kill(){
+        this._alive=false;
+    }
 }
 
 module.exports = Role;
