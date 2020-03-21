@@ -274,8 +274,8 @@ class LupusGame {
             this._hasConfirmed[i]=false;
             //selectable: all but not me
             var temp=[];
-            for(var i =0; i<this._players.length;i++){
-                temp=indexes.includes(i);
+            for(let j =0; j<this._players.length;j++){
+                temp=indexes.includes(j);
             }
             this._handlePlayerSelection(true,this._whoCanVote[i],temp);
         }
