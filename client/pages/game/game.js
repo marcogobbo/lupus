@@ -1,3 +1,13 @@
+/**
+ * si può votare se stessi e il morto
+ * reset badge su time day
+ * reset colori (ballottaggio, selected) in time day
+ * click sui morti
+ * voto su se stessi al ballottaggio/votazioni
+ * voto dei morti e se stessi al ballottaggio
+ * vincita: se c'è un vincente controllare il criceto
+ */
+
 const sock = io();
 var myUser;
 var myRole;
