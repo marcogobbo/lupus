@@ -176,7 +176,21 @@ class LupusGame {
                 whoVoted: player,
                 selected: selectedPlayer
             }, this.calculateVoti(this._vote));
+        } else {
+            this._whoCanPlay.forEach((pl) => {
+                if (pl == userVoting) {
+                    this._roles[userVoting].onSelected(selectedPlayer);
+                }
+            });
         }
+    }
+
+    onChatMessage(username, message){
+        this._whoCanPlay.forEach((pl) => {
+            if (pl == username) {
+                this._roles[username].onMessage(username+": "+message);
+            }
+        });
     }
 
     onNightResponse(userVoting, userVoted){
