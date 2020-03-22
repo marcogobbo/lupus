@@ -52,6 +52,10 @@ class Lupo extends Role {
         });
     }
 
+    increment(username){
+        this.temp[this.players.indexOf(username)]++;
+    }
+
     canAct() {
         if (_nightActions.getNightCount() == 0)
             return false;

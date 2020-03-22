@@ -199,6 +199,12 @@ class LupusGame {
             if (pl == userVoting) {
                 this._hasConfirmed[i] = true;
                 this._roles[userVoting].onResponse(userVoted);
+                if(this._roles[userVoting].getName()=='lupo'){
+                    this._whoCanPlay.forEach((pl2) => {
+                        if(this._roles[pl2].getName()=='lupo'&&pl2!=userVoting)
+                            this._roles[pl2].increment(userVoted);
+                    })
+                }
             }
         });
     }
