@@ -11,7 +11,7 @@ class Role{
         this._alive=true;
     }
 
-    act(nightActions,friends){
+    act(connection, friends){
         //method to be overloaded 
         console(this._name+"'s action");
         console(nightActions,friends);

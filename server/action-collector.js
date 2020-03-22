@@ -25,6 +25,7 @@ class ActionCollector {
     getActions(){
         return this._actions;
     }
+
     getPrevious(){
         return this._previous;
     }
@@ -37,6 +38,7 @@ class ActionCollector {
         }
         return temp;
     }
+    
     getPreviousByRoleName(roleName){
         var temp=[];
         for(var i=0; i<this._previous.length;i++){
@@ -45,6 +47,7 @@ class ActionCollector {
         }
         return temp;
     }
+
     getNightCount(){
         return this._nightCount;
     }

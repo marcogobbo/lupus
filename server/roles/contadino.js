@@ -7,7 +7,7 @@ class Contadino extends Role{
 
     act(friends){
         console.log("Acting Like a FARMER. Yeah!");
-        _nightActions.addAction(this._name,'PROVAAA CONTADINO');
+        _nightActions.addAction(this.getName(),'PROVAAA CONTADINO');
     }
     
     canAct(){
