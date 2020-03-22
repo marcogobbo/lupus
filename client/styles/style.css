@@ -480,7 +480,15 @@ main {
 	margin: 10px 5px 0 5px;
 }
 
-.character:hover:not(#me):not(#ballottaggio):not(#selected):not(.death):not(#confirmed):not(.disabled) {
+.character:hover
+:not(#me)
+:not(#ballottaggio)
+:not(#selected)
+:not(.death)
+:not(#confirmed)
+:not(.disabled)
+:not(#cartaBianca)
+:not(#cartaNera) {
 	-webkit-box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
 	box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
 	background: rgba(0, 0, 0, 0.3);
@@ -534,6 +542,27 @@ main {
 	-webkit-box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
 	box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
 	background: #c0392b !important;
+	cursor: pointer;
+}
+
+.cartaBianca {
+	background: #ffffff !important;
+}
+
+.cartaBianca:hover {
+	-webkit-box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
+	background: #acacac !important;
+	cursor: pointer;
+}
+.cartaNera {
+	background: #202020 !important;
+}
+
+.cartaNera:hover {
+	-webkit-box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 -1px 3px 3px rgba(0, 0, 0, 0.1);
+	background: #3b3b3b !important;
 	cursor: pointer;
 }
 
@@ -777,6 +806,15 @@ input[type=button]:active {
 	background-color: #e25705 !important;
 	color:white;
 	font-weight: bold;
+}
+
+.response {
+	text-align: center !important;
+	background-color: #060052 !important;
+	color:white;	
+}
+.response b{
+	color:white !important;	
 }
 
 #logs tr:nth-child(even) {

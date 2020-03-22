@@ -86,8 +86,9 @@ function _(el) {
 var votoConfirmed = false;
 var lastClicked = '';
 function clickOther(userClicked) {
-    if (canVote)
-        if (!votoConfirmed)
+    // GIORNO
+    if (canVote) {
+        if (!votoConfirmed) {
             if (lastClicked != userClicked) {
                 if (lastClicked) {
                     document.getElementsByName(lastClicked)[0].removeAttribute('id');
@@ -96,14 +97,16 @@ function clickOther(userClicked) {
                 lastClicked = userClicked;
                 document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
             }
+        }
+    }
 }
 
 sock.on('voting_time', () => {
-    writeLog('VOTAZIONI APERTE', true);
+    writeLog('VOTAZIONI APERTE', 'info');
 })
 
 sock.on('dead_player', (i, chiEMorto) => {
-    writeLog('E\' MORTO QUALCUNO', true);
+    writeLog('E\' MORTO QUALCUNO', 'info');
     alert(chiEMorto);
 
     document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
@@ -111,7 +114,7 @@ sock.on('dead_player', (i, chiEMorto) => {
 })
 
 sock.on('ballot_time', (players) => {
-    writeLog('Vanno al ballottaggio: <b>' + players + '</b>', true);
+    writeLog('Vanno al ballottaggio: <b>' + players + '</b>', 'info');
     // console.log('ballot_time');
     // console.log('players:', players);
 
@@ -180,15 +183,16 @@ function abilitaPlayers() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
-        if (elements[i].id != 'me')
+        if (elements[i].id != 'me') {
             elements[i].id = null;
-        elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+            elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+        }
         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
     }
 }
 
 sock.on('writeLog', (voteObj, voteArr) => {
-    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>', false);
+    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
     const parent = document.querySelector('#logs');
     parent.scrollTop = parent.scrollHeight;
 
@@ -207,8 +211,8 @@ const writeLog = (text, controlMsg) => {
 
     //<li> element
     const tr = document.createElement('tr');
-    if (controlMsg)
-        tr.className = 'info';
+    tr.className = controlMsg;
+
     const td = document.createElement('td');
 
     td.innerHTML = text;
@@ -217,14 +221,27 @@ const writeLog = (text, controlMsg) => {
 };
 
 function confermaVoto() {
-    if (canVote)
-        if (lastClicked != '') {
-            sock.emit('confermaVoto', myUser);
+    if (time == 'day') {
+        if (canVote)
+            if (lastClicked != '') {
+                sock.emit('confermaVoto', myUser);
 
-            votoConfirmed = true;
-            document.getElementById("selected").setAttribute('id', 'confirmed');
-            document.querySelector('#box input[type="button"]').style.display = "none";
+                votoConfirmed = true;
+                document.getElementById("selected").setAttribute('id', 'confirmed');
+                document.querySelector('#box input[type="button"]').style.display = "none";
+            }
+    } else {
+        //NOTTE
+        if (canVote) {
+            if (lastClicked != '') {
+                sock.emit('role_selection', myUser, lastClicked);
+
+                votoConfirmed = true;
+                document.getElementById("selected").setAttribute('id', 'confirmed');
+                document.querySelector('#box input[type="button"]').style.display = "none";
+            }
         }
+    }
 }
 
 sock.on('game_time', (text) => {
@@ -269,3 +286,17 @@ function vaiAGiorno() {
     // Avvio suono
     // sun.play();
 }
+
+//! CONTROLLER ROLES //
+
+sock.on('veggente_response', color => {
+    console.log(color);
+    writeLog('<b>' + lastClicked + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA' : 'NERA') + '</b>', 'response')
+
+    var charac = document.getElementsByClassName('character')[players.indexOf(lastClicked)];
+    charac.id = null;
+    if (color == 0)
+        charac.classList.add('cartaBianca');
+    else
+        charac.classList.add('cartaNera');
+})
