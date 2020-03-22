@@ -6,13 +6,14 @@ class Lupo extends Role {
     }
 
     act(connection, players, roles, sameRole) {
+        console.log('ciaociaociao',sameRole)
         this.players = players;
         this.roles = roles;
         this.connection = connection;
-        this.sameRole=sameRole;
-        this.temp=[];
-        for(let i=0;i<players.length;i++){
-            temp[i]=0;
+        this.sameRole = sameRole;
+        this.temp = [];
+        for (let i = 0; i < players.length; i++) {
+            this.temp[i] = 0;
         }
 
         var others = [];
@@ -39,11 +40,15 @@ class Lupo extends Role {
     onResponse(username) {
         _nightActions.addAction(this.getName, username);
         this.temp[this.players.indexOf(username)]++;
-        io.to(this.connection).emit("wolf_response", username,this.temp);
+
+        this.sameRole.forEach(val => {
+            io.to(val.connection).emit("wolf_response", this.temp);
+        });
+        io.to(this.connection).emit("wolf_response", this.temp);
     }
 
-    onMessage(txt){
-        this.sameRole.forEach(val=>{
+    onMessage(txt) {
+        this.sameRole.forEach(val => {
             io.to(val.connection).emit("friends_chat", txt);
         });
     }

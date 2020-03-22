@@ -95,8 +95,6 @@ function clickOther(userClicked) {
                 }
                 if (time == 'day')
                     sock.emit('logDay', myUser, userClicked)
-                else
-                    sock.emit('friends_selection', myUser, userClicked)
 
                 lastClicked = userClicked;
                 document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
@@ -210,7 +208,7 @@ sock.on('writeLog', (voteObj, voteArr) => {
             em.hidden = voteArr[i] > 0 ? false : true;
             em.innerHTML = voteArr[i];
         })
-    }    
+    }
 })
 
 const writeLog = (text, controlMsg) => {
@@ -311,6 +309,10 @@ sock.on('veggente_response', color => {
 
 sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
+})
+
+sock.on('wolf_response',voteArr=>{
+    console.log(voteArr)
 })
 
 
