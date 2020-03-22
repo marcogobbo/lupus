@@ -93,7 +93,11 @@ function clickOther(userClicked) {
                 if (lastClicked) {
                     document.getElementsByName(lastClicked)[0].removeAttribute('id');
                 }
-                sock.emit('logDay', myUser, userClicked)
+                if (time == 'day')
+                    sock.emit('logDay', myUser, userClicked)
+                else
+                    sock.emit('friends_selection', myUser, userClicked)
+
                 lastClicked = userClicked;
                 document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
             }
@@ -157,6 +161,8 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
                         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
                     }
         }
+
+
     } else {        // vuol dire che sono al ballottaggio
         for (let i = 0; i < elements.length; i++) {
             if (!deadPlayers[i])
@@ -183,7 +189,7 @@ function abilitaPlayers() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
-        if (elements[i].id != 'me') {
+        if (elements[i].id != 'me' || time == 'night') {
             elements[i].id = null;
             elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
         }
@@ -192,17 +198,19 @@ function abilitaPlayers() {
 }
 
 sock.on('writeLog', (voteObj, voteArr) => {
-    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
-    const parent = document.querySelector('#logs');
-    parent.scrollTop = parent.scrollHeight;
+    if (time == 'day') {
+        writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
+        const parent = document.querySelector('#logs');
+        parent.scrollTop = parent.scrollHeight;
 
-    //update badges
-    players.forEach((pl, i) => {
-        let em = document.getElementsByName(pl)[0].children[0];
-        // console.log(em)
-        em.hidden = voteArr[i] > 0 ? false : true;
-        em.innerHTML = voteArr[i];
-    })
+        //update badges
+        players.forEach((pl, i) => {
+            let em = document.getElementsByName(pl)[0].children[0];
+            // console.log(em)
+            em.hidden = voteArr[i] > 0 ? false : true;
+            em.innerHTML = voteArr[i];
+        })
+    }    
 })
 
 const writeLog = (text, controlMsg) => {
@@ -287,8 +295,8 @@ function vaiAGiorno() {
     // sun.play();
 }
 
-//! CONTROLLER ROLES //
 
+//! CONTROLLER ROLES //
 sock.on('veggente_response', color => {
     console.log(color);
     writeLog('<b>' + lastClicked + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA' : 'NERA') + '</b>', 'response')
@@ -300,3 +308,9 @@ sock.on('veggente_response', color => {
     else
         charac.classList.add('cartaNera');
 })
+
+sock.on('my_friends', whoLupi => {
+    //cambiare le foto con quella dei lupi
+})
+
+

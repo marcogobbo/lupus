@@ -78,9 +78,6 @@ io.on('connection', (sock) => {
     sock.on("friends_chat_out",(username, message)=>{
         LG.onChatMessage(username,message);
     })
-    sock.on("friends_selection",(username, selectedPlayer)=>{
-        LG.onPlayerSelected(username, selectedPlayer);
-    })
 });
 
 server.on('error', (err) => {

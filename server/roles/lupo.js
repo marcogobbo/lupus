@@ -1,7 +1,7 @@
 const Role = require("./role");
 
-class Lupo extends Role{
-    constructor(){
+class Lupo extends Role {
+    constructor() {
         super("Lupo", "Tu sei il cattivo. Uccidi chi vuoi nella notte", "lupi", 1);
     }
 
@@ -9,14 +9,14 @@ class Lupo extends Role{
         this.players = players;
         this.roles = roles;
         this.connection = connection;
-        this.sameRole=sameRole;
+        this.sameRole = sameRole;
 
-        var others=[];
-        sameRole.forEach(val =>{
+        var others = [];
+        sameRole.forEach(val => {
             others.push(val.index);
         });
         io.to(this.connection).emit("my_friends", others);
-        
+
         var selezionabili = [];
         players.forEach((pl) => {
             if (roles[pl].isAlive()) {
@@ -28,7 +28,7 @@ class Lupo extends Role{
             array[i] = selezionabili.includes(pl);
         });
 
-        if(_nightActions.getNightCount()!=0)
+        if (_nightActions.getNightCount() != 0)
             io.to(this.connection).emit("control_selection", true, 'night', array);
     }
 
@@ -37,21 +37,14 @@ class Lupo extends Role{
         io.to(this.connection).emit("wolf_response", username);
     }
 
-    onSelected(username) {
-        //_nightActions.addAction(this.getName, username);
-        this.sameRole.forEach(val=>{
-            io.to(val.connection).emit("writeLog", username);
-        });
-    }
-
-    onMessage(txt){
-        this.sameRole.forEach(val=>{
+    onMessage(txt) {
+        this.sameRole.forEach(val => {
             io.to(val.connection).emit("friends_chat", txt);
         });
     }
 
-    canAct(){
-        if(_nightActions.getNightCount()==0)
+    canAct() {
+        if (_nightActions.getNightCount() == 0)
             return false;
         return true;
     }
