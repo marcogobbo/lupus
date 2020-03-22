@@ -132,11 +132,11 @@ function clickOther(userClicked) {
 }
 
 sock.on('voting_time', () => {
-    writeLog('VOTAZIONI APERTE');
+    writeLog('VOTAZIONI APERTE',true);
 })
 
 sock.on('dead_player', (i, chiEMorto) => {
-    writeLog('E\' MORTO QUALCUNO');
+    writeLog('E\' MORTO QUALCUNO',true);
     alert(chiEMorto);
 
     document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
@@ -144,7 +144,7 @@ sock.on('dead_player', (i, chiEMorto) => {
 })
 
 sock.on('ballot_time', (players) => {
-    writeLog('Vanno al ballottaggio: <b>' + players + '</b>');
+    writeLog('Vanno al ballottaggio: <b>' + players + '</b>',true);
     console.log('ballot_time');
     console.log('players:', players);
 
@@ -221,7 +221,7 @@ function abilitaPlayers() {
 }
 
 sock.on('writeLog', (voteObj, voteArr) => {
-    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
+    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>', false);
     const parent = document.querySelector('#logs');
     parent.scrollTop = parent.scrollHeight;
 
@@ -234,12 +234,14 @@ sock.on('writeLog', (voteObj, voteArr) => {
     })
 })
 
-const writeLog = (text) => {
+const writeLog = (text, controlMsg) => {
     //<ul> element
     const parent = document.querySelector('#log_table');
 
     //<li> element
     const tr = document.createElement('tr');
+    if (controlMsg)
+        tr.className = 'info';
     const td = document.createElement('td');
 
     td.innerHTML = text;

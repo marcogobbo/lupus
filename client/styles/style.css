@@ -754,7 +754,9 @@ input[type=button]:active {
 
 .info {
 	text-align: center !important;
-	background-color: #3498db !important;
+	background-color: #e25705 !important;
+	color:white;
+	font-weight:bold;
 }
 
 #logs tr:nth-child(even) {
