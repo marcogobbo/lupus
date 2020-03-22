@@ -207,6 +207,21 @@ class LupusGame {
                 this._roles[userVoting].onResponse(userVoted);
             }
         });
+        if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)){
+            console.log("## NIGHT ENDED ##");
+            this._players.forEach(pl => {
+                this._handlePlayerSelection(false, pl, null);
+            });
+            this._debug();
+            //operations using the action collector
+            this._time='day';
+            this._sendTimeUpdate();
+            this._computeNightOperations();
+            
+            this._resetVote();
+            this._enableVotingTime();
+        }
+
     }
 
     onVoteConfirmed(user) {
@@ -271,8 +286,6 @@ class LupusGame {
                     console.log(this._vote);
                 }
             }
-        } else if (this._time == 'night') {
-            //TODO
         }
     }
 
@@ -287,6 +300,31 @@ class LupusGame {
         })
         return result;
     };
+
+    _computeNightOperations(){
+        //Lupi
+        var wolves=_nightActions.getActionsByRoleName("Lupo");
+        var max=-1;
+        var sel='none'; 
+        for(let i=0;i<wolves.length;i++){
+            var count=0;
+            for(let j=0;j<wolves.length;j++){
+                if(wolves[i]==wolves[j]){
+                    count++;
+                }
+            }
+            if(count>max)
+                sel=wolves[i];
+        }
+        //get GDC op
+        var dead=sel;
+        if(_nightActions.getActionsByRoleName("Guardia Del Corpo").length!=0
+            &&_nightActions.getActionsByRoleName("Guardia Del Corpo")[0]==dead)
+            dead='none';
+        if(dead!='none'){
+            this._killPlayer(this._players.indexOf(dead));
+        }   
+    }
 
     _computeFriends(playerName, roleName) {
         var temp = [];
