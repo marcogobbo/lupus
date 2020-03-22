@@ -198,9 +198,9 @@ class LupusGame {
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == userVoting) {
                 this._hasConfirmed[i] = true;
-                if(this._roles[userVoting].getName()=='lupo'){
+                if(this._roles[userVoting].getName()=='Lupo'){
                     this._whoCanPlay.forEach((pl2) => {
-                        if(this._roles[pl2].getName()=='lupo'&&pl2!=userVoting)
+                        if(this._roles[pl2].getName()=='Lupo'&&pl2!=userVoting)
                             this._roles[pl2].increment(userVoted);
                     })
                 }
