@@ -313,8 +313,10 @@ class LupusGame {
                     count++;
                 }
             }
-            if(count>max)
+            if(count>max){
                 sel=wolves[i];
+                max=count;
+            }
         }
         console.log(sel)
         //get GDC op
