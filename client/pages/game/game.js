@@ -111,7 +111,9 @@ sock.on('voting_time', () => {
 
 sock.on('dead_player', (i, chiEMorto) => {
     writeLog('E\' MORTO QUALCUNO', 'info');
-    alert(chiEMorto);
+    console.log(chiEMorto);
+
+    deadPlayers[i] = true;
 
     document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
     document.getElementsByClassName('character')[i].classList.add('death');
