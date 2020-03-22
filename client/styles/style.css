@@ -649,6 +649,14 @@ input[type=button]:active {
 		width: 790px;
 		margin: 20px auto;
 	}
+
+	#logs, #logs table {
+		width: 700px !important;
+	}
+
+	#logs td {
+		padding: 10px 0 !important;
+	}
 }
 
 /*
@@ -659,6 +667,17 @@ input[type=button]:active {
 	main {
 		width: 505px;
 		margin: 20px auto;
+	}
+	#logs {
+		font-size: 15px !important;
+		height: 140px !important;
+	}
+	#logs, #logs table {
+		width: 450px !important;
+	}
+
+	#logs td {
+		padding: 10px 0 !important;
 	}
 }
 
@@ -749,6 +768,7 @@ input[type=button]:active {
 }
 
 #logs td b {
+	color: #2c3e50;
 	font-weight: bold !important;
 }
 
@@ -756,7 +776,7 @@ input[type=button]:active {
 	text-align: center !important;
 	background-color: #e25705 !important;
 	color:white;
-	font-weight:bold;
+	font-weight: bold;
 }
 
 #logs tr:nth-child(even) {
