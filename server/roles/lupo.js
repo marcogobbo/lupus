@@ -5,8 +5,13 @@ class Lupo extends Role{
         super("Lupo", "Tu sei il cattivo. Uccidi chi vuoi nella notte", "lupi", 1);
     }
 
-    act(){
+    act(friends){
         console.log("Acting Like a WOLF. Yeah!");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

@@ -5,8 +5,13 @@ class MagaCirce extends Role{
         super("Maga Circe", "Sei una maga, usa i tuoi poteri e fai grugnire una persona al giorno!", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Oink Oink! Eheheheh");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

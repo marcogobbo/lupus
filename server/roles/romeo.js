@@ -5,8 +5,13 @@ class Romeo extends Role{
         super("Romeo", "Oh, Romeo Romeo, scegli la tua Giulietta e unitevi insieme fino alla morte", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Cerco solo la mia Giulietta, che guardi?");
+    }
+    
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 
