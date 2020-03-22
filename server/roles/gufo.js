@@ -5,8 +5,13 @@ class Gufo extends Role{
         super("Gufo", "Sei un contadino, il tuo compito è gufare, mandi direttamente al ballottaggio i giocatori.", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Mi piace gufare!");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

@@ -5,8 +5,13 @@ class Massone extends Role{
         super("Massone", "Tra massoni vi riconoscete, è una garanzia in più!", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Masso massone");
+    }
+
+    canAct(){
+        //TODO!!
+        return false;
     }
 }
 

@@ -5,8 +5,13 @@ class Veggente extends Role{
         super("Veggente", "Tu non fai niente, per ora", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Acting Like a VEGGENTE(in inglese). Yeah!");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

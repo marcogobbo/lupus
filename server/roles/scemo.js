@@ -5,8 +5,13 @@ class Scemo extends Role{
         super("Scemo", "Sei lo scemo del villaggio, se muori al ballottaggio hai vinto!", "scemo", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Scemo chi legge");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

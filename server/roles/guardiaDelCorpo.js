@@ -5,8 +5,13 @@ class GuardiaDelCorpo extends Role{
         super("Guardia Del Corpo", "Tu non fai niente, per ora", "contadini", 0);
     }
 
-    act(){
+    act(friends){
         console.log("Acting Like a BODYGUARD. Yeah!");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 

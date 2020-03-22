@@ -28,16 +28,14 @@ class LupusGame {
          */
         this._time = '';
         this._dayTime = '';
-        this._turnCount = 0;//night count
-        this._nightActions = new ActionCollector();
+        global._nightActions = new ActionCollector();
 
         /**
          * Vote structure
          */
         this._vote = [];
-        this._whoCanVote = [];
+        this._whoCanPlay = [];
         this._hasConfirmed = [];
-        this._ballotVote = [];
 
         /**
          * Parameters used to wait until all players have been loaded inn the game page.
@@ -109,27 +107,28 @@ class LupusGame {
         this._dayTime = 'vote';
         this._players.forEach((pl) => {
             if (this._roles[pl].isAlive()) {
-                this._whoCanVote.push(pl);
+                this._whoCanPlay.push(pl);
             }
         });
 
-        for (let i = 0; i < this._whoCanVote.length; i++) {
+        for (let i = 0; i < this._whoCanPlay.length; i++) {
             this._hasConfirmed[i] = false;
             //selectable: all but not me
             var temp = [];
-            this._whoCanVote.forEach((pl, i) => {
-                if (this._whoCanVote[i] != pl) {
+            this._whoCanPlay.forEach((pl, i) => {
+                if (this._whoCanPlay[i] != pl) {
                     temp.push(i);
                 }
             });
 
             var array = [];
             this._players.forEach((pl, i) => {
-                array[i] = this._whoCanVote.includes(pl);
+                array[i] = this._whoCanPlay.includes(pl);
             });
 
-            this._handlePlayerSelection(true, this._whoCanVote[i], array);
+            this._handlePlayerSelection(true, this._whoCanPlay[i], array);
         }
+        this._debug();
     }
 
     deletePlayer() {
@@ -156,28 +155,27 @@ class LupusGame {
          */
         if (this._time == "day") {
             console.log("## Brodcast the vote ##");
-            var array;
+            console.log(player +"->"+selectedPlayer);
             this._vote[this._players.indexOf(player)] = selectedPlayer;      //! array da inviare NON accetta indice string ma SOLO num
             io.emit("writeLog", {
                 whoVoted: player,
                 selected: selectedPlayer
             }, this.calculateVoti(this._vote));
-            console.log(this._vote)
         }
     }
 
     onVoteConfirmed(user) {
         io.emit('voteConfirmed', this.calculateVoti(this._vote));
-        this._whoCanVote.forEach((pl, i) => {
+        this._whoCanPlay.forEach((pl, i) => {
             if (pl == user) {
                 this._hasConfirmed[i] = true;
             }
         });
 
-        //console.log(this._hasConfirmed,this._whoCanVote);
+        //console.log(this._hasConfirmed,this._whoCanPlay);
         if (this._time == 'day') {
             if (this._dayTime == 'vote') {
-                if (this._checkEndVote(this._hasConfirmed, this._whoCanVote)) {
+                if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
                     console.log("## Vote ended ##");
                     this._dayTime = 'ballot';
                     this._players.forEach(pl => {
@@ -189,7 +187,7 @@ class LupusGame {
             }
             else if (this._dayTime = 'ballot') {
                 console.log("## BALLOT VOTE RECEIVED ##");
-                if (this._checkEndVote(this._hasConfirmed, this._whoCanVote)) {
+                if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
                     console.log("## Ballot ended ##");
                     //todo
                     //handle the dead of the player
@@ -199,11 +197,47 @@ class LupusGame {
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
                     } else if (arr.length == 1) {
                         this._killPlayer(arr[0]);
+
+                        //go on with the game.
+                        /**
+                         * 0. check win, if not
+                         * 1. switch to night
+                         * 2. check who can play and start his action
+                         */
+
+                        /**0. CHECK IF GAME ENDED */
+                        var winningTeam=this._computeWinner();
+                        if(winningTeam=='none'){
+                            this._resetVote();
+                            /**0. switch to night */
+                            this._time = 'night';
+                            this._dayTime = '';
+                            _nightActions.newNight();
+                            this._sendTimeUpdate();
+                            
+                            this._players.forEach((pl) => {
+                                if (this._roles[pl].isAlive()) {
+                                    this._whoCanPlay.push(pl);
+                                }
+                            });
+
+                            for (let i = 0; i < this._whoCanPlay.length; i++) {
+                                var friends=this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
+                                this._roles[this._whoCanPlay[i]].act(friends);
+                                this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();                    
+                            }
+
+                            this._debug();
+                        }else{
+                            //broadcast who won the game
+                            console.log("WINNER: "+winningTeam);
+                        }
                     }
-                    //go on with the game.
                     console.log(this._vote);
                 }
             }
+        } else if(this._time=='night'){
+            //TODO
         }
     }
 
@@ -219,14 +253,34 @@ class LupusGame {
         return result;
     };
 
+    _computeFriends(playerName, roleName){
+        var temp=[];
+        for(let i=0; i<this._players.length;i++){
+            if(this._players[i]!=playerName&&this._roles[this._players[i]].isAlive()&&this._roles[this._players[i]].getName()==roleName){
+                temp.push({
+                    'name': this._players[i],
+                    'index': i,
+                    'connection': this._connections[this._players[i]]
+                });
+            }
+        }
+    }
+
+    _computeWinner(){
+        /**
+         * TODO
+         */
+        return 'none';
+    }
     _resetVote() {
         this._vote = [];
-        this._whoCanVote = [];
+        this._whoCanPlay = [];
         this._hasConfirmed = [];
     }
 
     _handleBallot() {
         console.log("## BALLOT TIME ##");
+        this._debug();
         //what players?
         //1) compute the due max values max1,max2; 2) check how many players has been voted max1 times; 3) if <2 send also all of max2 
         var leaderboard = [];
@@ -270,19 +324,19 @@ class LupusGame {
 
         this._players.forEach((pl, i) => {
             if (this._roles[pl].isAlive() && !indexes.includes(i)) {
-                this._whoCanVote.push(pl);
+                this._whoCanPlay.push(pl);
             }
         });
         //after computed
-        for (let i = 0; i < this._whoCanVote.length; i++) {
+        for (let i = 0; i < this._whoCanPlay.length; i++) {
             this._hasConfirmed[i] = false;
             //selectable: all but not me
             var temp = [];
             for (let j = 0; j < this._players.length; j++) {
                 temp[j] = indexes.includes(j);
             }
-            this._handlePlayerSelection(true, this._whoCanVote[i], temp);
-            console.log("Sent ballot to: " + this._whoCanVote[i]);
+            this._handlePlayerSelection(true, this._whoCanPlay[i], temp);
+            console.log("Ballot message to: " + this._whoCanPlay[i]);
         }
     }
 
@@ -304,7 +358,7 @@ class LupusGame {
         /**
          * This method returns the most voted player
          */
-        console.log("[DEBUG] Vote: " + array);
+        //console.log("[DEBUG] Vote: " + array);
         var leaderboard = [];
         for (let i = 0; i < this._players.length; i++) {
             leaderboard[i] = 0;
@@ -331,7 +385,6 @@ class LupusGame {
     _handlePlayerSelection(status, player, selectable) {
         if (!status) io.to(`${this._connections[player]}`).emit("control_selection", status, this._time == 'night' ? this._time : this._dayTime);
         else {
-            //selectable[1] = false;
             io.to(`${this._connections[player]}`).emit("control_selection", status, this._time == 'night' ? this._time : this._dayTime, selectable);
             console.log(selectable);
         }
@@ -344,6 +397,19 @@ class LupusGame {
         console.log("[DEBUG] Killed: " + index);
         this._roles[this._players[index]].kill();
         io.emit("dead_player", index, this._players[index]);
+    }
+
+    _debug(){
+        console.log("## DEBUG ##");
+        console.log("time: ", this._time);
+        if(this._time=='day')
+            console.log("dayTime: ", this._dayTime);
+        console.log("roles: ",this._roles);
+        console.log("vote: ",this._vote);
+        console.log("whoCanPlay: ",this._whoCanPlay);
+        console.log("hasConfirmed: ",this._hasConfirmed);
+        if(this._time=='night')
+        console.log("nightActions: ", _nightActions);
     }
 
     runTestGame() {

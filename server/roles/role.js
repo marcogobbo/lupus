@@ -11,14 +11,13 @@ class Role{
         this._alive=true;
     }
 
-    act(){
+    act(nightActions,friends){
         //method to be overloaded 
-        console(this._name+" is doing his action");
+        console(this._name+"'s action");
+        console(nightActions,friends);
     }
 
-    vote(){
-        //this method is used during the day to select pepole
-        console(this._name+" is voting");
+    canAct(){
     }
 
     getName(){

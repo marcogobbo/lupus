@@ -5,8 +5,13 @@ class RoseMary extends Role{
         super("Rose Mary", "Il tuo compito è quello di aiutare i lupi salvandoli dal voto!", "lupi", 1);
     }
 
-    act(){
+    act(friends){
         console.log("Sono un rosmarino");
+    }
+
+    canAct(){
+        //TODO!!
+        return true;
     }
 }
 
