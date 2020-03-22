@@ -10,7 +10,6 @@ class Veggente extends Role {
         this.roles = roles;
         this.connection=connection;
 
-        console.log("Acting Like a VEGGENTE(in inglese). Yeah!");
         var selezionabili = [];
         players.forEach((pl) => {
             if (roles[pl].isAlive()) {
