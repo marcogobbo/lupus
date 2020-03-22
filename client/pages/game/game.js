@@ -144,7 +144,7 @@ sock.on('dead_player', (i, chiEMorto) => {
 })
 
 sock.on('ballot_time', (players) => {
-    writeLog('BALLOTTAGGIO ' + players);
+    writeLog('Vanno al ballottaggio: <b>' + players + '</b>');
     console.log('ballot_time');
     console.log('players:', players);
 
@@ -221,7 +221,7 @@ function abilitaPlayers() {
 }
 
 sock.on('writeLog', (voteObj, voteArr) => {
-    writeLog(voteObj.whoVoted + ' selected ' + voteObj.selected);
+    writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
     const parent = document.querySelector('#logs');
     parent.scrollTop = parent.scrollHeight;
 
@@ -241,6 +241,7 @@ const writeLog = (text) => {
     //<li> element
     const tr = document.createElement('tr');
     const td = document.createElement('td');
+
     td.innerHTML = text;
     tr.appendChild(td);
     parent.appendChild(tr);
