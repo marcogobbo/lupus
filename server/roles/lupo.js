@@ -50,9 +50,10 @@ class Lupo extends Role {
         this.sameRole.forEach(val => {
             io.to(val.connection).emit("friends_chat", txt);
         });
+        io.to(this.connection).emit("friends_chat", txt);
     }
 
-    increment(username){
+    increment(username) {
         this.temp[this.players.indexOf(username)]++;
     }
 

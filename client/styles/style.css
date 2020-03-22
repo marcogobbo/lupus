@@ -679,11 +679,11 @@ input[type=button]:active {
 		margin: 20px auto;
 	}
 
-	#logs, #logs table {
+	.logs, .logs table {
 		width: 700px !important;
 	}
 
-	#logs td {
+	.logs td {
 		padding: 10px 0 !important;
 	}
 }
@@ -697,15 +697,15 @@ input[type=button]:active {
 		width: 505px;
 		margin: 20px auto;
 	}
-	#logs {
+	.logs {
 		font-size: 15px !important;
 		height: 140px !important;
 	}
-	#logs, #logs table {
+	.logs, .logs table {
 		width: 450px !important;
 	}
 
-	#logs td {
+	.logs td {
 		padding: 10px 0 !important;
 	}
 }
@@ -760,17 +760,17 @@ input[type=button]:active {
 	padding: 7px;
 }
 
-#log_board {
+.log_board {
 	text-align: center;
 }
 
-#log_board h4 {
+.log_board h4 {
 	text-transform: uppercase;
 	font-size: 13px;
 	font-weight: bold;
 }
 
-#logs {
+.logs {
 	overflow-y: auto;
 	height: 80px;
 	margin: 10px auto 0;
@@ -784,19 +784,19 @@ input[type=button]:active {
 	width: 270px;
 }
 
-#logs table {
+.logs table {
 	width: 270px;
 }
 
-#logs tr {
+.logs tr {
 	border-bottom: 1px solid #ced0d1;
 }
 
-#logs td {
+.logs td {
 	padding: 5px 0;
 }
 
-#logs td b {
+.logs td b {
 	color: #2c3e50;
 	font-weight: bold !important;
 }
@@ -817,7 +817,7 @@ input[type=button]:active {
 	color:white !important;	
 }
 
-#logs tr:nth-child(even) {
+.logs tr:nth-child(even) {
 	background: #ecf0f1;
 }
 

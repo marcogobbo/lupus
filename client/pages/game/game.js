@@ -17,7 +17,6 @@ window.onload = () => {
     _setPlayers();
     _setRole();
     _setDeadPlayers();
-
     //send the update!
     sock.emit("updateSocketId", myUser);
 }
@@ -203,7 +202,7 @@ function abilitaPlayers() {
 sock.on('writeLog', (voteObj, voteArr) => {
     if (time == 'day') {
         writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
-        const parent = document.querySelector('#logs');
+        const parent = document.querySelector('.logs');
         parent.scrollTop = parent.scrollHeight;
 
         //update badges
@@ -305,7 +304,24 @@ function keyDown(event) {
 }
 function sendMessage() {
     sock.emit('friends_chat_out', myUser, _('msg').value)
+    _('msg').value = '';
 }
+sock.on('friends_chat', txt => {
+    const chat = document.querySelector('.logs');
+    chat.scrollTop = chat.scrollHeight;
+    // console.log('friends_chat')
+    const parent = document.querySelector('#chat_table');
+
+    //<li> element
+    const tr = document.createElement('tr');
+
+    const td = document.createElement('td');
+
+    td.innerHTML = txt;
+    tr.appendChild(td);
+    parent.appendChild(tr);
+
+})
 
 
 //! CONTROLLER ROLES //
@@ -323,6 +339,9 @@ sock.on('veggente_response', color => {
 
 sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
+    if (whoLupi.length > 0) {
+        _('chat_board').hidden = false;
+    }
 })
 
 sock.on('wolf_response', voteArr => {

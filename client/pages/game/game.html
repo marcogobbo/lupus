@@ -62,9 +62,9 @@
                     </p>
                 </div>
             </div>
-            <div id="log_board">
+            <div class="log_board" id="log_board">
                 <h4>Cronologia</h4>
-                <div id="logs">
+                <div class="logs">
                     <table id="log_table">
                         <!--<tr>
                                 <td>Martina ha votato Elena</td>
@@ -81,9 +81,9 @@
                     </table>
                 </div>
             </div>
-            <div id="friends_chat">
-                <h4>Cronologia</h4>
-                <div>
+            <div hidden class="log_board" id="chat_board">
+                <h4>Chat</h4>
+                <div class="logs">
                     <table id="chat_table">
                         <!--<tr>
                                 <td>Martina ha votato Elena</td>
@@ -98,8 +98,9 @@
                                 <td>Marco ha votato Guglie</td>
                             </tr>-->
                     </table>
-                    <input type="text" id="msg" onkeydown="keyDown(event)"><button onclick="sendMessage()">►</button>
                 </div>
+                <input type="text" id="msg" onkeydown="keyDown(event)"><button onclick="sendMessage()">►</button>
+
             </div>
         </section>
     </main>

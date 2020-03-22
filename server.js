@@ -72,11 +72,11 @@ io.on('connection', (sock) => {
     sock.on('confermaVoto', (user) => {
         LG.onVoteConfirmed(user);
     })
-    sock.on("role_selection",(userVoting, userVoted)=>{
+    sock.on("role_selection", (userVoting, userVoted) => {
         LG.onNightResponse(userVoting, userVoted);
     })
-    sock.on("friends_chat_out",(username, message)=>{
-        LG.onChatMessage(username,message);
+    sock.on("friends_chat_out", (username, message) => {
+        LG.onChatMessage(username, message);
     })
 });
 
