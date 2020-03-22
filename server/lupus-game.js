@@ -313,9 +313,12 @@ class LupusGame {
                     count++;
                 }
             }
-            if(count>max)
+            if(count>max){
                 sel=wolves[i];
+                max=count;
+            }
         }
+        console.log(sel);
         //get GDC op
         var dead=sel;
         if(_nightActions.getActionsByRoleName("Guardia Del Corpo").length!=0
