@@ -261,6 +261,7 @@ sock.on('game_time', (text) => {
 
     switchDay(text);
 
+    _('chat_board').hidden = true;
 });
 
 function switchDay(dayTime) {
