@@ -53,6 +53,7 @@ class LupusGame {
         this._time = 'night';
         this._sendTimeUpdate();
         //this._enableVotingTime();
+        this._enableNightTime();
     }
 
     _enableNightTime(){
