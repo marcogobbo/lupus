@@ -304,6 +304,7 @@ class LupusGame {
     _computeNightOperations(){
         //Lupi
         var wolves=_nightActions.getActionsByRoleName("Lupo");
+        console.log(wolves);
         var max=-1;
         var sel='none'; 
         for(let i=0;i<wolves.length;i++){

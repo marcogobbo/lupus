@@ -37,7 +37,7 @@ class Lupo extends Role {
     }
 
     onResponse(username) {
-        _nightActions.addAction(this.getName, username);
+        _nightActions.addAction(this.getName(), username);
         this.temp[this.players.indexOf(username)]++;
 
         this.sameRole.forEach(val => {
