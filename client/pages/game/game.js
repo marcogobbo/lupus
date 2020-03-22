@@ -276,23 +276,25 @@ function vaiANotte() {
     time = 'night';
 
     // Faccio transizione giorno -> notte cambiando posizione sole e luna
-    document.getElementById("sun").style = "top: 120px;";
-    document.getElementById("moon").style = "top: 35px";
+    _("sun").style = "top: 120px;";
+    _("moon").style = "top: 35px";
 
     // Cambio sfondo
-    document.getElementById("sky").style = "background: #2C3E50;"
+    _("sky").style = "background: #2C3E50;"
+    document.body.style = "background: #3c5d1a;"
+
     // Avvio suono lupo
     // moon.play();      
 }
 function vaiAGiorno() {
     time = 'day';
     // Faccio transizione notte -> giorno cambiando posizione luna e sole
-    document.getElementById("moon").style = "top: 120px;";
-    document.getElementById("sun").style = "top: 30px;";
+    _("moon").style = "top: 120px;";
+    _("sun").style = "top: 30px;";
 
     // Cambio sfondo
-    document.getElementById("sky").style = "background: #B2EBF2;";
-
+    _("sky").style = "background: #B2EBF2;";
+    document.body.style = "background: #7CB342;"
     // Avvio suono
     // sun.play();
 }

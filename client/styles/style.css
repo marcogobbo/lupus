@@ -371,7 +371,7 @@ textarea {
 
 body {
 	font-family: 'Open Sans', sans-serif;
-	background: #7CB342;
+	background: #3c5d1a;
 }
 
 header {
@@ -386,6 +386,13 @@ header {
 #sky {
 	height: 110px;
 	background: #B2EBF2;
+	overflow: hidden;
+	transition: 1s linear;
+}
+
+body {
+	height: 110px;
+	background: #3c5d1a;
 	overflow: hidden;
 	transition: 1s linear;
 }
