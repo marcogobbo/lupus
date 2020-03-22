@@ -4,7 +4,8 @@ var myRole;
 var players;
 var deadPlayers = [];
 
-var time = 'giorno';
+// var time = 'night';
+var time;
 
 var canVote = false;
 
@@ -81,40 +82,6 @@ function _(el) {
     return document.getElementById(el);
 }
 
-function switchDay() {
-    if (time == 'giorno') {
-        time = 'notte';
-        giornoToNotte();
-        _('log_board').hidden = true;
-    }
-    else {
-        time = 'giorno';
-        notteToGiorno();
-        _('log_board').hidden = false;
-    }
-};
-
-function giornoToNotte() {
-    // Faccio transizione giorno -> notte cambiando posizione sole e luna
-    document.getElementById("sun").style = "top: 120px;";
-    document.getElementById("moon").style = "top: 35px";
-
-    // Cambio sfondo
-    document.getElementById("sky").style = "background: #2C3E50;"
-    // Avvio suono lupo
-    // moon.play();      
-}
-function notteToGiorno() {
-    // Faccio transizione notte -> giorno cambiando posizione luna e sole
-    document.getElementById("moon").style = "top: 120px;";
-    document.getElementById("sun").style = "top: 30px;";
-
-    // Cambio sfondo
-    document.getElementById("sky").style = "background: #B2EBF2;";
-
-    // Avvio suono
-    // sun.play();
-}
 
 var votoConfirmed = false;
 var lastClicked = '';
@@ -132,11 +99,11 @@ function clickOther(userClicked) {
 }
 
 sock.on('voting_time', () => {
-    writeLog('VOTAZIONI APERTE',true);
+    writeLog('VOTAZIONI APERTE', true);
 })
 
 sock.on('dead_player', (i, chiEMorto) => {
-    writeLog('E\' MORTO QUALCUNO',true);
+    writeLog('E\' MORTO QUALCUNO', true);
     alert(chiEMorto);
 
     document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
@@ -144,13 +111,13 @@ sock.on('dead_player', (i, chiEMorto) => {
 })
 
 sock.on('ballot_time', (players) => {
-    writeLog('Vanno al ballottaggio: <b>' + players + '</b>',true);
-    console.log('ballot_time');
-    console.log('players:', players);
+    writeLog('Vanno al ballottaggio: <b>' + players + '</b>', true);
+    // console.log('ballot_time');
+    // console.log('players:', players);
 
     var elements = document.getElementsByClassName('character');
     players.forEach(i => {
-        console.log(elements[i])
+        // console.log(elements[i])
         elements[i].classList.remove('disabled');
         elements[i].classList.add('ballottaggio');
     });
@@ -158,10 +125,10 @@ sock.on('ballot_time', (players) => {
 })
 
 sock.on('control_selection', (val, stato, chiPossoVotare) => {
-    console.log('control_selection');
-    console.log('val:', val);
-    console.log('chipossovotare:', chiPossoVotare);
-    console.log('stato:', stato)
+    // console.log('control_selection');
+    // console.log('val:', val);
+    // console.log('chipossovotare:', chiPossoVotare);
+    // console.log('stato:', stato)
     abilitaPlayers();
 
     // ARRIVA ALL'APERTURA DELLA VOTAZIONE (giorno, ballottaggio, notte)
@@ -193,7 +160,7 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
                 if (elements[i].id != 'me') {
                     elements[i].classList.add('disabled');
                     elements[i].setAttribute('onclick', 'null')
-                    console.log(elements[i].classList);
+                    // console.log(elements[i].classList);
                     //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
                 }
         }
@@ -258,4 +225,47 @@ function confermaVoto() {
             document.getElementById("selected").setAttribute('id', 'confirmed');
             document.querySelector('#box input[type="button"]').style.display = "none";
         }
+}
+
+sock.on('game_time', (text) => {
+    console.log('game_time');
+    console.log('time:', time)
+    console.log('text:', text)
+
+    switchDay(text);
+
+});
+
+function switchDay(dayTime) {
+    if (time != dayTime) {
+        if (dayTime == 'night')
+            vaiANotte();
+        else
+            vaiAGiorno();
+    }
+}
+
+function vaiANotte() {
+    time = 'night';
+
+    // Faccio transizione giorno -> notte cambiando posizione sole e luna
+    document.getElementById("sun").style = "top: 120px;";
+    document.getElementById("moon").style = "top: 35px";
+
+    // Cambio sfondo
+    document.getElementById("sky").style = "background: #2C3E50;"
+    // Avvio suono lupo
+    // moon.play();      
+}
+function vaiAGiorno() {
+    time = 'day';
+    // Faccio transizione notte -> giorno cambiando posizione luna e sole
+    document.getElementById("moon").style = "top: 120px;";
+    document.getElementById("sun").style = "top: 30px;";
+
+    // Cambio sfondo
+    document.getElementById("sky").style = "background: #B2EBF2;";
+
+    // Avvio suono
+    // sun.play();
 }
