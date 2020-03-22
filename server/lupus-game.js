@@ -65,7 +65,7 @@ class LupusGame {
 
         for (let i = 0; i < this._whoCanPlay.length; i++) {
             var friends=this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
-            this._roles[this._whoCanPlay[i]].act(this._connections[this._whoCanPlay[i]],friends);
+            this._roles[this._whoCanPlay[i]].act(this._connections[this._whoCanPlay[i]], this._players, this._roles, friends);
             this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();                    
         }
     }
@@ -177,6 +177,15 @@ class LupusGame {
                 selected: selectedPlayer
             }, this.calculateVoti(this._vote));
         }
+    }
+
+    onNightResponse(userVoting, userVoted){
+        this._whoCanPlay.forEach((pl, i) => {
+            if (pl == userVoting) {
+                this._hasConfirmed[i] = true;
+                this._roles[userVoting].onResponse(userVoted);
+            }
+        });
     }
 
     onVoteConfirmed(user) {

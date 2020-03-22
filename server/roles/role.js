@@ -17,6 +17,10 @@ class Role{
         console(nightActions,friends);
     }
 
+    onResponse(username){
+        console(username);
+    }
+
     canAct(){
     }
 

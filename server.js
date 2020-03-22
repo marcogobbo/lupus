@@ -72,6 +72,9 @@ io.on('connection', (sock) => {
     sock.on('confermaVoto', (user) => {
         LG.onVoteConfirmed(user);
     })
+    sock.on("messaggio_di_cecco",(userVoting, userVoted)=>{
+        LG.onNightResponse(userVoting, userVoted);
+    })
 });
 
 server.on('error', (err) => {
