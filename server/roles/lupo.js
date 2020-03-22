@@ -10,6 +10,10 @@ class Lupo extends Role{
         this.roles = roles;
         this.connection = connection;
         this.sameRole=sameRole;
+        this.temp=[];
+        for(let i=0;i<players.length;i++){
+            temp[i]=0;
+        }
 
         var others=[];
         sameRole.forEach(val =>{
@@ -34,14 +38,8 @@ class Lupo extends Role{
 
     onResponse(username) {
         _nightActions.addAction(this.getName, username);
-        io.to(this.connection).emit("wolf_response", username);
-    }
-
-    onSelected(username) {
-        //_nightActions.addAction(this.getName, username);
-        this.sameRole.forEach(val=>{
-            io.to(val.connection).emit("writeLog", username);
-        });
+        this.temp[this.players.indexOf(username)]++;
+        io.to(this.connection).emit("wolf_response", username,this.temp);
     }
 
     onMessage(txt){
