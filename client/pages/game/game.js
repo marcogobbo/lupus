@@ -91,7 +91,10 @@ function clickOther(userClicked) {
         if (!votoConfirmed) {
             if (lastClicked != userClicked) {
                 if (lastClicked) {
-                    document.getElementsByName(lastClicked)[0].removeAttribute('id');
+                    if (lastClicked != myUser)
+                        document.getElementsByName(lastClicked)[0].removeAttribute('id');
+                    else
+                        document.getElementsByName(lastClicked)[0].setAttribute('id', 'me');
                 }
                 if (time == 'day')
                     sock.emit('logDay', myUser, userClicked)
@@ -187,8 +190,10 @@ function abilitaPlayers() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
-        if (elements[i].id != 'me' || time == 'night') {
+        if (elements[i].id != 'me') {
             elements[i].id = null;
+            elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+        } else if (time == 'night') {
             elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
         }
         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
@@ -293,6 +298,15 @@ function vaiAGiorno() {
     // sun.play();
 }
 
+function keyDown(event) {
+    if (event.keyCode == 13)    //pressed enter
+        sendMessage();
+
+}
+function sendMessage() {
+    sock.emit('friends_chat_out', myUser, _('msg').value)
+}
+
 
 //! CONTROLLER ROLES //
 sock.on('veggente_response', color => {
@@ -311,8 +325,16 @@ sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
 })
 
-sock.on('wolf_response',voteArr=>{
+sock.on('wolf_response', voteArr => {
     console.log(voteArr)
+
+    //update badges
+    players.forEach((pl, i) => {
+        let em = document.getElementsByName(pl)[0].children[0];
+        // console.log(em)
+        em.hidden = voteArr[i] > 0 ? false : true;
+        em.innerHTML = voteArr[i];
+    })
 })
 
 

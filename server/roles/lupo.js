@@ -6,7 +6,6 @@ class Lupo extends Role {
     }
 
     act(connection, players, roles, sameRole) {
-        console.log('ciaociaociao',sameRole)
         this.players = players;
         this.roles = roles;
         this.connection = connection;

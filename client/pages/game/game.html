@@ -1,62 +1,72 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lupus: Game</title>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="../../styles/style.css"></link>
-        <link rel="stylesheet" href="../../styles/clouds.css"></link>
-    </head>
-    <body>
-        <header>
-            <div id="sky">
-                <div id="clouds">
-                    <div id="sun"></div>
-                    <div id="moon"></div>
-                    <div class="cloud x1"></div>
-                    <div class="cloud x2"></div>
-                    <div class="cloud x3"></div>
-                    <div class="cloud x4"></div>
-                    <div class="cloud x5"></div>
-                    <div class="cloud x6"></div>
-                </div>
-            </div>
-            <nav id="timer">
-                <div id="timer-box">
-                    <span id="min">12</span>:<span id="sec">01</span>
-                </div>
-            </nav>
-        </header>
 
-        <!-- Corpo del sito -->
-        <button onclick="switchDay()">GIORNO/NOTTE</button>
-        <main>
-            <section id="list_users">
-                <div id="list_users_fill">
-                    <!--<div class="character">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lupus: Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles/style.css">
+    </link>
+    <link rel="stylesheet" href="../../styles/clouds.css">
+    </link>
+</head>
+
+<body>
+    <header>
+        <div id="sky">
+            <div id="clouds">
+                <div id="sun"></div>
+                <div id="moon"></div>
+                <div class="cloud x1"></div>
+                <div class="cloud x2"></div>
+                <div class="cloud x3"></div>
+                <div class="cloud x4"></div>
+                <div class="cloud x5"></div>
+                <div class="cloud x6"></div>
+            </div>
+        </div>
+        <nav id="timer">
+            <div id="timer-box">
+                <span id="min">12</span>:<span id="sec">01</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Corpo del sito -->
+    <button onclick="switchDay()">GIORNO/NOTTE</button>
+    <main>
+        <section id="list_users">
+            <div id="list_users_fill">
+                <!--<div class="character">
                         <div class="user_img">
                             <img src="../../assets/images/avatar.jpg">
                         </div>
                         <div class="user_name">MARCO</div>
                     </div>-->
+            </div>
+        </section>
+        <section id="box">
+            <input type="button" hidden onclick="confermaVoto()" value="Conferma Voto">
+            <div id="user_role">
+                <div id="user_role_img"><img src="../../assets/images/avatar.jpg"></div>
+                <div id="user_details">
+                    <p id="user_role_card"><b>PERSONAGGIO: </b>
+                        <!--<span>Lupo</span>-->
+                    </p>
+                    <p id="user_role_faction"><b>CARTA: </b><span>
+                            <!--NERA</span>-->
+                    </p>
+                    <p id="user_role_desc"><b>DESCRIZIONE: </b><span>
+                            <!--Hai il compito, ogni notte, di uccidere un contadino insieme ai tuoi compagni lupi.</span>-->
+                    </p>
                 </div>
-            </section>
-            <section id="box">
-                <input type="button" hidden onclick="confermaVoto()" value="Conferma Voto">
-                <div id="user_role">
-                    <div id="user_role_img"><img src="../../assets/images/avatar.jpg"></div>
-                    <div id="user_details">
-                        <p id="user_role_card"><b>PERSONAGGIO: </b><!--<span>Lupo</span>--></p>
-                        <p id="user_role_faction"><b>CARTA: </b><span><!--NERA</span>--></p>
-                        <p id="user_role_desc"><b>DESCRIZIONE: </b><span><!--Hai il compito, ogni notte, di uccidere un contadino insieme ai tuoi compagni lupi.</span>--></p>
-                    </div>
-                </div>
-                <div id="log_board">
-                    <h4>Cronologia</h4>
-                    <div id="logs">
-                        <table id="log_table">
-                            <!--<tr>
+            </div>
+            <div id="log_board">
+                <h4>Cronologia</h4>
+                <div id="logs">
+                    <table id="log_table">
+                        <!--<tr>
                                 <td>Martina ha votato Elena</td>
                             </tr>
                             <tr>
@@ -68,13 +78,34 @@
                             <tr>
                                 <td>Marco ha votato Guglie</td>
                             </tr>-->
-                        </table>
-                    </div>
+                    </table>
                 </div>
-            </section>
-        </main>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="game.js"></script>
-        <script src="rolesController.js.js"></script>
-    </body>
+            </div>
+            <div id="friends_chat">
+                <h4>Cronologia</h4>
+                <div>
+                    <table id="chat_table">
+                        <!--<tr>
+                                <td>Martina ha votato Elena</td>
+                            </tr>
+                            <tr>
+                                <td>Luca ha votato Elena</td>
+                            </tr>
+                            <tr>
+                                <td>Arianna ha votato Pippo</td>
+                            </tr>
+                            <tr>
+                                <td>Marco ha votato Guglie</td>
+                            </tr>-->
+                    </table>
+                    <input type="text" id="msg" onkeydown="keyDown(event)"><button onclick="sendMessage()">►</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+    <script src="rolesController.js.js"></script>
+</body>
+
 </html>
