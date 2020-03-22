@@ -50,9 +50,23 @@ class LupusGame {
 
     _start() {
         //not correct now since we are testing the day behaviour
-        this._time = 'day';
+        this._time = 'night';
         this._sendTimeUpdate();
-        this._enableVotingTime();
+        //this._enableVotingTime();
+    }
+
+    _enableNightTime(){
+        this._players.forEach((pl) => {
+            if (this._roles[pl].isAlive()) {
+                this._whoCanPlay.push(pl);
+            }
+        });
+
+        for (let i = 0; i < this._whoCanPlay.length; i++) {
+            var friends=this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
+            this._roles[this._whoCanPlay[i]].act(this._connections[this._whoCanPlay[i]],friends);
+            this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();                    
+        }
     }
 
     _sendRoles() {
@@ -215,17 +229,7 @@ class LupusGame {
                             _nightActions.newNight();
                             this._sendTimeUpdate();
                             
-                            this._players.forEach((pl) => {
-                                if (this._roles[pl].isAlive()) {
-                                    this._whoCanPlay.push(pl);
-                                }
-                            });
-
-                            for (let i = 0; i < this._whoCanPlay.length; i++) {
-                                var friends=this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
-                                this._roles[this._whoCanPlay[i]].act(this._connections[this._whoCanPlay[i]],friends);
-                                this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();                    
-                            }
+                            this._enableNightTime();
 
                             this._debug();
                         }else{
