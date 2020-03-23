@@ -204,14 +204,18 @@ function abilitaPlayers() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
-        if (elements[i].id != 'me' && !deadPlayers[i]) {
-            elements[i].id = null;
-            elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
-        } else if (time == 'night') {
-            elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+        if (!deadPlayers[i]) {
+            if (elements[i].id != 'me') {
+                elements[i].id = null;
+                elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+            } else {
+                if (time == 'night') {
+                    elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+                }
+                else    //GIORNO
+                    elements[i].setAttribute('onclick', null);
+            }
         }
-        else    //GIORNO
-            elements[i].setAttribute('onclick', null);
         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
     }
 }
@@ -244,10 +248,11 @@ const writeLog = (text, controlMsg) => {
     tr.appendChild(td);
     parent.appendChild(tr);
     console.log("Ci sono ancora");
-    console.log(document.querySelector('.logs'));
-    console.log(document.querySelectorAll('.logs'));
     // Ti prego fai uno scroll
-    document.querySelector('.logs').scrollTop = document.querySelector('.logs').scrollHeight;
+    var logs = document.getElementsByClassName('logs');
+    for (let i = 0; i < logs.length; i++)
+        logs[i].scrollTop = logs[i].scrollHeight;
+
     console.log("Almeno fino a qui arrivo");
 };
 

@@ -256,10 +256,10 @@ class LupusGame {
                     if (arr.length > 1) {
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
                         console.log("RIPETERE VOTAZIONE");
-                        this._players.forEach(pl => {
-                            this._handlePlayerSelection(false, pl, null);
-                        });
-                        this._handleBallot();
+                        // this._players.forEach(pl => {
+                        //     this._handlePlayerSelection(false, pl, null);
+                        // });
+                        // this._handleBallot();
                     } else if (arr.length == 1) {
                         this._killPlayer(arr[0]);
 
