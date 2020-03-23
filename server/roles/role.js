@@ -11,10 +11,10 @@ class Role{
         this._alive=true;
     }
 
-    act(connection, friends){
+    act(user, friends){
         //method to be overloaded 
         console(this._name+"'s action");
-        console(nightActions,friends);
+        console(nightActions, friends);
     }
 
     onResponse(username){

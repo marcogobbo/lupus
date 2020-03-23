@@ -5,14 +5,15 @@ class Veggente extends Role {
         super("Veggente", "Tu non fai niente, per ora", "contadini", 0);
     }
 
-    act(connection, players, roles, sameRole) {
+    act(user, players, roles, sameRole) {
         this.players = players;
         this.roles = roles;
-        this.connection=connection;
+        this.connection=user.connection;
+        this.username=user.username;
 
         var selezionabili = [];
         players.forEach((pl) => {
-            if (roles[pl].isAlive()) {
+            if (roles[pl].isAlive()&&pl!=this.username) {
                 selezionabili.push(pl);
             }
         });
