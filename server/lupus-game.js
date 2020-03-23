@@ -66,7 +66,7 @@ class LupusGame {
         for (let i = 0; i < this._whoCanPlay.length; i++) {
             var friends = this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
             console.log(this._whoCanPlay[i], friends);
-            this._roles[this._whoCanPlay[i]].act(this._connections[this._whoCanPlay[i]], this._players, this._roles, friends);
+            this._roles[this._whoCanPlay[i]].act({'connection':this._connections[this._whoCanPlay[i]],'username':this._whoCanPlay[i]}, this._players, this._roles, friends);
             this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();
         }
     }
