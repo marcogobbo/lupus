@@ -189,7 +189,7 @@ class LupusGame {
     onChatMessage(username, message) {
         this._whoCanPlay.forEach((pl) => {
             if (pl == username) {
-                this._roles[username].onMessage(username + ": " + message);
+                this._roles[username].onMessage("<b>" + username + "</b>: " + message);
             }
         });
     }

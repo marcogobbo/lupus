@@ -83,7 +83,7 @@
             </div>
             <div hidden class="log_board" id="chat_board">
                 <h4>Chat</h4>
-                <div class="logs">
+                <div class="logs chat">
                     <table id="chat_table">
                         <!--<tr>
                                 <td>Martina ha votato Elena</td>
@@ -99,8 +99,9 @@
                             </tr>-->
                     </table>
                 </div>
-                <input type="text" id="msg" onkeydown="keyDown(event)"><button onclick="sendMessage()">►</button>
-
+                <div id="chat">
+                    <textarea id="msg" onkeydown="keyDown(event)"></textarea><input type="button" value="Invia" onclick="sendMessage()">
+                </div>
             </div>
         </section>
     </main>
