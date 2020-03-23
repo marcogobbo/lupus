@@ -66,7 +66,7 @@ class LupusGame {
         for (let i = 0; i < this._whoCanPlay.length; i++) {
             var friends = this._computeFriends(this._whoCanPlay[i], this._roles[this._whoCanPlay[i]].getName());
             console.log(this._whoCanPlay[i], friends);
-            this._roles[this._whoCanPlay[i]].act({'connection':this._connections[this._whoCanPlay[i]],'username':this._whoCanPlay[i]}, this._players, this._roles, friends);
+            this._roles[this._whoCanPlay[i]].act({ 'connection': this._connections[this._whoCanPlay[i]], 'username': this._whoCanPlay[i] }, this._players, this._roles, friends);
             this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();
         }
     }
@@ -261,7 +261,7 @@ class LupusGame {
                         // });
                         // this._handleBallot();
                     } else if (arr.length == 1) {
-                        this._killPlayer(arr[0]);
+                        this._killPlayer(arr[0],'day');
 
                         //go on with the game.
                         /**
@@ -331,7 +331,7 @@ class LupusGame {
             && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == dead)
             dead = 'none';
         if (dead != 'none') {
-            this._killPlayer(this._players.indexOf(dead));
+            this._killPlayer(this._players.indexOf(dead),'night');
         }
     }
 
@@ -473,13 +473,13 @@ class LupusGame {
         }
     }
 
-    _killPlayer(index) {
+    _killPlayer(index, daytime) {
         /**
          * This method is used to kill a player
          */
         console.log("[DEBUG] Killed: " + index);
         this._roles[this._players[index]].kill();
-        io.emit("dead_player", index, this._players[index]);
+        io.emit("dead_player", index, this._players[index], daytime);
     }
 
     _debug() {

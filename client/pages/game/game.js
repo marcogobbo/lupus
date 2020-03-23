@@ -1,10 +1,7 @@
 /**
- * si può votare se stessi e il morto
  * reset badge su time day
  * reset colori (ballottaggio, selected) in time day
- * click sui morti
- * voto su se stessi al ballottaggio/votazioni
- * voto dei morti e se stessi al ballottaggio
+ 
  * vincita: se c'è un vincente controllare il criceto
  */
 
@@ -121,23 +118,46 @@ sock.on('voting_time', () => {
     writeLog('VOTAZIONI APERTE', 'info');
 })
 
-sock.on('dead_player', (i, chiEMorto) => {
-    writeLog('\u00C8 MORTO QUALCUNO', 'info');
+sock.on('dead_player', (i, chiEMorto,dayTime) => {
+    //morte viene dopo il cambio giorno
+
+    if (dayTime == 'night')
+        writeLog('\u00C8 MORTO ' + chiEMorto, 'info');
+    else //dayTime == 'day'
+        writeLog(chiEMorto + ' \u00C8 STATO LINCIATO', 'info');
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
 
-    document.getElementsByClassName('character')[i].classList.remove('ballottaggio');
-    document.getElementsByClassName('character')[i].classList.add('death');
+    var elements = document.getElementsByClassName('character');
+
+    elements[i].id = null;
+    elements[i].classList.remove('ballottaggio');
+    elements[i].classList.add('death');
+    elements[i].setAttribute('onclick', 'null')
+
+    if (amIDead()) {
+        //se sono morto, disabilito tutti
+        for (let j = 0; j < elements.length; j++) {
+            if (!deadPlayers[j])    //!solo quelli non morti
+                elements[j].classList = 'character disabled';
+            elements[j].setAttribute('onclick', null);
+        }
+    }
 })
 
-sock.on('ballot_time', (players) => {
-    writeLog('Vanno al ballottaggio: <b>' + players + '</b>', 'info');
+sock.on('ballot_time', (playersBallot) => {
+
+    var str = '';
+    playersBallot.forEach(p => {
+        str += players[p] + ', ';
+    })
+    writeLog('Vanno al ballottaggio: <b>' + str + '</b>', 'info');
     // console.log('ballot_time');
     // console.log('players:', players);
 
     var elements = document.getElementsByClassName('character');
-    players.forEach(i => {
+    playersBallot.forEach(i => {
         // console.log(elements[i])
         elements[i].classList.remove('disabled');
         elements[i].classList.add('ballottaggio');
@@ -166,12 +186,13 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
 
         for (let i = 0; i < elements.length; i++) {
             // console.log(elements[i]);
-            if (!chiPossoVotare[i])
-                if (!deadPlayers[i])
-                    if (elements[i].id != 'me') {
-                        elements[i].classList.add('disabled');
-                        elements[i].setAttribute('onclick', 'null')
-                    }
+            if (!chiPossoVotare[i] && !deadPlayers[i]) {
+                if (elements[i].id != 'me') {
+                    elements[i].classList.add('disabled');
+                }
+                elements[i].setAttribute('onclick', 'null')
+            }
+
 
             // console.log(elements[i].classList);
             //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
@@ -243,17 +264,17 @@ const writeLog = (text, controlMsg) => {
     tr.className = controlMsg;
 
     const td = document.createElement('td');
-    console.log("Ci sono");
+    // console.log("Ci sono");
     td.innerHTML = text;
     tr.appendChild(td);
     parent.appendChild(tr);
-    console.log("Ci sono ancora");
+    // console.log("Ci sono ancora");
     // Ti prego fai uno scroll
     var logs = document.getElementsByClassName('logs');
     for (let i = 0; i < logs.length; i++)
         logs[i].scrollTop = logs[i].scrollHeight;
 
-    console.log("Almeno fino a qui arrivo");
+    // console.log("Almeno fino a qui arrivo");
 };
 
 function confermaVoto() {
@@ -287,8 +308,60 @@ sock.on('game_time', (text) => {
 
     switchDay(text);
 
+    resetCharacters();
+
     _('chat_board').hidden = true;
 });
+
+function amIDead() {
+    console.log(deadPlayers)
+    if (deadPlayers[players.indexOf(myUser)])
+        return true;
+    else
+        return false;
+}
+
+
+function resetCharacters() {
+    var elements = document.getElementsByClassName('character');
+
+    var ems = document.getElementsByClassName('voted');
+    for (let i = 0; i < ems.length; i++) {
+        ems[i].hidden = true;
+        ems[i].innerHTML = '';
+    }
+
+    canVote = false;
+
+    if (amIDead()) {
+        //se sono morto, disabilito tutti
+        for (let j = 0; j < elements.length; j++) {
+            if (!deadPlayers[j])    //!solo quelli non morti
+                elements[j].classList = 'character disabled';
+            elements[j].setAttribute('onclick', null);
+        }
+    } else {
+        //se NON sono morto, riabilito tutti, rimuovo classi, abilito click
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.remove('disabled', 'ballottaggio');
+            elements[i].classList.remove('cartaNera', 'cartaBianca');
+
+            if (!deadPlayers[i]) {
+                if (elements[i].id != 'me') {
+                    elements[i].id = null;
+                    elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+                } else {
+                    if (time == 'night') {
+                        elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
+                    }
+                    else    //GIORNO
+                        elements[i].setAttribute('onclick', null);
+                }
+            }
+            //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
+        }
+    }
+}
 
 function switchDay(dayTime) {
     if (time != dayTime) {
