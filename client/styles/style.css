@@ -541,6 +541,7 @@ main {
 
 .cartaBianca {
 	background: #ffffff !important;
+	color: #000 !important;
 }
 
 /*.cartaBianca:hover {
@@ -550,7 +551,6 @@ main {
 	cursor: pointer;
 }*/
 .cartaNera {
-	color: #FFF !important;
 	background: #202020 !important;
 }
 
