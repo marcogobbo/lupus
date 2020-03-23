@@ -118,7 +118,7 @@ sock.on('voting_time', () => {
     writeLog('VOTAZIONI APERTE', 'info');
 })
 
-sock.on('dead_player', (i, chiEMorto,dayTime) => {
+sock.on('dead_player', (i, chiEMorto, dayTime) => {
     //morte viene dopo il cambio giorno
 
     if (dayTime == 'night')
@@ -425,6 +425,30 @@ sock.on('friends_chat', txt => {
 
 })
 
+sock.on('found_winner', team => {
+    //da cambiare poi con gli alri
+    var win;
+
+
+    writeLog('HANNO VINTO I ' + team);
+    disableAll()
+})
+
+function disableAll() {
+    var elements = document.getElementsByClassName('character');
+
+    for (let j = 0; j < elements.length; j++) {
+        if (!deadPlayers[j])
+            elements[j].classList = 'character disabled';
+        elements[j].setAttribute('onclick', null);
+    }
+
+    var ems = document.getElementsByClassName('voted');
+    for (let i = 0; i < ems.length; i++) {
+        ems[i].hidden = true;
+        ems[i].innerHTML = '';
+    }
+}
 
 //! CONTROLLER ROLES //
 sock.on('veggente_response', color => {

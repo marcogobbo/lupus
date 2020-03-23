@@ -261,7 +261,7 @@ class LupusGame {
                         // });
                         // this._handleBallot();
                     } else if (arr.length == 1) {
-                        this._killPlayer(arr[0],'day');
+                        this._killPlayer(arr[0], 'day');
 
                         //go on with the game.
                         /**
@@ -286,6 +286,9 @@ class LupusGame {
                         } else {
                             //broadcast who won the game
                             console.log("WINNER: " + winningTeam);
+                            //!nella emit deve mandare anche l'array dei vincitori
+                            //todo: chi gioca per sè, io proporrei una squadra = 2
+                            io.emit('found_winner', winningTeam)
                         }
                     }
                     console.log(this._vote);
@@ -309,9 +312,11 @@ class LupusGame {
     _computeNightOperations() {
         //Lupi
         var wolves = _nightActions.getActionsByRoleName("Lupo");
-        console.log(wolves);
+        console.log('wolves:', wolves);
         var max = -1;
         var sel = 'none';
+
+        //! quando rimane un lupo solo viene selezionato il PRIMO morto
         for (let i = 0; i < wolves.length; i++) {
             var count = 0;
             for (let j = 0; j < wolves.length; j++) {
@@ -324,14 +329,14 @@ class LupusGame {
                 max = count;
             }
         }
-        console.log(sel)
+        console.log('sel', sel)
         //get GDC op
         var dead = sel;
         if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
             && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == dead)
             dead = 'none';
         if (dead != 'none') {
-            this._killPlayer(this._players.indexOf(dead),'night');
+            this._killPlayer(this._players.indexOf(dead), 'night');
         }
     }
 
@@ -353,7 +358,25 @@ class LupusGame {
         /**
          * TODO
          */
-        return 'none';
+        var black = 0, white = 0, other = 0;
+        this._players.forEach((pl) => {
+            //get numero carte bianche e nere
+            if (this._roles[pl].isAlive()) {
+                if (this._roles[pl].getSquad() == 'contadini')
+                    white++;
+                else if (this._roles[pl].getSquad() == 'lupi')
+                    black++;
+                else
+                    ohers++;    // qui ci sarà da dividere le squadre "gioco per me stesso"
+            }
+        });
+        if (black == 0 && white > 1)
+            return 'contadini'
+        else if (black == white)
+            return 'lupi';
+        else
+            //aggiungere casistica di other
+            return 'none';
     }
     _resetVote() {
         this._vote = [];
