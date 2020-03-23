@@ -1,3 +1,7 @@
+// LUPO RIMANE DA SOLO NON PUO' VOTARE GLI ALTRI
+// LUPO SI SUICIDA RIMUOVERE BADGE
+
+
 //this class need to be completed and improved with the functions of the server.
 const Role = require('./roles/role');
 const Lupo = require('./roles/lupo');
