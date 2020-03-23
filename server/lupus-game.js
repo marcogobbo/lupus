@@ -198,26 +198,26 @@ class LupusGame {
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == userVoting) {
                 this._hasConfirmed[i] = true;
-                if(this._roles[userVoting].getName()=='Lupo'){
+                if (this._roles[userVoting].getName() == 'Lupo') {
                     this._whoCanPlay.forEach((pl2) => {
-                        if(this._roles[pl2].getName()=='Lupo'&&pl2!=userVoting)
+                        if (this._roles[pl2].getName() == 'Lupo' && pl2 != userVoting)
                             this._roles[pl2].increment(userVoted);
                     })
                 }
                 this._roles[userVoting].onResponse(userVoted);
             }
         });
-        if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)){
+        if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
             console.log("## NIGHT ENDED ##");
             this._players.forEach(pl => {
                 this._handlePlayerSelection(false, pl, null);
             });
             this._debug();
             //operations using the action collector
-            this._time='day';
+            this._time = 'day';
             this._sendTimeUpdate();
             this._computeNightOperations();
-            
+
             this._resetVote();
             this._enableVotingTime();
         }
@@ -255,6 +255,11 @@ class LupusGame {
                     var arr = this._mostVotedPlayers(this._vote);
                     if (arr.length > 1) {
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
+                        console.log("RIPETERE VOTAZIONE");
+                        this._players.forEach(pl => {
+                            this._handlePlayerSelection(false, pl, null);
+                        });
+                        this._handleBallot();
                     } else if (arr.length == 1) {
                         this._killPlayer(arr[0]);
 
@@ -301,33 +306,33 @@ class LupusGame {
         return result;
     };
 
-    _computeNightOperations(){
+    _computeNightOperations() {
         //Lupi
-        var wolves=_nightActions.getActionsByRoleName("Lupo");
+        var wolves = _nightActions.getActionsByRoleName("Lupo");
         console.log(wolves);
-        var max=-1;
-        var sel='none'; 
-        for(let i=0;i<wolves.length;i++){
-            var count=0;
-            for(let j=0;j<wolves.length;j++){
-                if(wolves[i]==wolves[j]){
+        var max = -1;
+        var sel = 'none';
+        for (let i = 0; i < wolves.length; i++) {
+            var count = 0;
+            for (let j = 0; j < wolves.length; j++) {
+                if (wolves[i] == wolves[j]) {
                     count++;
                 }
             }
-            if(count>max){
-                sel=wolves[i];
-                max=count;
+            if (count > max) {
+                sel = wolves[i];
+                max = count;
             }
         }
         console.log(sel)
         //get GDC op
-        var dead=sel;
-        if(_nightActions.getActionsByRoleName("Guardia Del Corpo").length!=0
-            &&_nightActions.getActionsByRoleName("Guardia Del Corpo")[0]==dead)
-            dead='none';
-        if(dead!='none'){
+        var dead = sel;
+        if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
+            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == dead)
+            dead = 'none';
+        if (dead != 'none') {
             this._killPlayer(this._players.indexOf(dead));
-        }   
+        }
     }
 
     _computeFriends(playerName, roleName) {

@@ -99,17 +99,19 @@ function clickOther(userClicked) {
     if (canVote) {
         if (!votoConfirmed) {
             if (lastClicked != userClicked) {
-                if (lastClicked) {
-                    if (lastClicked != myUser)
-                        document.getElementsByName(lastClicked)[0].removeAttribute('id');
-                    else
-                        document.getElementsByName(lastClicked)[0].setAttribute('id', 'me');
-                }
-                if (time == 'day')
-                    sock.emit('logDay', myUser, userClicked)
+                if (userClicked != deadPlayers[players.indexOf(userClicked)]) {
+                    if (lastClicked) {
+                        if (lastClicked != myUser)
+                            document.getElementsByName(lastClicked)[0].removeAttribute('id');
+                        else
+                            document.getElementsByName(lastClicked)[0].setAttribute('id', 'me');
+                    }
+                    if (time == 'day')
+                        sock.emit('logDay', myUser, userClicked)
 
-                lastClicked = userClicked;
-                document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
+                    lastClicked = userClicked;
+                    document.getElementsByName(userClicked)[0].setAttribute('id', 'selected');
+                }
             }
         }
     }
@@ -144,9 +146,10 @@ sock.on('ballot_time', (players) => {
 })
 
 sock.on('control_selection', (val, stato, chiPossoVotare) => {
-    // console.log('control_selection');
+    console.log('control_selection');
     // console.log('val:', val);
-    // console.log('chipossovotare:', chiPossoVotare);
+    console.log('chipossovotare:', chiPossoVotare);
+    console.log('dead: ', deadPlayers)
     // console.log('stato:', stato)
     abilitaPlayers();
 
@@ -168,10 +171,10 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
                     if (elements[i].id != 'me') {
                         elements[i].classList.add('disabled');
                         elements[i].setAttribute('onclick', 'null')
-
-                        // console.log(elements[i].classList);
-                        //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
                     }
+
+            // console.log(elements[i].classList);
+            //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
         }
 
 
@@ -201,12 +204,14 @@ function abilitaPlayers() {
     for (let i = 0; i < elements.length; i++) {
         elements[i].classList.remove('disabled');
         // console.log(elements[i].classList);
-        if (elements[i].id != 'me') {
+        if (elements[i].id != 'me' && !deadPlayers[i]) {
             elements[i].id = null;
             elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
         } else if (time == 'night') {
             elements[i].setAttribute('onclick', `clickOther('${players[i]}')`);
         }
+        else    //GIORNO
+            elements[i].setAttribute('onclick', null);
         //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
     }
 }
