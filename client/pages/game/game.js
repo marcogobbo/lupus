@@ -120,7 +120,7 @@ sock.on('voting_time', () => {
 })
 
 sock.on('dead_player', (i, chiEMorto) => {
-    writeLog('E\' MORTO QUALCUNO', 'info');
+    writeLog('\u00C8 MORTO QUALCUNO', 'info');
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
@@ -214,8 +214,6 @@ function abilitaPlayers() {
 sock.on('writeLog', (voteObj, voteArr) => {
     if (time == 'day') {
         writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
-        const parent = document.querySelector('.logs');
-        parent.scrollTop = parent.scrollHeight;
 
         //update badges
         players.forEach((pl, i) => {
@@ -236,10 +234,16 @@ const writeLog = (text, controlMsg) => {
     tr.className = controlMsg;
 
     const td = document.createElement('td');
-
+    console.log("Ci sono");
     td.innerHTML = text;
     tr.appendChild(td);
     parent.appendChild(tr);
+    console.log("Ci sono ancora");
+    console.log(document.querySelector('.logs'));
+    console.log(document.querySelectorAll('.logs'));
+    // Ti prego fai uno scroll
+    document.querySelector('.logs').scrollTop = document.querySelector('.logs').scrollHeight;
+    console.log("Almeno fino a qui arrivo");
 };
 
 function confermaVoto() {
@@ -294,7 +298,7 @@ function vaiANotte() {
 
     // Cambio sfondo
     _("sky").style = "background: #2C3E50;"
-    document.body.style = "background: #3c5d1a;"
+    document.body.style = "background: #29402b;"
 
     // Avvio suono lupo
     // moon.play();      
