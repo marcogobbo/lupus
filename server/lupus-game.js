@@ -371,7 +371,7 @@ class LupusGame {
     }
 
     _computeWinner() {
-        return 'none';
+        //return 'none';
         /**
          * TODO
          */
