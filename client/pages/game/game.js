@@ -455,7 +455,7 @@ function disableAll() {
 //! CONTROLLER ROLES //
 sock.on('veggente_response', color => {
     console.log(color);
-    writeLog('<b>' + lastClicked + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA' : 'NERA') + '</b>', 'response')
+    writeLog('<b>' + lastClicked + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
 
     var charac = document.getElementsByClassName('character')[players.indexOf(lastClicked)];
     charac.id = null;

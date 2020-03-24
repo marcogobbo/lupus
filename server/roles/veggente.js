@@ -33,10 +33,6 @@ class Veggente extends Role {
     }
 
     canAct() {
-        //TODO!!
-        // if(_nightActions.getNightCount()==1)
-        //     return false;
-        // return true;
         return true;
     }
 }
