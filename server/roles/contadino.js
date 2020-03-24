@@ -5,9 +5,8 @@ class Contadino extends Role{
         super("Contadino", "Tu non fai niente", "contadini", 0);
     }
 
-    act(friends){
-        console.log("Acting Like a FARMER. Yeah!");
-        //_nightActions.addAction(this.getName(),'PROVAAA CONTADINO');
+    act(user, players, roles, sameRole){
+        io.to(user.connection).emit("farmer_night");
     }
     
     canAct(){

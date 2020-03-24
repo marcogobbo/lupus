@@ -122,9 +122,9 @@ sock.on('dead_player', (i, chiEMorto, dayTime) => {
     //morte viene dopo il cambio giorno
 
     if (dayTime == 'night')
-        writeLog('\u00C8 MORTO ' + chiEMorto, 'info');
+        writeLog('\u00C8 MORTO ' + chiEMorto+' &#128534;', 'info');
     else //dayTime == 'day'
-        writeLog(chiEMorto + ' \u00C8 STATO LINCIATO', 'info');
+        writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
@@ -149,9 +149,11 @@ sock.on('dead_player', (i, chiEMorto, dayTime) => {
 sock.on('ballot_time', (playersBallot) => {
 
     var str = '';
-    playersBallot.forEach(p => {
-        str += players[p] + ', ';
-    })
+    for(let x=0;x<playersBallot.length-1;x++){
+        str += players[playersBallot[x]] + ', ';
+    }
+    str += players[playersBallot[playersBallot.length-1]];
+    
     writeLog('Vanno al ballottaggio: <b>' + str + '</b>', 'info');
     // console.log('ballot_time');
     // console.log('players:', players);
@@ -482,4 +484,10 @@ sock.on('wolf_response', voteArr => {
     })
 })
 
+sock.on('draw_repetition',()=>{
+    writeLog('Decidetevi! Votate di nuovo.', 'response');
+})
 
+sock.on('farmer_night',()=>{
+    writeLog('Buonanotte. &#128564;', 'response');
+})

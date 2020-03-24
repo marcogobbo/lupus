@@ -3,24 +3,28 @@ class ActionCollector {
         this._actions=[];
         this._previous=[];
         // this._nightCount=-1;
-        this._nightCount=1;
+        this._nightCount=0;
     }
 
     newNight(){
-        for(var i=0; i<this._previous.length;i++){
+        while(this._previous.length!=0)
             this._previous.pop();
-        }
-        this._actions.forEach(el =>{
-            this._previous.push(el);
-        });
-        for(var i=0; i<this._actions.length;i++){
-            this._actions.pop();
-        }
+        while(this._actions.length!=0)
+            this._previous.push(this._actions.pop());
         this._nightCount++;
     }
 
     addAction(roleName, selection){
         this._actions.push({'role':roleName, 'selected':selection});
+    }
+
+    removeAction(roleName){
+        var newer=[];
+        for(var i=0; i<this._actions.length;i++){
+            if(this._actions[i].role!=roleName)
+                newer.push(this._actions[i].selected);
+        }
+        this._actions=newer;
     }
 
     getActions(){

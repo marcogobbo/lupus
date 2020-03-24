@@ -53,14 +53,18 @@ class LupusGame {
     }
 
     _start() {
-        //not correct now since we are testing the day behaviour
         this._time = 'night';
         this._sendTimeUpdate();
-        //this._enableVotingTime();
         this._enableNightTime();
+
+        //this is not correct since we are doing tests now
+        // this._time = 'day';
+        // this._sendTimeUpdate();
+        // this._enableVotingTime();
     }
 
     _enableNightTime() {
+        _nightActions.newNight();
         this._players.forEach((pl) => {
             if (this._roles[pl].isAlive()) {
                 this._whoCanPlay.push(pl);
@@ -181,13 +185,7 @@ class LupusGame {
                 whoVoted: player,
                 selected: selectedPlayer
             }, this.calculateVoti(this._vote));
-        } //else {
-        //     this._whoCanPlay.forEach((pl) => {
-        //         if (pl == userVoting) {
-        //             this._roles[userVoting].onSelected(selectedPlayer);
-        //         }
-        //     });
-        // }
+        }
     }
 
     onChatMessage(username, message) {
@@ -209,6 +207,21 @@ class LupusGame {
                     })
                 }
                 this._roles[userVoting].onResponse(userVoted);
+                if (this._roles[userVoting].getName() == 'Lupo'){
+                    console.log("Checking the wolves...")
+                    if(!this._roles[userVoting].check()) {
+                        console.log("Fuck Wolves.");
+                        _nightActions.removeAction(this._roles[userVoting].getName());
+                        this._whoCanPlay.forEach((pl2,i) => {
+                            if (this._roles[pl2].getName() == 'Lupo' && pl2 != userVoting){
+                                this._hasConfirmed[i] = false;
+                                this._roles[pl2].repeat();
+                            }
+                        })
+                        this._hasConfirmed[i] = false;
+                        this._roles[userVoting].repeat();
+                    }
+                }
             }
         });
         if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
@@ -260,10 +273,10 @@ class LupusGame {
                     if (arr.length > 1) {
                         console.log("FUCK BALLOTTAGGIO. PAREGGIO");
                         console.log("RIPETERE VOTAZIONE");
-                        // this._players.forEach(pl => {
-                        //     this._handlePlayerSelection(false, pl, null);
-                        // });
-                        // this._handleBallot();
+                        this._players.forEach(pl => {
+                             this._handlePlayerSelection(false, pl, null);
+                        });
+                        this._handleBallot();
                     } else if (arr.length == 1) {
                         this._killPlayer(arr[0], 'day');
 
@@ -281,7 +294,6 @@ class LupusGame {
                             /**0. switch to night */
                             this._time = 'night';
                             this._dayTime = '';
-                            _nightActions.newNight();
                             this._sendTimeUpdate();
 
                             this._enableNightTime();
@@ -316,7 +328,7 @@ class LupusGame {
     _computeNightOperations() {
         //Lupi
         var wolves = _nightActions.getActionsByRoleName("Lupo");
-        console.log('wolves:', wolves);
+        console.log('Wolves night selection:', wolves);
         var max = -1;
         var sel = 'none';
 
@@ -333,7 +345,7 @@ class LupusGame {
                 max = count;
             }
         }
-        console.log('sel', sel)
+        console.log('Wolves\' Selection:', sel)
         //get GDC op
         var dead = sel;
         if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
@@ -359,10 +371,11 @@ class LupusGame {
     }
 
     _computeWinner() {
+        return 'none';
         /**
          * TODO
          */
-        var black = 0, white = 0, other = 0;
+        var black = 0, white = 0, others = 0;
         this._players.forEach((pl) => {
             //get numero carte bianche e nere
             if (this._roles[pl].isAlive()) {
@@ -371,7 +384,7 @@ class LupusGame {
                 else if (this._roles[pl].getSquad() == 'lupi')
                     black++;
                 else
-                    ohers++;    // qui ci sarà da dividere le squadre "gioco per me stesso"
+                    others++;    // qui ci sarà da dividere le squadre "gioco per me stesso"
             }
         });
         if (black == 0 && white > 1)
