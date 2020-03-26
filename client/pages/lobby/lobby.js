@@ -134,6 +134,7 @@ function initNumRoles() {
     _('nLupi').value = settings.lupi;
     _('nGdc').value = settings.gdc;
     _('nVeggente').value = settings.veggente;
+    _('nMedium').value = settings.medium;
 
     updateContadini();
 }
@@ -144,6 +145,7 @@ var settings = {
     'contadini': 0,
     'gdc': 0,
     'veggente': 1,
+    'medium': 0,
 };
 
 function decrease(el) {
@@ -152,11 +154,19 @@ function decrease(el) {
         case 'gdc':
             if (_('nGdc').value > 0)
                 _('nGdc').value--;
+            settings.gdc = _('nGdc').value;
             updateContadini();
             break;
         case 'veggente':
             if (_('nVeggente').value > 0)
                 _('nVeggente').value--;
+            settings.veggente = _('nVeggente').value;
+            updateContadini();
+            break;
+        case 'medium':
+            if (_('nMedium').value > 0)
+                _('nMedium').value--;
+            settings.medium = _('nMedium').value;
             updateContadini();
             break;
     }
@@ -179,6 +189,12 @@ function increase(el) {
             settings.veggente = _('nVeggente').value;
             updateContadini();
             break;
+        case 'medium':
+            if (_('nMedium').value < 1)
+                _('nMedium').value++;
+            settings.medium = _('nMedium').value;
+            updateContadini();
+            break;
     }
 }
 
@@ -187,7 +203,12 @@ function _(el) {
 }
 
 function updateContadini() {
-    var nCont = players.length - _('nLupi').value - _('nGdc').value - _('nVeggente').value;
+    var nCont = players.length
+        - _('nLupi').value
+        - _('nGdc').value
+        - _('nVeggente').value
+        - _('nMedium').value;
+
     _('nContadini').value = nCont;
     settings.contadini = nCont;
 }

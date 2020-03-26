@@ -155,11 +155,13 @@ sock.on('voting_time', () => {
 
 sock.on('dead_player', (i, chiEMorto, dayTime) => {
     //morte viene dopo il cambio giorno
-
     if (dayTime == 'night')
         writeLog('\u00C8 MORTO ' + chiEMorto + ' &#128534;', 'info');
     else //dayTime == 'day'
-        writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
+        if (chiEMorto != null)
+            writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
+        else
+            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...')
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
@@ -508,8 +510,6 @@ sock.on('my_friends', whoLupi => {
         document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
     });
 
-
-
     if (whoLupi.length > 0) {
         _('chat_board').hidden = false;
     }
@@ -525,6 +525,14 @@ sock.on('wolf_response', voteArr => {
         em.hidden = voteArr[i] > 0 ? false : true;
         em.innerHTML = voteArr[i];
     })
+})
+
+sock.on('guardia_response', username => {
+    console.log('VUOI SALVARE ' + username)
+})
+
+sock.on('medium_response', (lastDeadPlayer, color) => {
+    writeLog('<b>' + lastDeadPlayer + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
 })
 
 sock.on('draw_repetition', () => {

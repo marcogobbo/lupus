@@ -1,59 +1,59 @@
 /*ABSTRACT class: it is a temporary version. */
-class Role{
-    constructor(name, description, squad, color){
+class Role {
+    constructor(name, description, squad, color) {
         if (this.constructor === Role) {
             throw new Error('Cannot instanciate directly the class Role');
         }
-        this._name=name;
-        this._description=description;
-        this._squad=squad;
-        this._color=color;
-        this._alive=true;
+        this._name = name;
+        this._description = description;
+        this._squad = squad;
+        this._color = color;
+        this._alive = true;
     }
 
-    act(user, friends){
+    act(user, friends) {
         //method to be overloaded 
-        console(this._name+"'s action");
-        console(nightActions, friends);
+        console.log(this._name + "'s action");
+        console.log(nightActions, friends);
     }
 
-    onResponse(username){
-        console(username);
+    onResponse(username) {
+        console.log(username);
     }
 
-    canAct(){
+    canAct() {
     }
 
-    getName(){
+    getName() {
         return this._name;
     }
-    
-    getDescription(){
+
+    getDescription() {
         return this._description;
     }
-    
-    getSquad(){
+
+    getSquad() {
         return this._squad;
     }
 
-    getColor(){
+    getColor() {
         return this._color;
     }
-    
-    setSquad(squad){
-        this._squad=squad;
+
+    setSquad(squad) {
+        this._squad = squad;
     }
 
-    setColor(color){
-        this._color=color;
+    setColor(color) {
+        this._color = color;
     }
 
-    isAlive(){
+    isAlive() {
         return this._alive;
     }
-    
-    kill(){
-        this._alive=false;
+
+    kill() {
+        this._alive = false;
     }
 }
 
