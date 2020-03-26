@@ -5,24 +5,35 @@ var players;
 window.onload = () => {
 
     myUser = sessionStorage.getItem('user');
-
     //send the update!
     sock.emit("updateSocketId", myUser);
 
     // _('myUserName').innerHTML = myUser;
     //get giocatori connessi
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener('loadend', (e) => {
-        console.log(e.target.response);
-        addUserInLobby(JSON.parse(e.target.response));
+    var xhr2 = new XMLHttpRequest();
+    xhr2.addEventListener('loadend', (e) => {
+        imagesIndexes = JSON.parse(e.target.response);
+        var xhr = new XMLHttpRequest();
+        xhr.addEventListener('loadend', (e) => {
 
-        console.log(players)
-        if (players[0] != myUser) {
-            _('settings').innerHTML = '';
-        }
+            console.log(e.target.response);
+            addUserInLobby(JSON.parse(e.target.response));
+
+            console.log(players)
+            if (players[0] != myUser) {
+                _('settings').innerHTML = '';
+            }
+        });
+        xhr.open('GET', '/users');
+        xhr.send();
     });
-    xhr.open('GET', '/users');
-    xhr.send();
+    xhr2.open('GET', '/images');
+    xhr2.send();
+
+
+
+
+
 }
 
 //! NON FUNZIONA
@@ -32,9 +43,12 @@ window.addEventListener("close", function (event) {
     event.preventDefault();
 });
 
-sock.on('usersInLobby', (user) => {
+imagesIndexes = [];
+sock.on('usersInLobby', (user, _imagesIndexes) => {
     console.log('usersInLobby', user);
+    imagesIndexes = _imagesIndexes;
     addUserInLobby(user);
+    console.log(imagesIndexes)
 })
 
 //When each client received the role, go to the game page
@@ -42,7 +56,7 @@ sock.on('role', (role) => {
     console.log('Your role', role);
     window.sessionStorage.setItem('role', JSON.stringify(role));
     window.sessionStorage.setItem('players', JSON.stringify(players));
-    window.location.href='../game/game.html';
+    window.location.href = '../game/game.html';
 })
 
 const addUserInLobby = (users) => {
@@ -57,7 +71,7 @@ const addUserInLobby = (users) => {
     const parent = document.querySelector('#list_users_fill');
     parent.innerHTML = '';
 
-    users.forEach(element => {
+    users.forEach((element, i) => {
         // <div class="character" id="me">
         //    <div class="user_img"><img src="../../assets/images/avatar.jpg"></div>
         //    <div class="user_name">Marco</div>
@@ -71,7 +85,8 @@ const addUserInLobby = (users) => {
         userimg.className = 'user_img';
 
         const img = document.createElement('img');
-        img.src = '../../assets/images/avatar.jpg';
+        console.log(imagesIndexes[i])
+        img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
 
         const un = document.createElement('div');
         un.className = 'user_name'; un.innerHTML = element;
@@ -154,14 +169,14 @@ function increase(el) {
 
             if (_('nGdc').value < 1)
                 _('nGdc').value++;
-            settings.gdc=_('nGdc').value;
+            settings.gdc = _('nGdc').value;
             updateContadini();
             break;
         case 'veggente':
 
             if (_('nVeggente').value < 1)
                 _('nVeggente').value++;
-            settings.veggente=_('nVeggente').value;
+            settings.veggente = _('nVeggente').value;
             updateContadini();
             break;
     }

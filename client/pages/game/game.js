@@ -5,6 +5,27 @@
  * vincita: se c'è un vincente controllare il criceto
  */
 
+
+
+// SISTEMARE SETTINGS. PASSA LA GUARDIA DEL CORPO ANCHE SE è A ZERO
+// SISTEMARE INVIO MESSAGGI AI MORTI
+// AGIUNGERE LOG 'MESSAGGIO' INVIATO A 'USER'
+
+// buonanotte NON ESCE PER I LUPI
+
+
+// scroll nomi lunghi
+// auto scroll chat lupi
+// 
+// legenda con ruoli iniziali
+// ordine: mio ruolo, players, cronologia, chat
+
+
+
+
+
+
+
 const sock = io();
 var myUser;
 var myRole;
@@ -122,7 +143,7 @@ sock.on('dead_player', (i, chiEMorto, dayTime) => {
     //morte viene dopo il cambio giorno
 
     if (dayTime == 'night')
-        writeLog('\u00C8 MORTO ' + chiEMorto+' &#128534;', 'info');
+        writeLog('\u00C8 MORTO ' + chiEMorto + ' &#128534;', 'info');
     else //dayTime == 'day'
         writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
     console.log(chiEMorto);
@@ -149,11 +170,11 @@ sock.on('dead_player', (i, chiEMorto, dayTime) => {
 sock.on('ballot_time', (playersBallot) => {
 
     var str = '';
-    for(let x=0;x<playersBallot.length-1;x++){
+    for (let x = 0; x < playersBallot.length - 1; x++) {
         str += players[playersBallot[x]] + ', ';
     }
-    str += players[playersBallot[playersBallot.length-1]];
-    
+    str += players[playersBallot[playersBallot.length - 1]];
+
     writeLog('Vanno al ballottaggio: <b>' + str + '</b>', 'info');
     // console.log('ballot_time');
     // console.log('players:', players);
@@ -245,7 +266,7 @@ function abilitaPlayers() {
 
 sock.on('writeLog', (voteObj, voteArr) => {
     if (time == 'day') {
-        writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
+        //writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
 
         //update badges
         players.forEach((pl, i) => {
@@ -484,10 +505,10 @@ sock.on('wolf_response', voteArr => {
     })
 })
 
-sock.on('draw_repetition',()=>{
+sock.on('draw_repetition', () => {
     writeLog('Decidetevi! Votate di nuovo.', 'response');
 })
 
-sock.on('farmer_night',()=>{
+sock.on('farmer_night', () => {
     writeLog('Buonanotte. &#128564;', 'response');
 })

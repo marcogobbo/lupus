@@ -16,6 +16,7 @@ const server = http.createServer(app);
 global.io = socketio(server);
 
 var userConnected = [];
+var imagesIndexes = [];
 var connections = [];
 var settings;
 
@@ -37,10 +38,14 @@ io.on('connection', (sock) => {
             LG.updateSocketID(connections);
     });
 
-    sock.on('lobby', (username) => {
+    sock.on('lobby', (username, imageIndex) => {
+        console.log(imageIndex)
+
         userConnected.push(username);
+        imagesIndexes.push(imageIndex);
+        console.log(imagesIndexes)
         console.log('RECEIVED LOBBY:', username);
-        io.emit('usersInLobby', userConnected);
+        io.emit('usersInLobby', userConnected, imagesIndexes);
         connections[username] = sock.id;
 
         // if(userConnected.length==2){
@@ -110,4 +115,8 @@ const runGameTest = () => {
 
 app.get('/users', (req, res) => {
     res.send(userConnected);
+});
+
+app.get('/images', (req, res) => {
+    res.send(imagesIndexes);
 });

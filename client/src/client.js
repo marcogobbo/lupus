@@ -1,11 +1,17 @@
 sock = io();
 
+
+
+
+
+
 function _(el) {
     return document.getElementById(el);
 }
 
 
 goToLobby = () => {
+    // console.log(slideIndex)  
 
     user = _('username').value.toUpperCase();
     console.log(user)
@@ -13,13 +19,13 @@ goToLobby = () => {
         //controllo se username è già presente
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('loadend', (res) => {
-            console.log(res.target.response)            
+            console.log(res.target.response)
 
             if (!JSON.parse(res.target.response).includes(user)) {
                 // se non c'è, inserisco e cambio pagina
                 window.sessionStorage.setItem('user', user);
                 // console.log('SEND lobby: ', user)
-                sock.emit('lobby', user);
+                sock.emit('lobby', user, slideIndex);
                 window.location.href = 'pages/lobby/lobby.html';
             }
             else {
