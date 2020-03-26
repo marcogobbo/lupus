@@ -421,6 +421,13 @@ input[type=button]:active {
   background: #8a281e;
 }
 
+.mySlides {
+  margin: 0 auto !important;
+  display: none;
+  width: 120px;
+  border-radius: 5px;
+}
+
 @media only screen and (min-width: 360px) and (max-width: 413px) {
   .stage {
     transform: scale(0.7);

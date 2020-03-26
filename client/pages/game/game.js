@@ -423,12 +423,14 @@ function vaiAGiorno() {
 }
 
 function keyDown(event) {
-    if (event.keyCode == 13)    //pressed enter
+    if (event.keyCode == 13) {
+        event.preventDefault();
         sendMessage();
+    }
 
 }
 function sendMessage() {
-    sock.emit('friends_chat_out', myUser, _('msg').value)
+    sock.emit('friends_chat_out', myUser, _('msg').value);
     _('msg').value = '';
 }
 sock.on('friends_chat', txt => {
