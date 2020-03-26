@@ -39,7 +39,8 @@
             </div>
 
             <script type="text/javascript">
-                var slideIndex = 1;
+                var slideIndex = Math.floor(Math.random()*document.getElementsByClassName('mySlides').length);
+                
                 showDivs(slideIndex);
 
                 function plusDivs(n) {

@@ -36,6 +36,24 @@
     <!-- Corpo del sito -->
     <!-- <button onclick="switchDay()">GIORNO/NOTTE</button>-->
     <main>
+        <div id="user_role">
+            <div id="user_role_img">
+                <!-- <img src="../../assets/images/avatar.jpg"> -->
+                <img>
+            </div>
+            <div id="user_details">
+                <p id="user_role_card"><b>PERSONAGGIO: </b>
+                    <!--<span>Lupo</span>-->
+                </p>
+                <p id="user_role_faction"><b>CARTA: </b><span>
+                        <!--NERA</span>-->
+                </p>
+                <p id="user_role_desc"><b>DESCRIZIONE: </b><span>
+                        <!--Hai il compito, ogni notte, di uccidere un contadino insieme ai tuoi compagni lupi.</span>-->
+                </p>
+            </div>
+        </div>
+
         <section id="list_users">
             <div id="list_users_fill">
                 <!--<div class="character">
@@ -48,20 +66,7 @@
         </section>
         <section id="box">
             <input type="button" hidden onclick="confermaVoto()" value="Conferma Voto">
-            <div id="user_role">
-                <div id="user_role_img"><img src="../../assets/images/avatar.jpg"></div>
-                <div id="user_details">
-                    <p id="user_role_card"><b>PERSONAGGIO: </b>
-                        <!--<span>Lupo</span>-->
-                    </p>
-                    <p id="user_role_faction"><b>CARTA: </b><span>
-                            <!--NERA</span>-->
-                    </p>
-                    <p id="user_role_desc"><b>DESCRIZIONE: </b><span>
-                            <!--Hai il compito, ogni notte, di uccidere un contadino insieme ai tuoi compagni lupi.</span>-->
-                    </p>
-                </div>
-            </div>
+
             <div class="log_board" id="log_board">
                 <h4>Cronologia</h4>
                 <div class="logs">
@@ -100,7 +105,8 @@
                     </table>
                 </div>
                 <div id="chat">
-                    <textarea id="msg" onkeydown="keyDown(event)"></textarea><input type="button" value="Invia" onclick="sendMessage()">
+                    <textarea id="msg" onkeydown="keyDown(event)"></textarea><input type="button" value="Invia"
+                        onclick="sendMessage()">
                 </div>
             </div>
         </section>

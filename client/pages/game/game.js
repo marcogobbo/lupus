@@ -31,22 +31,30 @@ var myUser;
 var myRole;
 var players;
 var deadPlayers = [];
-
+var imagesIndexes = [];
 // var time = 'night';
 var time;
 
 var canVote = false;
 
 window.onload = () => {
+    var xhr2 = new XMLHttpRequest();
+    xhr2.addEventListener('loadend', (e) => {
+        // console.log(e.target)
+        imagesIndexes = JSON.parse(e.target.response);
+        myUser = sessionStorage.getItem('user');
+        myRole = JSON.parse(sessionStorage.getItem('role'));
+        players = JSON.parse(sessionStorage.getItem('players'));
+        _setPlayers();
+        _setRole();
+        _setDeadPlayers();
+        //send the update!
+        sock.emit("updateSocketId", myUser);
+    });
 
-    myUser = sessionStorage.getItem('user');
-    myRole = JSON.parse(sessionStorage.getItem('role'));
-    players = JSON.parse(sessionStorage.getItem('players'));
-    _setPlayers();
-    _setRole();
-    _setDeadPlayers();
-    //send the update!
-    sock.emit("updateSocketId", myUser);
+    xhr2.open('GET', '/images');
+    xhr2.send();
+
 }
 
 const _setDeadPlayers = () => {
@@ -60,12 +68,18 @@ const _setRole = () => {
     document.getElementById("user_role_card").innerHTML += "<span>" + myRole.name + "</span>";
     document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
     document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
+    console.log(myRole)
+    if (myRole.name != 'Contadino') {
+        document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+        document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
+    } else
+        document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
 }
 
 const _setPlayers = () => {
     const parent = document.querySelector('#list_users_fill');
 
-    players.forEach(element => {
+    players.forEach((element, i) => {
         // <div class="character" id="me">
         //    <div class="user_img"><img src="../../assets/images/avatar.jpg"></div>
         //    <div class="user_name">Marco</div>
@@ -88,7 +102,7 @@ const _setPlayers = () => {
         userimg.className = 'user_img';
 
         const img = document.createElement('img');
-        img.src = '../../assets/images/avatar.jpg';
+        img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
 
         const un = document.createElement('div');
         un.className = 'user_name';
@@ -490,6 +504,12 @@ sock.on('veggente_response', color => {
 
 sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
+    whoLupi.forEach(element => {
+        document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+    });
+
+
+
     if (whoLupi.length > 0) {
         _('chat_board').hidden = false;
     }
