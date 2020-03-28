@@ -26,7 +26,7 @@ class Veggente extends Role {
     }
 
     onResponse(username) {
-        //_nightActions.addAction(this.getName, username);
+        _nightActions.addAction(this.getName, username);
         var r_color = this.roles[username].getColor();
         //console.log(r_color)
         io.to(this.connection).emit("veggente_response", r_color);
