@@ -235,7 +235,9 @@ function updateContadini() {
         - _('nLupi').value
         - _('nGdc').value
         - _('nVeggente').value
-        - _('nMedium').value;
+        - _('nMedium').value
+        - _('nGufo').value
+        - _('nCriceto').value;
 
     _('nContadini').value = nCont;
     settings.contadini = nCont;
