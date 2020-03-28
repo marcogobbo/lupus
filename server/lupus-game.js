@@ -51,7 +51,7 @@ class LupusGame {
 
         //set up the game
         this._computeRoles(settings);
-        this._legend=this._computeLegend(settings);
+        this._legend = this._computeLegend(settings);
         this._sendRoles();
     }
 
@@ -99,73 +99,73 @@ class LupusGame {
                 name: this._roles[pl].getName(),
                 description: this._roles[pl].getDescription(),
                 color: this._roles[pl].getColor()
-            },this._legend);
+            }, this._legend);
         });
     }
 
-    _computeLegend(settings){
-        var temp=[];
-        if(settings.lupi>0){
-            var player_s=new Lupo();
+    _computeLegend(settings) {
+        var temp = [];
+        if (settings.lupi > 0) {
+            var player_s = new Lupo();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.lupi,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.lupi,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.contadini>0){
-            var player_s=new Contadino();
+        if (settings.contadini > 0) {
+            var player_s = new Contadino();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.contadini,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.contadini,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.veggente>0){
-            var player_s=new Veggente();
+        if (settings.veggente > 0) {
+            var player_s = new Veggente();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.veggente,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.veggente,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.gdc>0){
-            var player_s=new GuardiaDelCorpo();
+        if (settings.gdc > 0) {
+            var player_s = new GuardiaDelCorpo();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.gdc,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.gdc,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.medium>0){
-            var player_s=new Medium();
+        if (settings.medium > 0) {
+            var player_s = new Medium();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.medium,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.medium,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.gufo>0){
-            var player_s=new Gufo();
+        if (settings.gufo > 0) {
+            var player_s = new Gufo();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.gufo,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.gufo,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
-        if(settings.criceto>0){
-            var player_s=new Criceto();
+        if (settings.criceto > 0) {
+            var player_s = new Criceto();
             temp.push({
-                'name':player_s.getName(),
-                'quantity':settings.criceto,
-                'color':player_s.getColor(),
-                'description':player_s.getDescription()
+                'name': player_s.getName(),
+                'quantity': settings.criceto,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
             });
         }
         return temp;
@@ -326,7 +326,7 @@ class LupusGame {
 
             var winningTeam = this._computeWinner();
             if (winningTeam == 'none') {
-                
+
                 this._resetVote();
                 this._enableVotingTime();
 
@@ -455,7 +455,7 @@ class LupusGame {
         var wolves_sel = sel;
         // console.log('guardia del corpo ha votato: ', _nightActions.getActionsByRoleName("Guardia Del Corpo")[0])
         if ((_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
-            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel) || this._roles[wolves_sel].getName()=="Criceto")
+            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel) || (wolves_sel != 'none' && this._roles[wolves_sel].getName() == "Criceto"))
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
             //ROMEO CHECK
@@ -579,7 +579,7 @@ class LupusGame {
         if (gufo_player != 'none') {
             this._players.forEach((pl, i) => {
                 if (gufo_player == pl) {
-                    if (!indexes.includes(i)&&this._roles[gufo_player].isAlive()) {
+                    if (!indexes.includes(i) && this._roles[gufo_player].isAlive()) {
                         indexes.push(i);
                     }
                 }
