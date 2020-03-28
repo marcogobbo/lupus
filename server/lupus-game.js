@@ -255,11 +255,23 @@ class LupusGame {
             this._sendTimeUpdate();
             this._computeNightOperations();
 
-            this._resetVote();
-            this._enableVotingTime();
-        }
+            var winningTeam = this._computeWinner();
+            if (winningTeam == 'none') {
+                
+                this._resetVote();
+                this._enableVotingTime();
 
+            } else {
+                //broadcast who won the game
+                //console.log("WINNER: " + winningTeam);
+                //!nella emit deve mandare anche l'array dei vincitori
+                //todo: chi gioca per sè, io proporrei una squadra = 2
+                io.emit('found_winner', winningTeam)
+            }
+        }
     }
+
+
 
     onVoteConfirmed(user, userVoted) {
         io.emit('voteConfirmed', {
@@ -400,6 +412,8 @@ class LupusGame {
 
         if (deadCounter == 0)
             io.emit('dead_player', -1, null, 'night');
+
+
     }
 
     _computeFriends(playerName, roleName) {
@@ -421,12 +435,14 @@ class LupusGame {
         /**
          * TODO
          */
+        var cricetoAlive = false;
 
-         
         var black = 0, white = 0, others = 0;
         this._players.forEach((pl) => {
             //get numero carte bianche e nere
             if (this._roles[pl].isAlive()) {
+                if (this._roles[pl].getName() == 'Criceto')
+                    cricetoAlive = true;
                 if (this._roles[pl].getSquad() == 'contadini')
                     white++;
                 else if (this._roles[pl].getSquad() == 'lupi')
@@ -436,9 +452,15 @@ class LupusGame {
             }
         });
         if (black == 0 && white > 1)
-            return 'contadini'
+            if (!cricetoAlive)
+                return 'contadini'
+            else
+                return 'criceto'
         else if (black == white)
-            return 'lupi';
+            if (!cricetoAlive)
+                return 'lupi'
+            else
+                return 'criceto'
         else
             //aggiungere casistica di other
             return 'none';

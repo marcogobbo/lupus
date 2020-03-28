@@ -158,12 +158,12 @@ sock.on('dead_player', (i, chiEMorto, dayTime) => {
         if (chiEMorto != null)
             writeLog('\u00C8 MORTO ' + chiEMorto + ' &#128534;', 'info');
         else
-            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...', 'info')
+            writeLog('NON \u00C8 MORTO NESSUNO &#129300', 'info')
     else //dayTime == 'day'
         if (chiEMorto != null)
             writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
         else
-            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...', 'info')
+            writeLog('NON \u00C8 MORTO NESSUNO &#129300', 'info')
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
@@ -283,6 +283,7 @@ function abilitaPlayers() {
 }
 
 sock.on('writeLog', (voteObj, voteArr) => {
+    console.log('arrivato WRITELOG onPlayerSelected')
     if (time == 'day') {
         //writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
 
@@ -293,6 +294,20 @@ sock.on('writeLog', (voteObj, voteArr) => {
             em.hidden = voteArr[i] > 0 ? false : true;
             em.innerHTML = voteArr[i];
         })
+    }
+})
+
+sock.on('voteConfirmed', (voteObj, voteArr) => {
+    if (time == 'day') {
+        writeLog('<b>' + voteObj.whoVoted + '</b>' + ' ha votato ' + '<b>' + voteObj.selected + '</b>');
+
+        //update badges
+        // players.forEach((pl, i) => {
+        //     let em = document.getElementsByName(pl)[0].children[0];
+        //     // console.log(em)
+        //     em.hidden = voteArr[i] > 0 ? false : true;
+        //     em.innerHTML = voteArr[i];
+        // })
     }
 })
 
@@ -337,7 +352,7 @@ function confermaVoto() {
     if (time == 'day') {
         if (canVote)
             if (lastClicked != '') {
-                sock.emit('confermaVoto', myUser);
+                sock.emit('confermaVoto', myUser, lastClicked);
 
                 votoConfirmed = true;
                 document.getElementById("selected").setAttribute('id', 'confirmed');

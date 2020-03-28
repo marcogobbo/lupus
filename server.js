@@ -72,6 +72,7 @@ io.on('connection', (sock) => {
     });
 
     sock.on('logDay', (userVoting, userVoted) => {
+        console.log('arrivato LOGDAY')
         LG.onPlayerSelected(userVoting, userVoted);
     })
     sock.on('confermaVoto', (userVoting, userVoted) => {
