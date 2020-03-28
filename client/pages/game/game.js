@@ -107,11 +107,11 @@ const _setRole = () => {
     //document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
     //document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
     console.log(myRole)
-    // if (myRole.name != 'Contadino') {
-    //     document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
-    //     document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
-    // } else
-    //     document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
+     if (myRole.name != 'Contadino') {
+         document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+         document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
+     } else
+         document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
 }
 
 const _setPlayers = () => {
