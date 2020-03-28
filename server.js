@@ -75,7 +75,7 @@ io.on('connection', (sock) => {
         LG.onPlayerSelected(userVoting, userVoted);
     })
     sock.on('confermaVoto', (userVoting, userVoted) => {
-        LG.onVoteConfirmed(user);
+        LG.onVoteConfirmed(userVoting, userVoted);
     })
     sock.on("role_selection", (userVoting, userVoted) => {
         LG.onNightResponse(userVoting, userVoted);

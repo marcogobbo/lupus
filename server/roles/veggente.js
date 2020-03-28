@@ -8,12 +8,12 @@ class Veggente extends Role {
     act(user, players, roles, sameRole) {
         this.players = players;
         this.roles = roles;
-        this.connection=user.connection;
-        this.username=user.username;
+        this.connection = user.connection;
+        this.username = user.username;
 
         var selezionabili = [];
         players.forEach((pl) => {
-            if (roles[pl].isAlive()&&pl!=this.username) {
+            if (roles[pl].isAlive() && pl != this.username) {
                 selezionabili.push(pl);
             }
         });
@@ -26,7 +26,8 @@ class Veggente extends Role {
     }
 
     onResponse(username) {
-        _nightActions.addAction(this.getName, username);
+        _nightActions.addAction(this.getName(), username);
+        console.log(_nightActions)
         var r_color = this.roles[username].getColor();
         //console.log(r_color)
         io.to(this.connection).emit("veggente_response", r_color);

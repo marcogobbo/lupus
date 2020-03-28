@@ -261,11 +261,11 @@ class LupusGame {
 
     }
 
-    onVoteConfirmed(user,userVoted) {
+    onVoteConfirmed(user, userVoted) {
         io.emit('voteConfirmed', {
             whoVoted: user,
             selected: userVoted
-        },this.calculateVoti(this._vote));
+        }, this.calculateVoti(this._vote));
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == user) {
                 this._hasConfirmed[i] = true;
@@ -349,6 +349,7 @@ class LupusGame {
     };
 
     _computeNightOperations() {
+        var deadCounter = 0;
         //Lupi
         var wolves = _nightActions.getActionsByRoleName("Lupo");
         //console.log('Wolves night selection:', wolves);
@@ -371,29 +372,34 @@ class LupusGame {
         //console.log('Wolves\' Selection:', sel)
         //get GDC op
         var wolves_sel = sel;
-        console.log('guardia del corpo ha votato: ', _nightActions.getActionsByRoleName("Guardia Del Corpo")[0])
+        // console.log('guardia del corpo ha votato: ', _nightActions.getActionsByRoleName("Guardia Del Corpo")[0])
         if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
             && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel)
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
             //ROMEO CHECK
-            var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length!=0 ? _nightActions.getActionsByRoleName("Romeo")[0]:'none';
-            if(romeo_sel!='none'){
+            var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length != 0 ? _nightActions.getActionsByRoleName("Romeo")[0] : 'none';
+            if (romeo_sel != 'none') {
             }
+            deadCounter++;
             this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
-        else
-            io.emit('dead_player', -1, null, 'night');
+
 
         //CRICETO
         var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
-        this._players.forEach((pl)=>{
-            if(pl==veggente_sel){
-                if(this._roles[pl].getName()=='Criceto'&&this._roles[pl].isAlive())
-                    this._killPlayer(this._players.indexOf(veggente_sel), 'night');
+        // console.log('veggente votato: ',veggente_sel)
+        this._players.forEach((pl) => {
+            if (pl == veggente_sel) {
+                if (this._roles[pl].getName() == 'Criceto' && this._roles[pl].isAlive()) {
+                    this._killPlayer(this._players.indexOf(veggente_sel[0]), 'night');
+                    deadCounter++;
+                }
             }
         });
 
+        if (deadCounter == 0)
+            io.emit('dead_player', -1, null, 'night');
     }
 
     _computeFriends(playerName, roleName) {
@@ -415,6 +421,8 @@ class LupusGame {
         /**
          * TODO
          */
+
+         
         var black = 0, white = 0, others = 0;
         this._players.forEach((pl) => {
             //get numero carte bianche e nere
@@ -476,11 +484,11 @@ class LupusGame {
         /**
          * CHECK GUFO
          */
-        var gufo_player = _nightActions.getActionsByRoleName("Gufo").length!=0 ? _nightActions.getActionsByRoleName("Gufo")[0]:'none';
-        if(gufo_player!='none'){
-            this._players.forEach((pl,i)=>{
-                if(gufo_player==pl){
-                    if(!indexes.includes(i)){
+        var gufo_player = _nightActions.getActionsByRoleName("Gufo").length != 0 ? _nightActions.getActionsByRoleName("Gufo")[0] : 'none';
+        if (gufo_player != 'none') {
+            this._players.forEach((pl, i) => {
+                if (gufo_player == pl) {
+                    if (!indexes.includes(i)) {
                         indexes.push(i);
                     }
                 }
