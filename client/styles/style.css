@@ -415,6 +415,33 @@ header {
 	position: relative;
 }
 
+#profile, #legend {
+	font-size: 13px;
+	position: relative;
+	text-transform: uppercase;
+}
+
+#profile {
+	float: left;
+	left: 10%;
+}
+
+#profile .nera {
+	color: #212121;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, .5), 0 -1px 0 rgba(255, 255, 255, .5), 1px 0 0 rgba(255, 255, 255, .5), -1px 0 0 rgba(255, 255, 255, .5);
+}
+
+#profile .bianca {
+	color: #F5F5F5;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5), 0 -1px 0 rgba(0, 0, 0, 0.5), 1px 0 0 rgba(0, 0, 0, 0.5), -1px 0 0 rgba(0, 0, 0, 0.5);
+}
+
+#legend {
+	float: right;
+	right: 10%;
+	cursor: pointer;
+}
+
 #timer-box {
 	width: 120px;
 	height: 50px;
@@ -424,6 +451,78 @@ header {
 	border-radius: 5px;
 	margin: 0 auto;
 }
+
+/*#popup {
+	position: fixed;
+	width: 315px;
+	height: 400px;
+	background: #F5F5F5;
+	z-index: 1000;
+}*/
+
+/* Popup box BEGIN */
+#popup{
+    background:rgba(0,0,0,.4);
+    display: none;
+    height: 100%;
+	position: fixed;
+	text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 10000;
+}
+#popup .helper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+#popup > div {
+    background-color: #fff;
+    box-shadow: 10px 10px 60px #555;
+    display: inline-block;
+    height: auto;
+	min-height: 100px;
+    vertical-align: middle;
+    width: 295px;
+    position: relative;
+    border-radius: 5px;
+	padding: 10px;
+	text-align: left;
+	margin-left: -3px;
+}
+
+#table-legend {
+	max-height: 300px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+#table-legend tr {
+	border-bottom: 1px dashed grey;
+}
+
+#close {
+    background-color: #fff;
+    border: 3px solid #999;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-block;
+    font-family: arial;
+    font-weight: bold;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 25px;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
+#close:hover {
+    background-color: #ccc;
+}
+/* Popup box BEGIN */
 
 
 /*
@@ -564,7 +663,7 @@ main {
 .voted {
 	font-style: normal;
 	position: absolute;
-	z-index: 9;
+	z-index: 7;
 	background-color: #FFF;
 	width: 30px;
 	height: 30px;
@@ -698,6 +797,22 @@ input[type=button]:active {
 		width: 50px;
 		height: 40px !important;
 	}
+
+	#profile, #legend {
+		font-size: 18px;
+	}
+	
+	#profile {
+		left: 35% !important;
+	}
+
+	#legend {
+		right: 35% !important;
+	}
+
+	#popup > div {
+		width: 570px !important;
+	}
 }
 
 /*
@@ -736,6 +851,10 @@ input[type=button]:active {
 		width: 50px;
 		height: 40px !important;
 	}
+
+	#popup > div {
+		width: 485px !important;
+	}
 }
 
 /*
@@ -747,6 +866,7 @@ input[type=button]:active {
 	height: 70px;
 	vertical-align: middle;
 	text-align: left;
+	margin: 10px 0;
 }
 #user_role b{
 	font-weight: bold;
