@@ -466,6 +466,7 @@ class LupusGame {
             this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
 
+        
 
         //CRICETO
         var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
