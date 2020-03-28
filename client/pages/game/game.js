@@ -421,8 +421,10 @@ function resetCharacters() {
 
 function switchDay(dayTime) {
     if (time != dayTime) {
-        if (dayTime == 'night')
+        if (dayTime == 'night') {
             vaiANotte();
+            writeLog('Buonanotte. &#128564;', 'response');
+        }
         else
             vaiAGiorno();
     }
@@ -545,6 +547,6 @@ sock.on('draw_repetition', () => {
     writeLog('Decidetevi! Votate di nuovo.', 'response');
 })
 
-sock.on('farmer_night', () => {
-    writeLog('Buonanotte. &#128564;', 'response');
-})
+// sock.on('farmer_night', () => {
+//     writeLog('Buonanotte. &#128564;', 'response');
+// })
