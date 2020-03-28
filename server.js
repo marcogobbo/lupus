@@ -74,7 +74,7 @@ io.on('connection', (sock) => {
     sock.on('logDay', (userVoting, userVoted) => {
         LG.onPlayerSelected(userVoting, userVoted);
     })
-    sock.on('confermaVoto', (user) => {
+    sock.on('confermaVoto', (userVoting, userVoted) => {
         LG.onVoteConfirmed(user);
     })
     sock.on("role_selection", (userVoting, userVoted) => {
