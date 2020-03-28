@@ -497,6 +497,10 @@ header {
 	overflow-x: hidden;
 }
 
+#table-legend table{
+	width: 100%;
+}
+
 #table-legend tr {
 	border-bottom: 1px dashed grey;
 }

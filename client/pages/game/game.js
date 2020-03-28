@@ -28,6 +28,7 @@
 const sock = io();
 var myUser;
 var myRole;
+var legend;
 var players;
 var deadPlayers = [];
 var imagesIndexes = [];
@@ -44,6 +45,8 @@ window.onload = () => {
         myUser = sessionStorage.getItem('user');
         myRole = JSON.parse(sessionStorage.getItem('role'));
         players = JSON.parse(sessionStorage.getItem('players'));
+        legend = JSON.parse(sessionStorage.getItem('legend'));
+        _setLegend();
         _setPlayers();
         _setRole();
         _setDeadPlayers();
@@ -62,17 +65,53 @@ const _setDeadPlayers = () => {
     });
 }
 
+const _setLegend = () => {
+    var table=document.querySelector("#table-legend table");
+    for(let i=0;i<legend.length;i++){
+
+        var image=(legend[i].name!='Contadino'?legend[i].name:'contadino8')+".png";
+        var name=legend[i].name+" (x"+legend[i].quantity+")";
+        var color=legend[i].color==0?"BIANCA":"NERA";
+        var description=legend[i].description;
+        var txt=`
+        <tr>
+            <td>
+                <div id="user_role">
+                    <div id="user_role_img">
+                        <img src="../../assets/images/`+image+
+                        `">
+                                </div>
+                                <div id="user_details">
+                                    <p id="user_role_card"><b>PERSONAGGIO: </b>
+                                        <span>`+name+
+                                        `</span>
+                                    </p>
+                                    <p id="user_role_faction"><b>CARTA: </b><span>
+                                    `+color+
+                                    `</span>
+                                    </p>
+                                    <p id="user_role_desc"><b>DESCRIZIONE: </b><span>`+description+
+                                    `</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+        </tr>
+      `;
+      table.innerHTML+=txt;
+    }
+}
 
 const _setRole = () => {
-    document.getElementById("user_role_card").innerHTML += "<span>" + myRole.name + "</span>";
-    document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
-    document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
+    document.getElementById("profile").innerHTML = '<span class="'+((myRole.color) ? "nera" : "bianca")+'">' + myRole.name + "</span>";
+    //document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
+    //document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
     console.log(myRole)
-    if (myRole.name != 'Contadino') {
-        document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
-        document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
-    } else
-        document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
+    // if (myRole.name != 'Contadino') {
+    //     document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+    //     document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
+    // } else
+    //     document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
 }
 
 const _setPlayers = () => {
