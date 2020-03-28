@@ -18,6 +18,7 @@ class ActionCollector {
         this._actions.push({ 'role': roleName, 'selected': selection });
     }
 
+    //caso di parità
     removeAction(roleName) {
         var newer = [];
         for (var i = 0; i < this._actions.length; i++) {

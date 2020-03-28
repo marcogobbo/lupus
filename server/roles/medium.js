@@ -22,10 +22,11 @@ class Medium extends Role {
         }
     }
 
+
     canAct() {
-        if (_nightActions.getNightCount() == 0)
+        // if (_nightActions.getNightCount() == 0)
             return false;
-        return true;
+        // return true;
     }
 }
 
