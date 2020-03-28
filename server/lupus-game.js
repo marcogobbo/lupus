@@ -579,7 +579,7 @@ class LupusGame {
         if (gufo_player != 'none') {
             this._players.forEach((pl, i) => {
                 if (gufo_player == pl) {
-                    if (!indexes.includes(i)) {
+                    if (!indexes.includes(i)&&this._roles[gufo_player].isAlive()) {
                         indexes.push(i);
                     }
                 }
