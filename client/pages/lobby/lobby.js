@@ -135,6 +135,8 @@ function initNumRoles() {
     _('nGdc').value = settings.gdc;
     _('nVeggente').value = settings.veggente;
     _('nMedium').value = settings.medium;
+    _('nGufo').value = settings.gufo;
+    _('nCriceto').value = settings.criceto;
 
     updateContadini();
 }
@@ -146,6 +148,8 @@ var settings = {
     'gdc': 0,
     'veggente': 1,
     'medium': 0,
+    'gufo': 0,
+    'criceto': 0,
 };
 
 function decrease(el) {
@@ -167,6 +171,18 @@ function decrease(el) {
             if (_('nMedium').value > 0)
                 _('nMedium').value--;
             settings.medium = _('nMedium').value;
+            updateContadini();
+            break;
+        case 'gufo':
+            if (_('nGufo').value > 0)
+                _('nGufo').value--;
+            settings.gufo = _('nGufo').value;
+            updateContadini();
+            break;
+        case 'criceto':
+            if (_('nCriceto').value > 0)
+                _('nCriceto').value--;
+            settings.criceto = _('nCriceto').value;
             updateContadini();
             break;
     }
@@ -193,6 +209,18 @@ function increase(el) {
             if (_('nMedium').value < 1)
                 _('nMedium').value++;
             settings.medium = _('nMedium').value;
+            updateContadini();
+            break;
+        case 'gufo':
+            if (_('nGufo').value < 1)
+                _('nGufo').value++;
+            settings.gufo = _('nGufo').value;
+            updateContadini();
+            break;
+        case 'criceto':
+            if (_('nCriceto').value < 1)
+                _('nCriceto').value++;
+            settings.criceto = _('nCriceto').value;
             updateContadini();
             break;
     }

@@ -26,14 +26,11 @@ class GuardiaDelCorpo extends Role {
     }
 
     canAct() {
-        //TODO!!
         return true;
     }
 
     onResponse(username) {
         _nightActions.addAction(this.getName(), username);
-        // var r_color = this.roles[username].getColor();
-        //console.log(r_color)
         io.to(this.connection).emit("guardia_response", username);
     }
 }

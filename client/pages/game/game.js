@@ -15,7 +15,6 @@
 
 
 // scroll nomi lunghi
-// auto scroll chat lupi
 // 
 // legenda con ruoli iniziali
 // ordine: mio ruolo, players, cronologia, chat
@@ -156,12 +155,15 @@ sock.on('voting_time', () => {
 sock.on('dead_player', (i, chiEMorto, dayTime) => {
     //morte viene dopo il cambio giorno
     if (dayTime == 'night')
-        writeLog('\u00C8 MORTO ' + chiEMorto + ' &#128534;', 'info');
+        if (chiEMorto != null)
+            writeLog('\u00C8 MORTO ' + chiEMorto + ' &#128534;', 'info');
+        else
+            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...', 'info')
     else //dayTime == 'day'
         if (chiEMorto != null)
             writeLog(chiEMorto + ' \u00C8 STATO LINCIATO &#128561;', 'info');
         else
-            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...')
+            writeLog('NON \u00C8 MORTO NESSUNO mumble mumble ...', 'info')
     console.log(chiEMorto);
 
     deadPlayers[i] = true;
@@ -308,13 +310,28 @@ const writeLog = (text, controlMsg) => {
     tr.appendChild(td);
     parent.appendChild(tr);
     // console.log("Ci sono ancora");
-    // Ti prego fai uno scroll
     var logs = document.getElementsByClassName('logs');
     for (let i = 0; i < logs.length; i++)
         logs[i].scrollTop = logs[i].scrollHeight;
-
-    // console.log("Almeno fino a qui arrivo");
 };
+
+sock.on('friends_chat', txt => {
+    const chat = document.getElementsByClassName('logs chat')[0];
+    // console.log('friends_chat')
+    const parent = document.querySelector('#chat_table');
+
+    //<li> element
+    const tr = document.createElement('tr');
+
+    const td = document.createElement('td');
+
+    td.innerHTML = txt;
+    tr.appendChild(td);
+    parent.appendChild(tr);
+    chat.scrollTop = chat.scrollHeight;
+    console.log(chat)
+
+})
 
 function confermaVoto() {
     if (time == 'day') {
@@ -404,8 +421,10 @@ function resetCharacters() {
 
 function switchDay(dayTime) {
     if (time != dayTime) {
-        if (dayTime == 'night')
+        if (dayTime == 'night') {
             vaiANotte();
+            writeLog('Buonanotte. &#128564;', 'response');
+        }
         else
             vaiAGiorno();
     }
@@ -449,22 +468,7 @@ function sendMessage() {
     sock.emit('friends_chat_out', myUser, _('msg').value);
     _('msg').value = '';
 }
-sock.on('friends_chat', txt => {
-    const chat = document.querySelector('.logs');
-    chat.scrollTop = chat.scrollHeight;
-    // console.log('friends_chat')
-    const parent = document.querySelector('#chat_table');
 
-    //<li> element
-    const tr = document.createElement('tr');
-
-    const td = document.createElement('td');
-
-    td.innerHTML = txt;
-    tr.appendChild(td);
-    parent.appendChild(tr);
-
-})
 
 sock.on('found_winner', team => {
     //da cambiare poi con gli alri
@@ -535,10 +539,14 @@ sock.on('medium_response', (lastDeadPlayer, color) => {
     writeLog('<b>' + lastDeadPlayer + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
 })
 
+sock.on('gufo_response', username => {
+    console.log('VUOI MANDARE AL BALLOTTAGGIO ' + username)
+})
+
 sock.on('draw_repetition', () => {
     writeLog('Decidetevi! Votate di nuovo.', 'response');
 })
 
-sock.on('farmer_night', () => {
-    writeLog('Buonanotte. &#128564;', 'response');
-})
+// sock.on('farmer_night', () => {
+//     writeLog('Buonanotte. &#128564;', 'response');
+// })

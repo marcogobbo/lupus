@@ -15,6 +15,7 @@ const RoseMary = require('./roles/roseMary');
 const Scemo = require('./roles/scemo');
 const Massone = require('./roles/massone');
 const MagaCirce = require('./roles/magaCirce');
+const Criceto = require('./roles/criceto');
 
 const ActionCollector = require('./action-collector');
 
@@ -121,6 +122,10 @@ class LupusGame {
             rolesArr.push(new GuardiaDelCorpo());
         for (var i = 0; i < settings.medium; i++)
             rolesArr.push(new Medium());
+        for (var i = 0; i < settings.gufo; i++)
+            rolesArr.push(new Gufo());
+        for (var i = 0; i < settings.criceto; i++)
+            rolesArr.push(new Criceto());
         //! aggiugere ruoli
 
         console.log(settings, rolesArr);
@@ -212,7 +217,6 @@ class LupusGame {
     }
 
     onNightResponse(userVoting, userVoted) {
-
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == userVoting) {
                 this._hasConfirmed[i] = true;
@@ -257,8 +261,11 @@ class LupusGame {
 
     }
 
-    onVoteConfirmed(user) {
-        io.emit('voteConfirmed', this.calculateVoti(this._vote));
+    onVoteConfirmed(user,userVoted) {
+        io.emit('voteConfirmed', {
+            whoVoted: user,
+            selected: userVoted
+        },this.calculateVoti(this._vote));
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == user) {
                 this._hasConfirmed[i] = true;
@@ -363,16 +370,30 @@ class LupusGame {
         }
         //console.log('Wolves\' Selection:', sel)
         //get GDC op
-        var dead = sel;
+        var wolves_sel = sel;
         console.log('guardia del corpo ha votato: ', _nightActions.getActionsByRoleName("Guardia Del Corpo")[0])
         if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
-            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == dead)
-            dead = 'none';
-        if (dead != 'none') {
-            this._killPlayer(this._players.indexOf(dead), 'night');
+            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel)
+            wolves_sel = 'none';
+        if (wolves_sel != 'none') {
+            //ROMEO CHECK
+            var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length!=0 ? _nightActions.getActionsByRoleName("Romeo")[0]:'none';
+            if(romeo_sel!='none'){
+            }
+            this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
         else
             io.emit('dead_player', -1, null, 'night');
+
+        //CRICETO
+        var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
+        this._players.forEach((pl)=>{
+            if(pl==veggente_sel){
+                if(this._roles[pl].getName()=='Criceto'&&this._roles[pl].isAlive())
+                    this._killPlayer(this._players.indexOf(veggente_sel), 'night');
+            }
+        });
+
     }
 
     _computeFriends(playerName, roleName) {
@@ -451,6 +472,25 @@ class LupusGame {
                 max2 = leaderboard[i];
             }
         }
+
+        /**
+         * CHECK GUFO
+         */
+        var gufo_player = _nightActions.getActionsByRoleName("Gufo").length!=0 ? _nightActions.getActionsByRoleName("Gufo")[0]:'none';
+        if(gufo_player!='none'){
+            this._players.forEach((pl,i)=>{
+                if(gufo_player==pl){
+                    if(!indexes.includes(i)){
+                        indexes.push(i);
+                    }
+                }
+            });
+            _nightActions.removeAction("Gufo");
+        }
+
+        /**
+         * Aggiungi in caso di un solo giocatore.
+         */
         if (indexes.length < 2) {
             for (let i = 0; i < leaderboard.length; i++) {
                 if (leaderboard[i] == max2) {
@@ -458,6 +498,7 @@ class LupusGame {
                 }
             }
         }
+
         //console.log("Max number of votes: " + max1 + ", " + max2 + "\nPlayers indexes: " + indexes);
 
         //send open ballot
@@ -547,7 +588,7 @@ class LupusGame {
     }
 
     _debug() {
-        //console.log("## DEBUG ##");
+        console.log("## DEBUG ##");
         //console.log("time: ", this._time);
         if (this._time == 'day')
             console.log("dayTime: ", this._dayTime);
@@ -556,7 +597,7 @@ class LupusGame {
         //console.log("whoCanPlay: ", this._whoCanPlay);
         //console.log("hasConfirmed: ", this._hasConfirmed);
         if (this._time == 'night')
-            console.log("nightActions: ", _nightActions);
+            console.log("Last nightActions: ", _nightActions.getActions());
     }
 
     runTestGame() {

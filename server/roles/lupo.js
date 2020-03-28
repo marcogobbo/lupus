@@ -5,7 +5,7 @@ class Lupo extends Role {
         super("Lupo", "Tu sei il cattivo. Uccidi chi vuoi nella notte", "lupi", 1);
     }
 
-    act(user, players, roles, sameRole) {
+    act(user, players, roles, sameRole, lastDeadPlayer) {
         this.players = players;
         this.roles = roles;
         this.connection=user.connection;
