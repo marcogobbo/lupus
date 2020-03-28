@@ -455,7 +455,7 @@ class LupusGame {
         var wolves_sel = sel;
         // console.log('guardia del corpo ha votato: ', _nightActions.getActionsByRoleName("Guardia Del Corpo")[0])
         if (_nightActions.getActionsByRoleName("Guardia Del Corpo").length != 0
-            && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel)
+            && (_nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel || this._roles[wolves_sel].getName()=="Criceto"))
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
             //ROMEO CHECK
