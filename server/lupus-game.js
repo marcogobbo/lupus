@@ -261,8 +261,11 @@ class LupusGame {
 
     }
 
-    onVoteConfirmed(user) {
-        io.emit('voteConfirmed', this.calculateVoti(this._vote));
+    onVoteConfirmed(user,userVoted) {
+        io.emit('voteConfirmed', {
+            whoVoted: user,
+            selected: userVoted
+        },this.calculateVoti(this._vote));
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == user) {
                 this._hasConfirmed[i] = true;
@@ -374,7 +377,9 @@ class LupusGame {
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
             //ROMEO CHECK
-
+            var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length!=0 ? _nightActions.getActionsByRoleName("Romeo")[0]:'none';
+            if(romeo_sel!='none'){
+            }
             this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
         else
