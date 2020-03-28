@@ -6,7 +6,7 @@ class Contadino extends Role{
     }
 
     act(user, players, roles, sameRole){
-        io.to(user.connection).emit("farmer_night");
+        // io.to(user.connection).emit("farmer_night");
     }
     
     canAct(){
