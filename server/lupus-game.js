@@ -373,6 +373,8 @@ class LupusGame {
             && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel)
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
+            //ROMEO CHECK
+
             this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
         else
@@ -380,9 +382,9 @@ class LupusGame {
 
         //CRICETO
         var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
-        this._players.forEach((pl,i)=>{
+        this._players.forEach((pl)=>{
             if(pl==veggente_sel){
-                if(this._roles[i].getName()=='Criceto'&&this._roles[i].isAlive())
+                if(this._roles[pl].getName()=='Criceto'&&this._roles[pl].isAlive())
                     this._killPlayer(this._players.indexOf(veggente_sel), 'night');
             }
         });
