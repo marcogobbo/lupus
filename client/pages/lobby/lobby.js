@@ -29,11 +29,6 @@ window.onload = () => {
     });
     xhr2.open('GET', '/images');
     xhr2.send();
-
-
-
-
-
 }
 
 //! NON FUNZIONA
@@ -52,9 +47,11 @@ sock.on('usersInLobby', (user, _imagesIndexes) => {
 })
 
 //When each client received the role, go to the game page
-sock.on('role', (role) => {
+sock.on('role', (role,legend) => {
     console.log('Your role', role);
+    console.log('Legend', legend);
     window.sessionStorage.setItem('role', JSON.stringify(role));
+    window.sessionStorage.setItem('legend', JSON.stringify(legend));
     window.sessionStorage.setItem('players', JSON.stringify(players));
     window.location.href = '../game/game.html';
 })

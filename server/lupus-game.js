@@ -51,6 +51,7 @@ class LupusGame {
 
         //set up the game
         this._computeRoles(settings);
+        this._legend=this._computeLegend(settings);
         this._sendRoles();
     }
 
@@ -98,8 +99,76 @@ class LupusGame {
                 name: this._roles[pl].getName(),
                 description: this._roles[pl].getDescription(),
                 color: this._roles[pl].getColor()
-            });
+            },this._legend);
         });
+    }
+
+    _computeLegend(settings){
+        var temp=[];
+        if(settings.lupi>0){
+            var player_s=new Lupo();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.lupi,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.contadini>0){
+            var player_s=new Contadino();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.contadini,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.veggente>0){
+            var player_s=new Veggente();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.veggente,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.gdc>0){
+            var player_s=new GuardiaDelCorpo();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.gdc,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.medium>0){
+            var player_s=new Medium();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.medium,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.gufo>0){
+            var player_s=new Gufo();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.gufo,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        if(settings.criceto>0){
+            var player_s=new Criceto();
+            temp.push({
+                'name':player_s.getName(),
+                'quantity':settings.criceto,
+                'color':player_s.getColor(),
+                'description':player_s.getDescription()
+            });
+        }
+        return temp;
     }
 
     _computeRoles(settings) {
