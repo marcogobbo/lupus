@@ -47,7 +47,7 @@ sock.on('usersInLobby', (user, _imagesIndexes) => {
 })
 
 //When each client received the role, go to the game page
-sock.on('role', (role,legend) => {
+sock.on('role', (role, legend) => {
     console.log('Your role', role);
     console.log('Legend', legend);
     window.sessionStorage.setItem('role', JSON.stringify(role));
@@ -134,6 +134,7 @@ function initNumRoles() {
     _('nMedium').value = settings.medium;
     _('nGufo').value = settings.gufo;
     _('nCriceto').value = settings.criceto;
+    _('nRoseMary').value = settings.roseMary;
 
     updateContadini();
 }
@@ -147,6 +148,7 @@ var settings = {
     'medium': 0,
     'gufo': 0,
     'criceto': 0,
+    'roseMary': 0,
 };
 
 function decrease(el) {
@@ -180,6 +182,12 @@ function decrease(el) {
             if (_('nCriceto').value > 0)
                 _('nCriceto').value--;
             settings.criceto = _('nCriceto').value;
+            updateContadini();
+            break;
+        case 'roseMary':
+            if (_('nRoseMary').value > 0)
+                _('nRoseMary').value--;
+            settings.roseMary = _('nRoseMary').value;
             updateContadini();
             break;
     }
@@ -220,6 +228,12 @@ function increase(el) {
             settings.criceto = _('nCriceto').value;
             updateContadini();
             break;
+        case 'roseMary':
+            if (_('nRoseMary').value < 1)
+                _('nRoseMary').value++;
+            settings.roseMary = _('nRoseMary').value;
+            updateContadini();
+            break;
     }
 }
 
@@ -235,6 +249,7 @@ function updateContadini() {
         - _('nMedium').value
         - _('nGufo').value
         - _('nCriceto').value;
+    - _('nRoseMary').value
 
     _('nContadini').value = nCont;
     settings.contadini = nCont;

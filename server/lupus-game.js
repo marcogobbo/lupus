@@ -168,6 +168,15 @@ class LupusGame {
                 'description': player_s.getDescription()
             });
         }
+        if (settings.roseMary > 0) {
+            var player_s = new RoseMary();
+            temp.push({
+                'name': player_s.getName(),
+                'quantity': settings.roseMary,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
+            });
+        }
         return temp;
     }
 
@@ -195,6 +204,8 @@ class LupusGame {
             rolesArr.push(new Gufo());
         for (var i = 0; i < settings.criceto; i++)
             rolesArr.push(new Criceto());
+        for (var i = 0; i < settings.roseMary; i++)
+            rolesArr.push(new RoseMary());
         //! aggiugere ruoli
 
         console.log(settings, rolesArr);
@@ -382,7 +393,16 @@ class LupusGame {
                         });
                         this._handleBallot();
                     } else if (arr.length == 1) {
-                        this._killPlayer(arr[0], 'day');
+
+                        var mariarosa_sel = _nightActions.getActionsByRoleName("Rose Mary");
+
+                        console.log('votazioni con mariarosa')
+                        console.log(arr[0], mariarosa_sel[0])
+
+                        if (arr[0] != this._players.indexOf(mariarosa_sel[0]))
+                            this._killPlayer(arr[0], 'day');
+                        else
+                            io.emit('dead_player', -1, null, 'night');
 
                         //go on with the game.
                         /**
@@ -466,7 +486,7 @@ class LupusGame {
             this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
 
-        
+
 
         //CRICETO
         var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
