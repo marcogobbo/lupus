@@ -553,7 +553,7 @@ class LupusGame {
             if (this._roles[pl].isAlive()) {
                 if (this._roles[pl].getName() == 'Criceto')
                     cricetoAlive = true;
-                if (this._roles[pl].getColor() == 'contadini')
+                if (this._roles[pl].getColor() == 0)
                     white++;
                 else if (this._roles[pl].getName() == 'Lupo')
                     black++;
