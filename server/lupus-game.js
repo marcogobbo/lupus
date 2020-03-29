@@ -554,7 +554,7 @@ class LupusGame {
                     cricetoAlive = true;
                 if (this._roles[pl].getSquad() == 'contadini')
                     white++;
-                else if (this._roles[pl].getSquad() == 'lupi')
+                else if (this._roles[pl].getName() == 'Lupo')
                     black++;
                 else
                     others++;    // qui ci sarà da dividere le squadre "gioco per me stesso"
