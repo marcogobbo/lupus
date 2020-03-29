@@ -135,6 +135,7 @@ function initNumRoles() {
     _('nGufo').value = settings.gufo;
     _('nCriceto').value = settings.criceto;
     _('nRoseMary').value = settings.roseMary;
+    _('nScemo').value = settings.scemo;
 
     updateContadini();
 }
@@ -149,6 +150,7 @@ var settings = {
     'gufo': 0,
     'criceto': 0,
     'roseMary': 0,
+    'scemo': 0,
 };
 
 function decrease(el) {
@@ -188,6 +190,12 @@ function decrease(el) {
             if (_('nRoseMary').value > 0)
                 _('nRoseMary').value--;
             settings.roseMary = _('nRoseMary').value;
+            updateContadini();
+            break;
+        case 'scemo':
+            if (_('nScemo').value > 0)
+                _('nScemo').value--;
+            settings.scemo = _('nScemo').value;
             updateContadini();
             break;
     }
@@ -234,6 +242,12 @@ function increase(el) {
             settings.roseMary = _('nRoseMary').value;
             updateContadini();
             break;
+        case 'scemo':
+            if (_('nScemo').value < 1)
+                _('nScemo').value++;
+            settings.scemo = _('nScemo').value;
+            updateContadini();
+            break;
     }
 }
 
@@ -248,8 +262,9 @@ function updateContadini() {
         - _('nVeggente').value
         - _('nMedium').value
         - _('nGufo').value
-        - _('nCriceto').value;
-    - _('nRoseMary').value
+        - _('nCriceto').value
+        - _('nRoseMary').value
+        - _('nScemo').value;
 
     _('nContadini').value = nCont;
     settings.contadini = nCont;

@@ -177,6 +177,15 @@ class LupusGame {
                 'description': player_s.getDescription()
             });
         }
+        if (settings.scemo > 0) {
+            var player_s = new Scemo();
+            temp.push({
+                'name': player_s.getName(),
+                'quantity': settings.scemo,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
+            });
+        }
         return temp;
     }
 
@@ -206,6 +215,8 @@ class LupusGame {
             rolesArr.push(new Criceto());
         for (var i = 0; i < settings.roseMary; i++)
             rolesArr.push(new RoseMary());
+        for (var i = 0; i < settings.scemo; i++)
+            rolesArr.push(new Scemo());
         //! aggiugere ruoli
 
         console.log(settings, rolesArr);
@@ -412,7 +423,15 @@ class LupusGame {
                          */
 
                         /**0. CHECK IF GAME ENDED */
-                        var winningTeam = this._computeWinner();
+                        var winningTeam;
+
+                        // console.log(this.lastDeadPlayer);
+                        // console.log(this._roles)
+
+                        if (this._roles[this._players[this.lastDeadPlayer.player]].getName() == 'Scemo')
+                            winningTeam = 'Scemo'
+                        else
+                            winningTeam = this._computeWinner();
                         if (winningTeam == 'none') {
                             this._resetVote();
                             /**0. switch to night */

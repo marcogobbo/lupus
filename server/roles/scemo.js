@@ -11,7 +11,7 @@ class Scemo extends Role{
 
     canAct(){
         //TODO!!
-        return true;
+        return false;
     }
 }
 

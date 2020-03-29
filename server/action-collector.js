@@ -3,7 +3,7 @@ class ActionCollector {
         this._actions = [];
         this._previous = [];
         // this._nightCount=-1;
-        this._nightCount = -1;
+        this._nightCount = 0;
     }
 
     newNight() {
