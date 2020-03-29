@@ -547,6 +547,7 @@ class LupusGame {
         var cricetoAlive = false;
 
         var black = 0, white = 0, others = 0;
+
         this._players.forEach((pl) => {
             //get numero carte bianche e nere
             if (this._roles[pl].isAlive()) {
@@ -560,6 +561,10 @@ class LupusGame {
                     others++;    // qui ci sarà da dividere le squadre "gioco per me stesso"
             }
         });
+
+        console.log('neri: ', black)
+        console.log('bianchi: ', white)
+        
         if (black == 0 && white > 1)
             if (!cricetoAlive)
                 return 'contadini'
