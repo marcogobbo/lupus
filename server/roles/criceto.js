@@ -9,7 +9,6 @@ class Criceto extends Role{
     }
 
     canAct(){
-        //TODO!!
         return false;
     }
 }

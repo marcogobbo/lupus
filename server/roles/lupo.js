@@ -22,15 +22,15 @@ class Lupo extends Role {
         });
         io.to(this.connection).emit("my_friends", others);
 
-        var selezionabili = [];
+        this.selezionabili = [];
         players.forEach((pl) => {
             if (roles[pl].isAlive()) {
-                selezionabili.push(pl);
+                this.selezionabili.push(pl);
             }
         });
         var array = [];
         players.forEach((pl, i) => {
-            array[i] = selezionabili.includes(pl);
+            array[i] = this.selezionabili.includes(pl);
         });
 
         if (_nightActions.getNightCount() != 0)
@@ -117,6 +117,11 @@ class Lupo extends Role {
         if (_nightActions.getNightCount() != 0)
             io.to(this.connection).emit("control_selection", true, 'night', array);
 
+    }
+
+    onTimeout(){
+        var i = Math.floor(Math.random() * this.selezionabili.length);
+        this.onResponse(this.selezionabili[i]);
     }
 }
 

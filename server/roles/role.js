@@ -55,6 +55,8 @@ class Role {
     kill() {
         this._alive = false;
     }
+
+    onTimeout(){}
 }
 
 module.exports = Role;

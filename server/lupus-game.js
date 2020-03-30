@@ -23,7 +23,7 @@ const ActionCollector = require('./action-collector');
  * Timer Duration [ms]
  */
 
-const timerLength = 10000;
+const timerLength = 20000;
 const intervalLength = 1000; //each second send an alert
 
 class LupusGame {
@@ -378,7 +378,7 @@ class LupusGame {
             }
         });
 
-        ////console.log(this._hasConfirmed,this._whoCanPlay);
+        //console.log(this._hasConfirmed,this._whoCanPlay);
         if (this._time == 'day') {
             if (this._dayTime == 'vote') {
                 if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
@@ -796,29 +796,70 @@ class LupusGame {
             this._stopTimer();
             //to do: handle NIGHT/VOTE/BALLOT TIMEOUT!!
             console.log("## TIME-OUT ("+(this._time=='night'?this._time:this._dayTime)+") ##");
+            io.emit("timeout_alert",this._time=='night'?this._time:this._dayTime);
 
             /**
              * COMMENTATO PERCHÈ NON COMPLETO: DOBBIAMO DECIDERE COME GESTIRE I VOTI MANCANTI. AD ORA FUNZIONA SOLO L'AVVISO AL CLIENT
              */
-            //LOCK ALL THE PLAYERS
-            // this._players.forEach(pl => {
-            //     this._handlePlayerSelection(false, pl, null);
-            // });
-            // if(this._time=='night'){
-            //     //TODO: handle missing night response
-                
-            //     this._handleNightEnd();
-            // } else if (this._time=='day'){
-            //     if(this._dayTime=='vote'){
-            //         //TODO: handle missing day vote response
-                    
-            //         this._handleVoteEnd();
-            //     } else if(this._dayTime=='ballot'){
-            //         //TODO: handle missing day vote response
-                    
-            //         this._handleBallotEnd();
-            //     }
-            // }
+            if(this._time=='night'){
+                //handle missing night response
+                //LOCK ALL THE PLAYERS
+                this._players.forEach(pl => {
+                    this._handlePlayerSelection(false, pl, null);
+                });
+                var wolf_check=_nightActions.getActionsByRoleName("Lupo").length>0;
+                this._whoCanPlay.forEach((pl, i) => {
+                    if(!this._hasConfirmed[i]){
+                        if(this._roles[pl].getName() != 'Lupo'||!wolf_check){
+                            this._roles[pl].onTimeout();
+                            if(this._roles[pl].getName()=='Lupo'){
+                                wolf_check=true;
+                            }
+                        }
+                        this._hasConfirmed[i]=true;
+                    }
+                });
+
+                this._handleNightEnd();
+            } else if (this._time=='day'){
+                //LOCK ALL THE PLAYERS
+                this._players.forEach(pl => {
+                    this._handlePlayerSelection(false, pl, null);
+                });
+                if(this._dayTime=='vote'){
+                    //Handle missing day vote response
+                    var index=this._mostVotedPlayers(this._vote)[0];
+                    console.log(this._players[index],this._whoCanPlay);
+                    for(let i=0;i<this._whoCanPlay.length;i++){
+                        if(!this._hasConfirmed[i]){
+                            console.log(this._players[i]);
+                            this._vote[i]=this._players[index];
+                            io.emit('voteConfirmed', {
+                                whoVoted: this._players[i],
+                                selected: this._players[index]
+                            }, this.calculateVoti(this._vote));
+                            this._hasConfirmed[i]=true;
+                        }
+                    }
+                    this._handleVoteEnd();
+                } else if(this._dayTime=='ballot'){
+                    //Handle missing day vote response
+                    var index=this._mostVotedPlayers(this._vote)[0];
+                    console.log(this._players[index],this._whoCanPlay);
+                    for(let i=0;i<this._whoCanPlay.length;i++){
+                        if(!this._hasConfirmed[i]){
+                            console.log(this._players[i]);
+                            this._vote[i]=this._players[index];
+                            io.emit('voteConfirmed', {
+                                whoVoted: this._players[i],
+                                selected: this._players[index]
+                            }, this.calculateVoti(this._vote));
+                            this._hasConfirmed[i]=true;
+                        }
+                    }
+                    this._handleBallotEnd();
+                }
+            }
 
         },timerLength)
     }

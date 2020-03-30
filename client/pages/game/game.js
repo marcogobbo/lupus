@@ -610,5 +610,13 @@ sock.on('draw_repetition', () => {
  */
 
  sock.on('remaining_time',timeLeft => {
+    var min=Math.floor((timeLeft/1000)/60);
+    var sec= timeLeft/1000 - min*60;
+    document.getElementById("min").innerHTML=(min<10?"0":"")+min;
+    document.getElementById("sec").innerHTML=(sec<10?"0":"")+sec;
     console.log(timeLeft);
- })
+ });
+
+ sock.on('timeout_alert',time => {
+    console.log("time-out - "+time);
+ });

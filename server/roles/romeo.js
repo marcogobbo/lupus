@@ -11,15 +11,15 @@ class Romeo extends Role{
         this.connection = user.connection;
         this.username = user.username;
 
-        var selezionabili = [];
+        this.selezionabili = [];
         players.forEach((pl) => {
             if (roles[pl].isAlive() && pl != this.username) {
-                selezionabili.push(pl);
+                this.selezionabili.push(pl);
             }
         });
         var array = [];
         players.forEach((pl, i) => {
-            array[i] = selezionabili.includes(pl);
+            array[i] = this.selezionabili.includes(pl);
         });
 
         io.to(this.connection).emit("control_selection", true, 'night', array);
@@ -32,6 +32,11 @@ class Romeo extends Role{
     onResponse(username) {
         _nightActions.addAction(this.getName(), username);
         io.to(this.connection).emit("romeo_response", username);
+    }
+
+    onTimeout(){
+        var i = Math.floor(Math.random() * this.selezionabili.length);
+        this.onResponse(this.selezionabili[i]);
     }
 }
 
