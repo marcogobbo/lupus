@@ -604,3 +604,11 @@ sock.on('draw_repetition', () => {
 // sock.on('farmer_night', () => {
 //     writeLog('Buonanotte. &#128564;', 'response');
 // })
+
+/**
+ * INTERVAL UPDATE
+ */
+
+ sock.on('remaining_time',timeLeft => {
+    console.log(timeLeft);
+ })

@@ -39,11 +39,10 @@ io.on('connection', (sock) => {
     });
 
     sock.on('lobby', (username, imageIndex) => {
-        console.log(imageIndex)
-
+        //console.log(imageIndex)
         userConnected.push(username);
         imagesIndexes.push(imageIndex);
-        console.log(imagesIndexes)
+        //console.log(imagesIndexes)
         console.log('RECEIVED LOBBY:', username);
         io.emit('usersInLobby', userConnected, imagesIndexes);
         connections[username] = sock.id;
@@ -72,11 +71,10 @@ io.on('connection', (sock) => {
     });
 
     sock.on('logDay', (userVoting, userVoted) => {
-        console.log('arrivato LOGDAY')
         LG.onPlayerSelected(userVoting, userVoted);
     })
     sock.on('confermaVoto', (userVoting, userVoted) => {
-        LG.onVoteConfirmed(userVoting, userVoted);
+        LG.onDayResponse(userVoting, userVoted);
     })
     sock.on("role_selection", (userVoting, userVoted) => {
         LG.onNightResponse(userVoting, userVoted);
