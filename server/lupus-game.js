@@ -361,6 +361,7 @@ class LupusGame {
         });
         if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
             //console.log("## NIGHT ENDED ##");
+            clearTimeout(this._timer);
             this._stopTimer();
             this._handleNightEnd();
         }
@@ -382,6 +383,7 @@ class LupusGame {
             if (this._dayTime == 'vote') {
                 if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
                     //console.log("## Vote ended ##");
+                    clearTimeout(this._timer);
                     this._stopTimer();
                     this._handleVoteEnd();
                 }
@@ -390,6 +392,7 @@ class LupusGame {
                 //console.log("## BALLOT VOTE RECEIVED ##");
                 if (this._checkEndVote(this._hasConfirmed, this._whoCanPlay)) {
                     //console.log("## Ballot ended ##");
+                    clearTimeout(this._timer);
                     this._stopTimer();
                     this._handleBallotEnd();
                 }
