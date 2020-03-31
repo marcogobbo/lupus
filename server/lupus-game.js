@@ -35,6 +35,7 @@ class LupusGame {
         this._connections = connections;
         this._roles = [];
         this.lastDeadPlayer = null;
+        this._lastsAtBallot = null;
 
         /**
          * Game time attributes
@@ -448,8 +449,8 @@ class LupusGame {
 
             var mariarosa_sel = _nightActions.getActionsByRoleName("Rose Mary");
 
-            console.log('votazioni con mariarosa')
-            console.log(arr[0], mariarosa_sel[0])
+            // console.log('votazioni con mariarosa')
+            // console.log(arr[0], mariarosa_sel[0])
 
             if (arr[0] != this._players.indexOf(mariarosa_sel[0]))
                 this._killPlayer(arr[0], 'day');
@@ -596,8 +597,8 @@ class LupusGame {
             }
         });
 
-        console.log('neri: ', black)
-        console.log('bianchi: ', white)
+        // console.log('neri: ', black)
+        // console.log('bianchi: ', white)
 
         if (black == 0 && white > 1)
             if (!cricetoAlive)
@@ -625,30 +626,29 @@ class LupusGame {
         this._debug();
         //what players?
         //1) compute the due max values max1,max2; 2) check how many players has been voted max1 times; 3) if <2 send also all of max2 
-        var leaderboard = [];
+        var ballotLeaderboard = [];
         for (let i = 0; i < this._players.length; i++) {
-            leaderboard[i] = 0;
+            ballotLeaderboard[i] = 0;
         }
         this._vote.forEach(selected => {
-            leaderboard[this._players.indexOf(selected)]++;
+            ballotLeaderboard[this._players.indexOf(selected)]++;
         });
-        this._resetVote();
 
-        //console.log("Leaderboard: " + leaderboard);
+        //console.log("ballotLeaderboard: " + ballotLeaderboard);
         var max1 = -1;
         var max2 = -1;
         var indexes = [];
-        for (let i = 0; i < leaderboard.length; i++) {
-            if (leaderboard[i] > max1) {
+        for (let i = 0; i < ballotLeaderboard.length; i++) {
+            if (ballotLeaderboard[i] > max1) {
                 indexes = [];
                 indexes.push(i);
                 max2 = max1;
-                max1 = leaderboard[i];
-            } else if (leaderboard[i] == max1) {
+                max1 = ballotLeaderboard[i];
+            } else if (ballotLeaderboard[i] == max1) {
                 indexes.push(i);
             }
-            if (leaderboard[i] > max2 && leaderboard[i] != max1) {
-                max2 = leaderboard[i];
+            if (ballotLeaderboard[i] > max2 && ballotLeaderboard[i] != max1) {
+                max2 = ballotLeaderboard[i];
             }
         }
 
@@ -670,22 +670,31 @@ class LupusGame {
         /**
          * Aggiungi in caso di un solo giocatore.
          */
-        if (indexes.length < 2) {
-            for (let i = 0; i < leaderboard.length; i++) {
-                if (leaderboard[i] == max2) {
+        if (indexes.length < 2 && max2>0) {
+            for (let i = 0; i < ballotLeaderboard.length; i++) {
+                if (ballotLeaderboard[i] == max2) {
                     indexes.push(i);
                 }
             }
         }
+        this._lastsAtBallot=indexes;
 
-        //console.log("Max number of votes: " + max1 + ", " + max2 + "\nPlayers indexes: " + indexes);
+        if(indexes.length>2){
+            this._resetVote();
+            this._openBallot();
+        } else{
+            //SOLO UNO VOTATO DA TUTTI ==> MUORE SOLO LUI SENZA BALLOTTAGGIO
+            this._handleBallotEnd();
+        }
+    }
 
+    _openBallot(){
         //send open ballot
-        io.emit("ballot_time", indexes);
+        io.emit("ballot_time", this._lastsAtBallot);
         //tempo per discolparsi?
 
         this._players.forEach((pl, i) => {
-            if (this._roles[pl].isAlive() && !indexes.includes(i)) {
+            if (this._roles[pl].isAlive() && !this._lastsAtBallot.includes(i)) {
                 this._whoCanPlay.push(pl);
             }
         });
@@ -695,7 +704,7 @@ class LupusGame {
             //selectable: all but not me
             var temp = [];
             for (let j = 0; j < this._players.length; j++) {
-                temp[j] = indexes.includes(j);
+                temp[j] = this._lastsAtBallot.includes(j);
             }
             this._handlePlayerSelection(true, this._whoCanPlay[i], temp);
             //console.log("Ballot message to: " + this._whoCanPlay[i]);
@@ -775,8 +784,7 @@ class LupusGame {
         //console.log("vote: ", this._vote);
         //console.log("whoCanPlay: ", this._whoCanPlay);
         //console.log("hasConfirmed: ", this._hasConfirmed);
-        if (this._time == 'night')
-            console.log("Last nightActions: ", _nightActions.getActions());
+        console.log("Last nightActions: ", _nightActions.getActions());
     }
 
     _startTimer() {
@@ -795,7 +803,7 @@ class LupusGame {
         this._timer = setTimeout(()=>{
             this._stopTimer();
             //to do: handle NIGHT/VOTE/BALLOT TIMEOUT!!
-            console.log("## TIME-OUT ("+(this._time=='night'?this._time:this._dayTime)+") ##");
+            //console.log("## TIME-OUT ("+(this._time=='night'?this._time:this._dayTime)+") ##");
             io.emit("timeout_alert",this._time=='night'?this._time:this._dayTime);
 
             /**
@@ -827,37 +835,69 @@ class LupusGame {
                     this._handlePlayerSelection(false, pl, null);
                 });
                 if(this._dayTime=='vote'){
-                    //Handle missing day vote response
-                    var index=this._mostVotedPlayers(this._vote)[0];
-                    console.log(this._players[index],this._whoCanPlay);
-                    for(let i=0;i<this._whoCanPlay.length;i++){
-                        if(!this._hasConfirmed[i]){
-                            console.log(this._players[i]);
-                            this._vote[i]=this._players[index];
-                            io.emit('voteConfirmed', {
-                                whoVoted: this._players[i],
-                                selected: this._players[index]
-                            }, this.calculateVoti(this._vote));
-                            this._hasConfirmed[i]=true;
-                        }
+                    //check if someone has confirmed his vote
+                    var someone=false;
+                    var i=0; var length=this._whoCanPlay.length;
+                    
+                    while(i<length&&!someone){
+                        someone=this._hasConfirmed[i];
+                        i++;
                     }
-                    this._handleVoteEnd();
+
+                    if(someone){
+                        //Handle missing day vote response
+                        var index=this._mostVotedPlayers(this._vote)[0];
+                        //console.log(this._players[index],this._whoCanPlay);
+                        for(let i=0;i<this._whoCanPlay.length;i++){
+                            if(!this._hasConfirmed[i]){
+                                //console.log(this._players[i]);
+                                this._vote[i]=this._players[index];
+                                io.emit('voteConfirmed', {
+                                    whoVoted: this._players[i],
+                                    selected: this._players[index]
+                                }, this.calculateVoti(this._vote));
+                                this._hasConfirmed[i]=true;
+                            }
+                        }
+                        this._handleVoteEnd();
+                    }else{
+                        //repeat
+                        this._resetVote();
+                        this._enableVotingTime();
+                    }
                 } else if(this._dayTime=='ballot'){
-                    //Handle missing day vote response
-                    var index=this._mostVotedPlayers(this._vote)[0];
-                    console.log(this._players[index],this._whoCanPlay);
-                    for(let i=0;i<this._whoCanPlay.length;i++){
-                        if(!this._hasConfirmed[i]){
-                            console.log(this._players[i]);
-                            this._vote[i]=this._players[index];
-                            io.emit('voteConfirmed', {
-                                whoVoted: this._players[i],
-                                selected: this._players[index]
-                            }, this.calculateVoti(this._vote));
-                            this._hasConfirmed[i]=true;
-                        }
+                    //check if someone has confirmed his vote
+                    var someone=false;
+                    var i=0; var length=this._whoCanPlay.length;
+                    
+                    while(i<length&&!someone){
+                        someone=this._hasConfirmed[i];
+                        i++;
                     }
-                    this._handleBallotEnd();
+                    
+                    if(someone){
+                        //Handle missing day vote response
+                        var index=this._mostVotedPlayers(this._vote)[0];
+                        //console.log(this._players[index],this._whoCanPlay);
+                        for(let i=0;i<this._whoCanPlay.length;i++){
+                            if(!this._hasConfirmed[i]){
+                                //console.log(this._players[i]);
+                                this._vote[i]=this._players[index];
+                                io.emit('voteConfirmed', {
+                                    whoVoted: this._players[i],
+                                    selected: this._players[index]
+                                }, this.calculateVoti(this._vote));
+                                this._hasConfirmed[i]=true;
+                            }
+                        }
+                        this._handleBallotEnd();
+                    } else {
+                        this._players.forEach(pl => {
+                            this._handlePlayerSelection(false, pl, null);
+                        });
+                        this._resetVote();
+                        this._openBallot();
+                    }
                 }
             }
 

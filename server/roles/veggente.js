@@ -30,7 +30,7 @@ class Veggente extends Role {
         console.log(_nightActions)
         var r_color = this.roles[username].getColor();
         //console.log(r_color)
-        io.to(this.connection).emit("veggente_response", r_color);
+        io.to(this.connection).emit("veggente_response", username, r_color);
     }
 
     canAct() {

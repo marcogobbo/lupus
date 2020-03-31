@@ -550,11 +550,11 @@ function disableAll() {
 }
 
 //! CONTROLLER ROLES //
-sock.on('veggente_response', color => {
+sock.on('veggente_response', (username,color) => {
     console.log(color);
-    writeLog('<b>' + lastClicked + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
+    writeLog('<b>' + username + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
 
-    var charac = document.getElementsByClassName('character')[players.indexOf(lastClicked)];
+    var charac = document.getElementsByClassName('character')[players.indexOf(username)];
     charac.id = null;
     if (color == 0)
         charac.classList.add('cartaBianca');
@@ -608,7 +608,6 @@ sock.on('draw_repetition', () => {
 /**
  * INTERVAL UPDATE
  */
-
  sock.on('remaining_time',timeLeft => {
     var min=Math.floor((timeLeft/1000)/60);
     var sec= timeLeft/1000 - min*60;
@@ -619,4 +618,5 @@ sock.on('draw_repetition', () => {
 
  sock.on('timeout_alert',time => {
     console.log("time-out - "+time);
+    writeLog('<b>TIME-OUT</b> ('+time+')', time=='night'?'response':'info');
  });
