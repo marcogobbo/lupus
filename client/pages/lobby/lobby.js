@@ -29,6 +29,9 @@ window.onload = () => {
     });
     xhr2.open('GET', '/images');
     xhr2.send();
+
+    _('minGiorno').value=3;
+    _('minNotte').value=2;
 }
 
 //! NON FUNZIONA
@@ -262,7 +265,7 @@ function increaseTimer(el){
 
 function decreaseTimer(el){
     if(_(el).value>(el=='minGiorno'?3:2))
-        _(el).value++;
+        _(el).value--;
 }
 
 function updateContadini() {

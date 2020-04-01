@@ -71,6 +71,8 @@ class LupusGame {
         this.timerNight = settings.timerNight*60*1000;
         this._interval = undefined;
         this._timer = undefined;
+
+        console.log("TIMER", this.timerDay,this.timerNight);
     }
 
     _start() {
@@ -801,7 +803,7 @@ class LupusGame {
         else if(this._time=='day'&&this.daytime=='ballot'){
             timerLength=this.timerDay*this._lastsAtBallot.length;
         }
-        this._timeLeft = this.timerLength; //treshold(?)
+        this._timeLeft = timerLength; //treshold(?)
         io.emit("remaining_time", this._timeLeft);
         this._interval = setInterval(() => {
             this._timeLeft -= intervalLength;
