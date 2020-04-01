@@ -798,9 +798,9 @@ class LupusGame {
         var timerLength=0;
         if(this._time=='night')
             timerLength=this.timerNight;
-        else if(this._time=='day'&&this.daytime=='vote')
+        else if(this._time=='day'&&this._dayTime=='vote')
             timerLength=this.timerDay;
-        else if(this._time=='day'&&this.daytime=='ballot'){
+        else if(this._time=='day'&&this._dayTime=='ballot'){
             timerLength=this.timerDay*this._lastsAtBallot.length;
         }
         this._timeLeft = timerLength; //treshold(?)
@@ -911,7 +911,7 @@ class LupusGame {
                 }
             }
 
-        },timerLength)
+        },timerLength);
     }
 
     _stopTimer() {

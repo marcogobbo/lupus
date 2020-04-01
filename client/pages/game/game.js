@@ -279,7 +279,9 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
         }
 
 
-    } else {        // vuol dire che sono al ballottaggio
+    } else {
+        document.querySelector('#box input[type="button"]').style.display = "none";
+        // vuol dire che sono al ballottaggio
         for (let i = 0; i < elements.length; i++) {
             if (!deadPlayers[i])
                 if (elements[i].id != 'me') {
