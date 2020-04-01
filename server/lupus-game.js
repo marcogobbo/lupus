@@ -69,6 +69,8 @@ class LupusGame {
         this._timeLeft = 0;
         this.timerLength = 20000;
         //this.timerLength=settings.timerLength;
+        this.timerDay = settings.timerDay;
+        this.timerNight = settings.timerNight;
         this._interval = undefined;
         this._timer = undefined;
     }
