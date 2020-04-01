@@ -255,6 +255,16 @@ function _(el) {
     return document.getElementById(el);
 }
 
+function increaseTimer(el){
+    if(_(el).value<5)
+        _(el).value++;
+}
+
+function decreaseTimer(el){
+    if(_(el).value>(el=='minGiorno'?3:2))
+        _(el).value++;
+}
+
 function updateContadini() {
     var nCont = players.length
         - _('nLupi').value
@@ -271,5 +281,7 @@ function updateContadini() {
 }
 
 function goPlay() {
+    settings.timerDay=_('minGiorno').value;
+    settings.timerNight=_('minNotte').value;
     sock.emit('clientSettings', settings);
 }

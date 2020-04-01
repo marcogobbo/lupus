@@ -67,10 +67,8 @@ class LupusGame {
          * - Interval: each second send the timeLeft to clients
          */
         this._timeLeft = 0;
-        this.timerLength = 20000;
-        //this.timerLength=settings.timerLength;
-        this.timerDay = settings.timerDay;
-        this.timerNight = settings.timerNight;
+        this.timerDay = settings.timerDay*60*1000;  //min to milliseconds
+        this.timerNight = settings.timerNight*60*1000;
         this._interval = undefined;
         this._timer = undefined;
     }
@@ -795,7 +793,14 @@ class LupusGame {
          * This method is used to set up the timer and the interval
          */
         console.log("## TIMER STARTED ("+(this._time=='night'?this._time:this._dayTime)+") ##");
-
+        var timerLength=0;
+        if(this._time=='night')
+            timerLength=this.timerNight;
+        else if(this._time=='day'&&this.daytime=='vote')
+            timerLength=this.timerDay;
+        else if(this._time=='day'&&this.daytime=='ballot'){
+            timerLength=this.timerDay*this._lastsAtBallot.length;
+        }
         this._timeLeft = this.timerLength; //treshold(?)
         io.emit("remaining_time", this._timeLeft);
         this._interval = setInterval(() => {
@@ -904,7 +909,7 @@ class LupusGame {
                 }
             }
 
-        },this.timerLength)
+        },timerLength)
     }
 
     _stopTimer() {

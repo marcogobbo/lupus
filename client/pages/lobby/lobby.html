@@ -104,16 +104,16 @@
                 </div>
                 <div class="option">
                     <hr>
-                    <label>Durata Giorno</label>
-                    <input type="button" value="-" onclick="decreaseTimer('giorno')">
+                    <label>Durata Giorno (minuti)</label>
+                    <input type="button" value="-" onclick="decreaseTimer('minGiorno')">
                     <input type="text" id="minGiorno" min="3" class="number">
-                    <input type="button" value="+" onclick="increaseTimer('giorno')">
+                    <input type="button" value="+" onclick="increaseTimer('minGiorno')">
                 </div>
                 <div class="option">
-                    <label>Durata Notte</label>
-                    <input type="button" value="-" onclick="decreaseTimer('notte')">
+                    <label>Durata Notte (minuti)</label>
+                    <input type="button" value="-" onclick="decreaseTimer('minNotte')">
                     <input type="text" id="minNotte" min="2" class="number">
-                    <input type="button" value="+" onclick="increaseTimer('notte')">
+                    <input type="button" value="+" onclick="increaseTimer('minNotte')">
                 </div>
             </div>
             <input type="button" value="Conferma" onclick="goPlay()">
