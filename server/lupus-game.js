@@ -23,7 +23,6 @@ const ActionCollector = require('./action-collector');
  * Timer Duration [ms]
  */
 
-const timerLength = 20000;
 const intervalLength = 1000; //each second send an alert
 
 class LupusGame {
@@ -68,6 +67,8 @@ class LupusGame {
          * - Interval: each second send the timeLeft to clients
          */
         this._timeLeft = 0;
+        this.timerLength = 20000;
+        //this.timerLength=settings.timerLength;
         this._interval = undefined;
         this._timer = undefined;
     }
@@ -793,7 +794,7 @@ class LupusGame {
          */
         console.log("## TIMER STARTED ("+(this._time=='night'?this._time:this._dayTime)+") ##");
 
-        this._timeLeft = timerLength; //treshold(?)
+        this._timeLeft = this.timerLength; //treshold(?)
         io.emit("remaining_time", this._timeLeft);
         this._interval = setInterval(() => {
             this._timeLeft -= intervalLength;
@@ -901,7 +902,7 @@ class LupusGame {
                 }
             }
 
-        },timerLength)
+        },this.timerLength)
     }
 
     _stopTimer() {

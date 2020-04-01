@@ -102,6 +102,18 @@
                     <input type="text" id="nScemo" min="0" class="number">
                     <input type="button" value="+" onclick="increase('scemo')">
                 </div>
+                <div class="option">
+                    <label>Durata Giorno</label>
+                    <input type="button" value="-" onclick="decreaseTimer('giorno')">
+                    <input type="text" id="minGiorno" min="3" class="number">
+                    <input type="button" value="+" onclick="increaseTimer('giorno')">
+                </div>
+                <div class="option">
+                    <label>Durata Notte</label>
+                    <input type="button" value="-" onclick="decreaseTimer('notte')">
+                    <input type="text" id="minNotte" min="2" class="number">
+                    <input type="button" value="+" onclick="increaseTimer('notte')">
+                </div>
             </div>
             <input type="button" value="Conferma" onclick="goPlay()">
             <h1 id="missingPlayers"></h1>
