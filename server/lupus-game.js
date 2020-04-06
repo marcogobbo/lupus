@@ -16,6 +16,7 @@ const Scemo = require('./roles/scemo');
 const Massone = require('./roles/massone');
 const MagaCirce = require('./roles/magaCirce');
 const Criceto = require('./roles/criceto');
+const FiglioDelLupo = require('./roles/figlioDelLupo')
 
 const ActionCollector = require('./action-collector');
 
@@ -26,7 +27,7 @@ const ActionCollector = require('./action-collector');
 const intervalLength = 1000; //each second send an alert
 
 class LupusGame {
-    constructor(players, connections, settings) {
+    constructor(players, connections, settings, filename) {
         /**
          * Players and socket attributes
          */
@@ -54,7 +55,8 @@ class LupusGame {
          * Parameters used to wait until all players have been loaded inn the game page.
          */
         this._started = false;
-        this._updateCount = 0;
+        // this._updateCount = 0;
+        this._hasUpdated = [];
 
         //set up the game
         this._computeRoles(settings);
@@ -67,12 +69,52 @@ class LupusGame {
          * - Interval: each second send the timeLeft to clients
          */
         this._timeLeft = 0;
-        this.timerDay = settings.timerDay*60*1000;  //min to milliseconds
-        this.timerNight = settings.timerNight*60*1000;
+        this.timerDay = settings.timerDay * 60 * 1000;  //min to milliseconds
+        this.timerNight = settings.timerNight * 60 * 1000;
         this._interval = undefined;
         this._timer = undefined;
 
-        console.log("TIMER", this.timerDay,this.timerNight);
+        /**
+         * Log on File
+         */
+        this._filename = filename;
+        this._initLogFile(settings);
+    }
+
+    _initLogFile(settings) {
+        console.log("New LupusGame created. [Log: " + this._filename + "]");
+        var str = "#### Lupus Game ####\n" + "Match created by: " + this._players[0] + "\n";
+        str += "\nMatch settings\n";
+        str += JSON.stringify(settings) + "\n";
+        str += "\n####################\n"
+        str += "\nPlayers:\n";
+        this._players.forEach(val => {
+            var temp = val + " {\n";
+            temp += "\tconnection: " + this._connections[val] + "\n";
+            temp += "\trole: " + this._roles[val].getName() + "\n";
+            temp += "}";
+            str += temp + "\n";
+        });
+        str += "\n####################\n"
+        str += "\nLOG:\n\n";
+
+        var fs = require('fs')
+        var logger = fs.createWriteStream(this._filename, {
+            flags: 'a' // 'a' means appending (old data will be preserved)
+        })
+        logger.write(str + "\n");
+        logger.end();
+    }
+
+    _log(str) {
+        var fs = require('fs')
+        var logger = fs.createWriteStream(this._filename, {
+            flags: 'a' // 'a' means appending (old data will be preserved)
+        })
+        var today = new Date();
+        var datetime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + ":" + today.getMilliseconds();
+        logger.write("[" + datetime + "] " + str + "\n");
+        logger.end();
     }
 
     _start() {
@@ -88,8 +130,8 @@ class LupusGame {
         this._time = 'night';
         this._dayTime = '';
         this._sendTimeUpdate();
-
         _nightActions.newNight();
+
         this._players.forEach((pl) => {
             if (this._roles[pl].isAlive()) {
                 this._whoCanPlay.push(pl);
@@ -112,6 +154,18 @@ class LupusGame {
             );
             this._hasConfirmed[i] = !this._roles[this._whoCanPlay[i]].canAct();
         }
+
+        /**
+         * LOG
+         */
+        var str = "Night started(" + _nightActions.getNightCount() + ")\nAlive: ";
+        var pl = "";
+        this._whoCanPlay.forEach(val => {
+            if (pl != "") pl += ", ";
+            pl += val;
+        });
+        str+=pl;
+        this._log(str);
 
         //START TIMER
         this._startTimer();
@@ -211,6 +265,24 @@ class LupusGame {
                 'description': player_s.getDescription()
             });
         }
+        // if (settings.figlioDelLupo > 0) {
+        //     var player_s = new FiglioDelLupo();
+        //     temp.push({
+        //         'name': player_s.getName(),
+        //         'quantity': settings.figlioDelLupo,
+        //         'color': player_s.getColor(),
+        //         'description': player_s.getDescription()
+        //     });
+        // }
+        // if (settings.romeo > 0) {
+        //     var player_s = new Romeo();
+        //     temp.push({
+        //         'name': player_s.getName(),
+        //         'quantity': settings.romeo,
+        //         'color': player_s.getColor(),
+        //         'description': player_s.getDescription()
+        //     });
+        // }
         return temp;
     }
 
@@ -242,9 +314,11 @@ class LupusGame {
             rolesArr.push(new RoseMary());
         for (var i = 0; i < settings.scemo; i++)
             rolesArr.push(new Scemo());
+        // for (var i = 0; i < settings.figlioDelLupo; i++)
+        //     rolesArr.push(new FiglioDelLupo());
         //! aggiugere ruoli
 
-        console.log(settings, rolesArr);
+        //console.log(settings, rolesArr);
         this._players.forEach(pl => {
             //get indice del ruolo
             var i = Math.floor(Math.random() * rolesArr.length);
@@ -289,6 +363,17 @@ class LupusGame {
             this._handlePlayerSelection(true, this._whoCanPlay[i], array);
         }
         this._debug();
+        /**
+         * LOG
+         */
+        var str = "Voting time started" + "\nAlive: ";
+        var pl = "";
+        this._whoCanPlay.forEach(val => {
+            if (pl != "") pl += ", ";
+            pl += val;
+        });
+        str+=pl;
+        this._log(str);
 
         //START TIMER
         this._startTimer();
@@ -300,15 +385,26 @@ class LupusGame {
         */
     }
 
-    updateSocketID(connections) {
+    updateSocketID(username, connections) {
         /*
         This method is used to recall the socketID update
         */
         this._connections = connections;
+        console.log("[Socket Update] " + username);
         if (!this._started) {
-            this._updateCount++;
-            if (this._updateCount == this._players.length)
+            if(!this._hasUpdated.includes(username))
+                this._hasUpdated.push(username);
+            var users = "";
+            for (let i = 0; i < this._players.length; i++) {
+                if (!this._hasUpdated.includes(this._players[i])) {
+                    if (users != "") users += ", ";
+                    users += this._players[i];
+                }
+            }
+            if (this._hasUpdated.length == this._players.length)
                 this._start();
+            else
+                console.log("Waiting for: " + users);
         }
     }
 
@@ -359,6 +455,11 @@ class LupusGame {
                         })
                         this._hasConfirmed[i] = false;
                         this._roles[userVoting].repeat();
+                        /**
+                         * LOG
+                         */
+                        this._log("Repeating Wolf night selection");
+
                     }
                 }
             }
@@ -408,7 +509,13 @@ class LupusGame {
         this._players.forEach(pl => {
             this._handlePlayerSelection(false, pl, null);
         });
-        // this._debug();
+
+        this._debug();
+        /**
+         * LOG
+         */
+        this._log("Night ended");
+
         //operations using the action collector
         this._time = 'day';
         this._sendTimeUpdate();
@@ -507,6 +614,9 @@ class LupusGame {
     };
 
     _computeNightOperations() {
+        var log_str = "Computing night operations\n";
+        log_str+="Night Actions "+_nightActions.toString();
+        
         var deadCounter = 0;
         //Lupi
         var wolves = _nightActions.getActionsByRoleName("Lupo");
@@ -535,15 +645,23 @@ class LupusGame {
             && _nightActions.getActionsByRoleName("Guardia Del Corpo")[0] == wolves_sel) || (wolves_sel != 'none' && this._roles[wolves_sel].getName() == "Criceto"))
             wolves_sel = 'none';
         if (wolves_sel != 'none') {
-            //ROMEO CHECK
-            var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length != 0 ? _nightActions.getActionsByRoleName("Romeo")[0] : 'none';
-            if (romeo_sel != 'none') {
+            //FIGLIO DEL LUPO CHECK
+            if (this._roles[wolves_sel].getName() == "Figlio del lupo") {
+                this._roles[wolves_sel].rebornAsWolf(this._connections[wolves_sel]);
+                this._newWolfTonight = true;
+                io.emit("new_wolf", "");
+                log_str+="\nNew Wolf: "+wolves_sel;
+            } else {
+                //ROMEO CHECK
+                var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length != 0 ? _nightActions.getActionsByRoleName("Romeo")[0] : 'none';
+                if (romeo_sel != 'none') {
+                    //to be done
+                    log_str+="\nRomeo ecc";
+                }
+                deadCounter++;
+                this._killPlayer(this._players.indexOf(wolves_sel), 'night');
             }
-            deadCounter++;
-            this._killPlayer(this._players.indexOf(wolves_sel), 'night');
         }
-
-
 
         //CRICETO
         var veggente_sel = _nightActions.getActionsByRoleName("Veggente");
@@ -551,6 +669,7 @@ class LupusGame {
         this._players.forEach((pl) => {
             if (pl == veggente_sel) {
                 if (this._roles[pl].getName() == 'Criceto' && this._roles[pl].isAlive()) {
+                    log_str+="\nCriceto selected by Veggente";
                     this._killPlayer(this._players.indexOf(veggente_sel[0]), 'night');
                     deadCounter++;
                 }
@@ -560,7 +679,7 @@ class LupusGame {
         if (deadCounter == 0)
             io.emit('dead_player', -1, null, 'night');
 
-
+        this._log(log_str);
     }
 
     _computeFriends(playerName, roleName) {
@@ -602,20 +721,23 @@ class LupusGame {
 
         // console.log('neri: ', black)
         // console.log('bianchi: ', white)
-
+        var str="none";
         if (black == 0 && white > 1)
             if (!cricetoAlive)
-                return 'contadini'
+                str= 'contadini'
             else
-                return 'criceto'
+                str= 'criceto'
         else if (black == white)
             if (!cricetoAlive)
-                return 'lupi'
+                str= 'lupi'
             else
-                return 'criceto'
+                str= 'criceto'
         else
             //aggiungere casistica di other
-            return 'none';
+            str= 'none';
+        if(str!='none')
+            this._log("Winner: "+str);
+        return str;
     }
 
     _resetVote() {
@@ -626,6 +748,7 @@ class LupusGame {
 
     _handleBallot() {
         //console.log("## BALLOT TIME ##");
+        var log_str="Ballot time started\n";
         this._debug();
         //what players?
         //1) compute the due max values max1,max2; 2) check how many players has been voted max1 times; 3) if <2 send also all of max2 
@@ -660,10 +783,12 @@ class LupusGame {
          */
         var gufo_player = _nightActions.getActionsByRoleName("Gufo").length != 0 ? _nightActions.getActionsByRoleName("Gufo")[0] : 'none';
         if (gufo_player != 'none') {
+            log_str+="Gufo selected player: "+gufo_player+"\n";
             this._players.forEach((pl, i) => {
                 if (gufo_player == pl) {
                     if (!indexes.includes(i) && this._roles[gufo_player].isAlive()) {
                         indexes.push(i);
+                        log_str+="Gufo selection added (idx: "+i+")\n";
                     }
                 }
             });
@@ -673,25 +798,30 @@ class LupusGame {
         /**
          * Aggiungi in caso di un solo giocatore.
          */
-        if (indexes.length < 2 && max2>0) {
+        if (indexes.length < 2 && max2 > 0) {
             for (let i = 0; i < ballotLeaderboard.length; i++) {
                 if (ballotLeaderboard[i] == max2) {
                     indexes.push(i);
                 }
             }
         }
-        this._lastsAtBallot=indexes;
+        this._lastsAtBallot = indexes;
+        log_str+="Player selected: "+JSON.stringify(indexes)+"\n";
 
-        if(indexes.length>2){
+        if (indexes.length >= 2) {
+            log_str+="Ballot opened\n";
+            this._log(log_str);
             this._resetVote();
             this._openBallot();
-        } else{
+        } else {
+            log_str+="Ballot end [1 player only]\n";
+            this._log(log_str);
             //SOLO UNO VOTATO DA TUTTI ==> MUORE SOLO LUI SENZA BALLOTTAGGIO
             this._handleBallotEnd();
         }
     }
 
-    _openBallot(){
+    _openBallot() {
         //send open ballot
         io.emit("ballot_time", this._lastsAtBallot);
         //tempo per discolparsi?
@@ -776,128 +906,136 @@ class LupusGame {
         }
         this._roles[this._players[index]].kill();
         io.emit("dead_player", index, this._players[index], daytime);
+
+        /**
+         * LOG
+         */
+        this._log("Player dead ["+this._players[index]+", "+index+", "+daytime+"]");
     }
 
     _debug() {
-        console.log("## DEBUG ##");
+        console.log("[DEBUG] Game time: "+this._time+(this._time=='day'?"("+this._dayTime+")":""));
         //console.log("time: ", this._time);
-        if (this._time == 'day')
-            console.log("dayTime: ", this._dayTime);
         //console.log("roles: ", this._roles);
         //console.log("vote: ", this._vote);
         //console.log("whoCanPlay: ", this._whoCanPlay);
         //console.log("hasConfirmed: ", this._hasConfirmed);
-        console.log("Last nightActions: ", _nightActions.getActions());
+        //console.log("Last nightActions: ", _nightActions.getActions());
     }
 
     _startTimer() {
         /**
          * This method is used to set up the timer and the interval
          */
-        console.log("## TIMER STARTED ("+(this._time=='night'?this._time:this._dayTime)+") ##");
-        var timerLength=0;
-        if(this._time=='night')
-            timerLength=this.timerNight;
-        else if(this._time=='day'&&this._dayTime=='vote')
-            timerLength=this.timerDay;
-        else if(this._time=='day'&&this._dayTime=='ballot'){
-            timerLength=this.timerDay*this._lastsAtBallot.length;
+        console.log("## TIMER STARTED (" + (this._time == 'night' ? this._time : this._dayTime) + ") ##");
+        var timerLength = 0;
+        if (this._time == 'night')
+            timerLength = this.timerNight;
+        else if (this._time == 'day' && this._dayTime == 'vote')
+            timerLength = this.timerDay;
+        else if (this._time == 'day' && this._dayTime == 'ballot') {
+            timerLength = this.timerDay * this._lastsAtBallot.length;
         }
         this._timeLeft = timerLength; //treshold(?)
+
         io.emit("remaining_time", this._timeLeft);
         this._interval = setInterval(() => {
             this._timeLeft -= intervalLength;
             io.emit("remaining_time", this._timeLeft);
         }, intervalLength);
 
-        this._timer = setTimeout(()=>{
+        this._timer = setTimeout(() => {
             this._stopTimer();
-            //to do: handle NIGHT/VOTE/BALLOT TIMEOUT!!
+            /**
+             * LOG
+             */
+            this._log("TIME-OUT");
+
             //console.log("## TIME-OUT ("+(this._time=='night'?this._time:this._dayTime)+") ##");
-            io.emit("timeout_alert",this._time=='night'?this._time:this._dayTime);
+            io.emit("timeout_alert", this._time == 'night' ? this._time : this._dayTime);
 
             /**
              * COMMENTATO PERCHÈ NON COMPLETO: DOBBIAMO DECIDERE COME GESTIRE I VOTI MANCANTI. AD ORA FUNZIONA SOLO L'AVVISO AL CLIENT
              */
-            if(this._time=='night'){
+            if (this._time == 'night') {
                 //handle missing night response
                 //LOCK ALL THE PLAYERS
                 this._players.forEach(pl => {
                     this._handlePlayerSelection(false, pl, null);
                 });
-                var wolf_check=_nightActions.getActionsByRoleName("Lupo").length>0;
+                var wolf_check = _nightActions.getActionsByRoleName("Lupo").length > 0;
                 this._whoCanPlay.forEach((pl, i) => {
-                    if(!this._hasConfirmed[i]){
-                        if(this._roles[pl].getName() != 'Lupo'||!wolf_check){
+                    if (!this._hasConfirmed[i]) {
+                        if (this._roles[pl].getName() != 'Lupo' || !wolf_check) {
                             this._roles[pl].onTimeout();
-                            if(this._roles[pl].getName()=='Lupo'){
-                                wolf_check=true;
+                            if (this._roles[pl].getName() == 'Lupo') {
+                                wolf_check = true;
                             }
                         }
-                        this._hasConfirmed[i]=true;
+                        this._hasConfirmed[i] = true;
                     }
                 });
 
                 this._handleNightEnd();
-            } else if (this._time=='day'){
+            } else if (this._time == 'day') {
                 //LOCK ALL THE PLAYERS
                 this._players.forEach(pl => {
                     this._handlePlayerSelection(false, pl, null);
                 });
-                if(this._dayTime=='vote'){
+                if (this._dayTime == 'vote') {
                     //check if someone has confirmed his vote
-                    var someone=false;
-                    var i=0; var length=this._whoCanPlay.length;
-                    
-                    while(i<length&&!someone){
-                        someone=this._hasConfirmed[i];
+                    var someone = false;
+                    var i = 0; var length = this._whoCanPlay.length;
+
+                    while (i < length && !someone) {
+                        someone = this._hasConfirmed[i];
                         i++;
                     }
 
-                    if(someone){
+                    if (someone) {
                         //Handle missing day vote response
-                        var index=this._mostVotedPlayers(this._vote)[0];
+                        var index = this._mostVotedPlayers(this._vote)[0];
                         //console.log(this._players[index],this._whoCanPlay);
-                        for(let i=0;i<this._whoCanPlay.length;i++){
-                            if(!this._hasConfirmed[i]){
+                        for (let i = 0; i < this._whoCanPlay.length; i++) {
+                            if (!this._hasConfirmed[i]) {
                                 //console.log(this._players[i]);
-                                this._vote[i]=this._players[index];
+                                this._vote[i] = this._players[index];
                                 io.emit('voteConfirmed', {
                                     whoVoted: this._players[i],
                                     selected: this._players[index]
                                 }, this.calculateVoti(this._vote));
-                                this._hasConfirmed[i]=true;
+                                this._hasConfirmed[i] = true;
                             }
                         }
                         this._handleVoteEnd();
-                    }else{
+                    } else {
                         //repeat
                         this._resetVote();
                         this._enableVotingTime();
                     }
-                } else if(this._dayTime=='ballot'){
+                } else if (this._dayTime == 'ballot') {
                     //check if someone has confirmed his vote
-                    var someone=false;
-                    var i=0; var length=this._whoCanPlay.length;
-                    
-                    while(i<length&&!someone){
-                        someone=this._hasConfirmed[i];
+                    var someone = false;
+                    var i = 0; var length = this._whoCanPlay.length;
+
+                    while (i < length && !someone) {
+                        someone = this._hasConfirmed[i];
                         i++;
                     }
-                    
-                    if(someone){
+
+                    if (someone) {
                         //Handle missing day vote response
-                        var index=this._mostVotedPlayers(this._vote)[0];
+                        var index = this._mostVotedPlayers(this._vote)[0];
                         //console.log(this._players[index],this._whoCanPlay);
-                        for(let i=0;i<this._whoCanPlay.length;i++){
-                            if(!this._hasConfirmed[i]){
+                        for (let i = 0; i < this._whoCanPlay.length; i++) {
+                            if (!this._hasConfirmed[i]) {
                                 //console.log(this._players[i]);
-                                this._vote[i]=this._players[index];
+                                this._vote[i] = this._players[index];
                                 io.emit('voteConfirmed', {
                                     whoVoted: this._players[i],
                                     selected: this._players[index]
                                 }, this.calculateVoti(this._vote));
-                                this._hasConfirmed[i]=true;
+                                this._hasConfirmed[i] = true;
                             }
                         }
                         this._handleBallotEnd();
@@ -911,7 +1049,12 @@ class LupusGame {
                 }
             }
 
-        },timerLength);
+        }, timerLength);
+
+        /**
+         * LOG
+         */
+        this._log("TIMER STARTED - " + (this._time == 'night' ? this._time : this._dayTime) + " (length: " + timerLength + " ms)");
     }
 
     _stopTimer() {

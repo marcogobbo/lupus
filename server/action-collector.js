@@ -57,6 +57,14 @@ class ActionCollector {
     getNightCount() {
         return this._nightCount;
     }
+
+    toString(){
+        var str="{\n";
+        str+="\tNight count: "+this._nightCount+",\n";
+        str+="\tActions: "+JSON.stringify(this._actions);
+        str+="\n}";
+        return str;
+    }
 }
 
 module.exports = ActionCollector;

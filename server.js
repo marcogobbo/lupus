@@ -32,10 +32,10 @@ io.on('connection', (sock) => {
     // });
 
     sock.on('updateSocketId', (username) => {
-        console.log('update of ' + username + ': [old:' + connections[username] + ' -> new:' + sock.id + ']');
+        //console.log('update of ' + username + ': [old:' + connections[username] + ' -> new:' + sock.id + ']');
         connections[username] = sock.id;
         if (playing)
-            LG.updateSocketID(connections);
+            LG.updateSocketID(username, connections);
     });
 
     sock.on('lobby', (username, imageIndex) => {
@@ -66,7 +66,10 @@ io.on('connection', (sock) => {
     // poi parte il gioco (rederit su page game)
     sock.on('clientSettings', (imp) => {
         settings = imp;
-        LG = new LupusGame(userConnected, connections, imp);
+        var today = new Date();
+        var datetime = today.getFullYear()+(today.getMonth()+1)+today.getDate()+"-"+today.getHours()+today.getMinutes()+today.getSeconds();
+        var logFilename="log/"+datetime+"_"+userConnected[0]+".txt";
+        LG = new LupusGame(userConnected, connections, imp, logFilename);
         playing = true;
     });
 

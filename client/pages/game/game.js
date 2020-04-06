@@ -603,6 +603,15 @@ sock.on('draw_repetition', () => {
     writeLog('Decidetevi! Votate di nuovo.', 'response');
 })
 
+sock.on('new_wolf', () => {
+    writeLog('Questa notte è nato un nuovo Lupo.', 'response');
+})
+
+sock.on('figlio_del_lupo', () => {
+    writeLog('Questa notte i lupi ti hanno indicato. Ora sei uno di loro.', 'response');
+})
+
+
 // sock.on('farmer_night', () => {
 //     writeLog('Buonanotte. &#128564;', 'response');
 // })
