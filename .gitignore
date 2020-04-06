@@ -209,4 +209,5 @@ $RECYCLE.BIN/
 
 node_modules
 package-lock.json
+*.txt
 # package.json
