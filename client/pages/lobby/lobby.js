@@ -2,6 +2,13 @@ const sock = io();
 var myUser;
 var players;
 
+var admin = {
+    'luca': 'LUCACECK',
+    'filippo': 'PIPPO',
+    'roberto': 'ROBY',
+    'marco': 'M'
+}
+
 window.onload = () => {
 
     myUser = sessionStorage.getItem('user');
@@ -71,7 +78,7 @@ const addUserInLobby = (users) => {
     const parent = document.querySelector('#list_users_fill');
     parent.innerHTML = '';
 
-    users.forEach((element, i) => {
+    players.forEach((element, i) => {
         // <div class="character" id="me">
         //    <div class="user_img"><img src="../../assets/images/avatar.jpg"></div>
         //    <div class="user_name">Marco</div>
@@ -86,7 +93,33 @@ const addUserInLobby = (users) => {
 
         const img = document.createElement('img');
         console.log(imagesIndexes[i])
-        img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
+
+        if (element.split('_')[0] == 'admin') {
+            switch (element){
+                case 'admin_l':
+                    element = admin.luca;
+                    img.src = '../../assets/images/admin_l.png';
+                break;
+    
+                case 'admin_f':
+                    element = admin.filippo;
+                    img.src = '../../assets/images/admin_f.png';
+                break;
+    
+                case 'admin_r':
+                    element = admin.roberto;
+                    img.src = '../../assets/images/admin_r.png';
+                break;
+    
+                case 'admin_m':
+                    element = admin.marco;
+                    img.src = '../../assets/images/admin_m.png';
+                break;
+
+                default:
+                    img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
+            }
+        }
 
         const un = document.createElement('div');
         un.className = 'user_name'; un.innerHTML = element;
