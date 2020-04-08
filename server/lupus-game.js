@@ -504,7 +504,7 @@ class LupusGame {
             }
         }
     }
-
+    
     _handleNightEnd() {
         this._players.forEach(pl => {
             this._handlePlayerSelection(false, pl, null);
