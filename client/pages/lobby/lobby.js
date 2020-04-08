@@ -2,7 +2,7 @@ const sock = io();
 var myUser;
 var players;
 
-var admin = {
+const admin = {
     'luca': 'LUCACECK',
     'filippo': 'PIPPO',
     'roberto': 'ROBY',
@@ -26,7 +26,6 @@ window.onload = () => {
             console.log(e.target.response);
             addUserInLobby(JSON.parse(e.target.response));
 
-            console.log(players)
             if (players[0] != myUser) {
                 _('settings').innerHTML = '';
             }
@@ -37,8 +36,8 @@ window.onload = () => {
     xhr2.open('GET', '/images');
     xhr2.send();
 
-    _('minGiorno').value=3;
-    _('minNotte').value=2;
+    _('minGiorno').value = 3;
+    _('minNotte').value = 2;
 }
 
 //! NON FUNZIONA
@@ -94,35 +93,34 @@ const addUserInLobby = (users) => {
         const img = document.createElement('img');
         console.log(imagesIndexes[i])
 
-        if (element.split('_')[0] == 'admin') {
-            switch (element){
-                case 'admin_l':
-                    element = admin.luca;
+        if (imagesIndexes[i] == -1) {
+            switch (element) {
+                case 'LUCACECK':
+                    myUser = admin.luca;
                     img.src = '../../assets/images/admin_l.png';
-                break;
-    
-                case 'admin_f':
-                    element = admin.filippo;
-                    img.src = '../../assets/images/admin_f.png';
-                break;
-    
-                case 'admin_r':
-                    element = admin.roberto;
-                    img.src = '../../assets/images/admin_r.png';
-                break;
-    
-                case 'admin_m':
-                    element = admin.marco;
-                    img.src = '../../assets/images/admin_m.png';
-                break;
+                    break;
 
-                default:
-                    img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
+                case 'PIPPO':
+                    myUser = admin.filippo;
+                    img.src = '../../assets/images/admin_f.png';
+                    break;
+
+                case 'ROBY':
+                    myUser = admin.roberto;
+                    img.src = '../../assets/images/admin_r.png';
+                    break;
+
+                case 'M':
+                    myUser = admin.marco;
+                    img.src = '../../assets/images/admin_m.png';
+                    break;
             }
         }
+        else
+            img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
 
         const un = document.createElement('div');
-        un.className = 'user_name'; un.innerHTML = element;
+        un.className = 'user_name'; un.innerHTML = players[i];
 
 
         charac.appendChild(userimg);
@@ -291,13 +289,13 @@ function _(el) {
     return document.getElementById(el);
 }
 
-function increaseTimer(el){
-    if(_(el).value<5)
+function increaseTimer(el) {
+    if (_(el).value < 5)
         _(el).value++;
 }
 
-function decreaseTimer(el){
-    if(_(el).value>(el=='minGiorno'?3:2))
+function decreaseTimer(el) {
+    if (_(el).value > (el == 'minGiorno' ? 3 : 2))
         _(el).value--;
 }
 
@@ -317,7 +315,7 @@ function updateContadini() {
 }
 
 function goPlay() {
-    settings.timerDay=_('minGiorno').value;
-    settings.timerNight=_('minNotte').value;
+    settings.timerDay = _('minGiorno').value;
+    settings.timerNight = _('minNotte').value;
     sock.emit('clientSettings', settings);
 }

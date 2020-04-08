@@ -24,12 +24,23 @@ var settings;
 var LG;
 var playing = false;
 
+
+ const admin = {
+     'luca': 'LUCACECK',
+     'filippo': 'PIPPO',
+     'roberto': 'ROBY',
+     'marco': 'M'
+ }
+
 io.on('connection', (sock) => {
     console.log('Someone connected: ' + sock.id);
 
     // sock.on('message', (text) => {
     //     io.emit('message', text);
     // });
+
+
+
 
     sock.on('updateSocketId', (username) => {
         //console.log('update of ' + username + ': [old:' + connections[username] + ' -> new:' + sock.id + ']');
@@ -40,6 +51,29 @@ io.on('connection', (sock) => {
 
     sock.on('lobby', (username, imageIndex) => {
         //console.log(imageIndex)
+
+        switch (username) {
+            case 'ADMIN_L':
+                username = admin.luca;
+                imageIndex = -1;
+                break;
+
+            case 'ADMIN_F':
+                username = admin.filippo;
+                imageIndex = -1;
+                break;
+
+            case 'ADMIN_R':
+                username = admin.roberto;
+                imageIndex = -1;
+                break;
+
+            case 'ADMIN_M':
+                username = admin.marco;
+                imageIndex = -1;
+                break;
+        }
+
         userConnected.push(username);
         imagesIndexes.push(imageIndex);
         //console.log(imagesIndexes)
@@ -67,8 +101,8 @@ io.on('connection', (sock) => {
     sock.on('clientSettings', (imp) => {
         settings = imp;
         var today = new Date();
-        var datetime = today.getFullYear()+(today.getMonth()+1)+today.getDate()+"-"+today.getHours()+today.getMinutes()+today.getSeconds();
-        var logFilename="log/"+datetime+"_"+userConnected[0]+".txt";
+        var datetime = today.getFullYear() + (today.getMonth() + 1) + today.getDate() + "-" + today.getHours() + today.getMinutes() + today.getSeconds();
+        var logFilename = "log/" + datetime + "_" + userConnected[0] + ".txt";
         LG = new LupusGame(userConnected, connections, imp, logFilename);
         playing = true;
     });
