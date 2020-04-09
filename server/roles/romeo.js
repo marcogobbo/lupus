@@ -2,7 +2,7 @@ const Role = require("./role");
 
 class Romeo extends Role{
     constructor(){
-        super("Romeo", "Oh, Romeo Romeo, scegli la tua Giulietta e unitevi insieme fino alla morte", "contadini", 0);
+        super("Romeo", "Oh, Romeo Romeo, scegli la tua Giulietta e unitevi insieme fino alla morte: se vieni indicato dai Lupi, Giulietta muore con te.", "contadini", 0);
     }
 
     act(user, players, roles, sameRole) {
@@ -31,7 +31,7 @@ class Romeo extends Role{
 
     onResponse(username) {
         _nightActions.addAction(this.getName(), username);
-        io.to(this.connection).emit("romeo_response", username);
+        io.to(this.connection).emit("romeo_response", username, this.players.indexOf(username));
     }
 
     onTimeout(){

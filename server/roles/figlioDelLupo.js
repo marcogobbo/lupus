@@ -23,6 +23,7 @@ class FiglioDelLupo extends Role {
                 others.push(val.index);
             });
             io.to(this.connection).emit("my_friends", others);
+            console.log(sameRole);
 
             this.selezionabili = [];
             players.forEach((pl) => {
@@ -136,10 +137,21 @@ class FiglioDelLupo extends Role {
         }
     }
 
-    rebornAsWolf(conn){
-        io.to(conn).emit("figlio_del_lupo", true);
-        this.setColor(1);
+    toWolf(){
         this.isWolf=true;
+    }
+
+    rebornAsWolf(idx, conn, others){
+        io.to(conn).emit("figlio_del_lupo", idx);
+        this.setColor(1);
+        others.forEach(val => {
+            io.to(val.connection).emit("new_friend_wolf", idx);
+        });
+        console.log("New wolf: ",idx,conn,others);
+    }
+
+    alreadyWolf(){
+        return this.isWolf;
     }
 }
 

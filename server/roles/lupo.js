@@ -21,6 +21,7 @@ class Lupo extends Role {
             others.push(val.index);
         });
         io.to(this.connection).emit("my_friends", others);
+        console.log(sameRole);
 
         this.selezionabili = [];
         players.forEach((pl) => {

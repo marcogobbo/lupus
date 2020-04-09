@@ -1,30 +1,3 @@
-/**
- * reset badge su time day
- * reset colori (ballottaggio, selected) in time day
- 
- * vincita: se c'è un vincente controllare il criceto
- */
-
-
-
-// SISTEMARE SETTINGS. PASSA LA GUARDIA DEL CORPO ANCHE SE è A ZERO
-// SISTEMARE INVIO MESSAGGI AI MORTI
-// AGIUNGERE LOG 'MESSAGGIO' INVIATO A 'USER'
-
-// buonanotte NON ESCE PER I LUPI
-
-
-// scroll nomi lunghi
-// 
-// legenda con ruoli iniziali
-// ordine: mio ruolo, players, cronologia, chat
-
-
-
-
-
-
-
 const sock = io();
 var myUser;
 var myRole;
@@ -36,6 +9,15 @@ var imagesIndexes = [];
 var time;
 
 var canVote = false;
+var last_giulietta=undefined;
+
+window.onunload = () =>{
+    sock.emit('leaving_msg', myUser);
+}
+
+window.onbeforeunload = () => {
+    return "Se lasci la pagina abbandoni la partita e non puoi più giocarci. Sei sicuro?";
+}
 
 window.onload = () => {
     var xhr2 = new XMLHttpRequest();
@@ -480,6 +462,10 @@ function switchDay(dayTime) {
         if (dayTime == 'night') {
             vaiANotte();
             writeLog('Buonanotte. &#128564;', 'response');
+            if(myRole.name=="Romeo" && last_giulietta!=undefined){
+                document.getElementsByClassName('character')[last_giulietta.index].children[1].children[0].src = last_giulietta.pic;
+                last_giulietta=undefined;
+            }
         }
         else
             vaiAGiorno();
@@ -567,7 +553,7 @@ sock.on('veggente_response', (username,color) => {
 sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
     whoLupi.forEach(element => {
-        document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+        document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + (myRole.name=="Figlio del lupo"?"Lupo":myRole.name) + '.png';
     });
 
     if (whoLupi.length > 0) {
@@ -599,6 +585,16 @@ sock.on('gufo_response', username => {
     console.log('VUOI MANDARE AL BALLOTTAGGIO ' + username)
 })
 
+sock.on('romeo_response', (username, idx) => {
+    writeLog('Per questa notte <b>'+username+'</b> è la tua Giulietta.', 'response');
+    last_giulietta={
+        'index': idx,
+        'pic': document.getElementsByClassName('character')[idx].children[1].children[0].src
+    }
+    document.getElementsByClassName('character')[idx].children[1].children[0].src = '../../assets/images/' + "Giulietta" + '.png';
+
+})
+
 sock.on('draw_repetition', () => {
     writeLog('Decidetevi! Votate di nuovo.', 'response');
 })
@@ -607,9 +603,14 @@ sock.on('new_wolf', () => {
     writeLog('Questa notte è nato un nuovo Lupo.', 'response');
 })
 
-sock.on('figlio_del_lupo', () => {
+sock.on('figlio_del_lupo', (idx) => {
     writeLog('Questa notte i lupi ti hanno indicato. Ora sei uno di loro.', 'response');
+    document.getElementsByClassName('character')[idx].children[1].children[0].src = '../../assets/images/' + "Lupo" + '.png';
 })
+
+sock.on('new_friend_wolf', (idx) =>{
+    document.getElementsByClassName('character')[idx].children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+});
 
 
 // sock.on('farmer_night', () => {
@@ -624,10 +625,10 @@ sock.on('figlio_del_lupo', () => {
     var sec= timeLeft/1000 - min*60;
     document.getElementById("min").innerHTML=(min<10?"0":"")+min;
     document.getElementById("sec").innerHTML=(sec<10?"0":"")+sec;
-    console.log(timeLeft);
+    //console.log(timeLeft);
  });
 
  sock.on('timeout_alert',time => {
-    console.log("time-out - "+time);
+    //console.log("time-out - "+time);
     writeLog('<b>TIME-OUT</b> ('+time+')', time=='night'?'response':'info');
  });

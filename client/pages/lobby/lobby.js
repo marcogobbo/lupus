@@ -40,13 +40,6 @@ window.onload = () => {
     _('minNotte').value = 2;
 }
 
-//! NON FUNZIONA
-window.addEventListener("close", function (event) {
-    sock.emit('userClose', myUser);
-    // make the close button ineffective
-    event.preventDefault();
-});
-
 imagesIndexes = [];
 sock.on('usersInLobby', (user, _imagesIndexes) => {
     console.log('usersInLobby', user);
@@ -131,15 +124,6 @@ const addUserInLobby = (users) => {
 
         // console.log(parent);
     });
-
-    // const parent2 = document.querySelector('#events');
-    // parent2.innerHTML = '';
-    // //<li> element
-    // users.forEach(element => {
-    //     const el = document.createElement('li');
-    //     el.innerHTML = element;
-    //     parent2.appendChild(el);
-    // });
 };
 
 function checkMissingPlayers() {
@@ -170,6 +154,8 @@ function initNumRoles() {
     _('nCriceto').value = settings.criceto;
     _('nRoseMary').value = settings.roseMary;
     _('nScemo').value = settings.scemo;
+    _('nRomeo').value = settings.scemo;
+    _('nFiglioDelLupo').value = settings.scemo;
 
     updateContadini();
 }
@@ -185,6 +171,8 @@ var settings = {
     'criceto': 0,
     'roseMary': 0,
     'scemo': 0,
+    'romeo': 0,
+    'figlioDelLupo': 0
 };
 
 function decrease(el) {
@@ -230,6 +218,18 @@ function decrease(el) {
             if (_('nScemo').value > 0)
                 _('nScemo').value--;
             settings.scemo = _('nScemo').value;
+            updateContadini();
+            break;
+        case 'romeo':
+            if (_('nRomeo').value > 0)
+                _('nRomeo').value--;
+            settings.romeo = _('nRomeo').value;
+            updateContadini();
+            break;
+        case 'figlioDelLupo':
+            if (_('nFiglioDelLupo').value > 0)
+                _('nFiglioDelLupo').value--;
+            settings.figlioDelLupo = _('nFiglioDelLupo').value;
             updateContadini();
             break;
     }
@@ -282,6 +282,18 @@ function increase(el) {
             settings.scemo = _('nScemo').value;
             updateContadini();
             break;
+        case 'romeo':
+            if (_('nRomeo').value < 1)
+                _('nRomeo').value++;
+            settings.romeo = _('nRomeo').value;
+            updateContadini();
+            break;
+        case 'figlioDelLupo':
+            if (_('nFiglioDelLupo').value < 1)
+                _('nFiglioDelLupo').value++;
+            settings.figlioDelLupo = _('nFiglioDelLupo').value;
+            updateContadini();
+            break;
     }
 }
 
@@ -308,7 +320,9 @@ function updateContadini() {
         - _('nGufo').value
         - _('nCriceto').value
         - _('nRoseMary').value
-        - _('nScemo').value;
+        - _('nScemo').value
+        - _('nRomeo').value
+        - _('nFiglioDelLupo').value;
 
     _('nContadini').value = nCont;
     settings.contadini = nCont;

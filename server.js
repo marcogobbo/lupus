@@ -89,11 +89,8 @@ io.on('connection', (sock) => {
     });
 
     //evento chiamato quando viene abbanonata la partita dalla pagina LOBBY
-    //! NON FUNZIONA LATO CLIENT
-    sock.on('userClose', (username, ) => {
-        console.log("ABBANDONATO DA ", username)
-        userConnected.splice(userConnected.indexOf.call(username), 1);
-        io.emit('usersInLobby', userConnected);
+    sock.on('leaving_msg', (username, ) => {
+        console.log(username+" leave the game...");
     });
 
     // ricevo allo start del game
@@ -127,17 +124,6 @@ server.on('error', (err) => {
 server.listen(process.env.PORT || 8080, () => {
     console.log('Lupus Server started', process.env.PORT || 8080);
 });
-
-// ROUTING
-// app.get('/lobby', (req, res) => {
-//     //aggiungere controllo nome vuoto
-//     res.redirect('/pages/lobby/lobby.html')
-// })
-
-// app.get('/game', (req, res) => {
-//     //aggiungere controllo nome vuoto
-//     res.redirect('pages/game/game.html')
-// })
 
 const runGameTest = () => {
     console.log("Testing the game from server...")

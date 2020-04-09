@@ -69,8 +69,11 @@ class LupusGame {
          * - Interval: each second send the timeLeft to clients
          */
         this._timeLeft = 0;
-        this.timerDay = settings.timerDay * 60 * 1000;  //min to milliseconds
-        this.timerNight = settings.timerNight * 60 * 1000;
+        // this.timerDay = settings.timerDay * 60 * 1000;  //min to milliseconds
+        // this.timerNight = settings.timerNight * 60 * 1000;
+
+        this.timerDay = 0.5 * 60 * 1000;  //min to milliseconds
+        this.timerNight = 0.5 * 60 * 1000;
         this._interval = undefined;
         this._timer = undefined;
 
@@ -265,24 +268,24 @@ class LupusGame {
                 'description': player_s.getDescription()
             });
         }
-        // if (settings.figlioDelLupo > 0) {
-        //     var player_s = new FiglioDelLupo();
-        //     temp.push({
-        //         'name': player_s.getName(),
-        //         'quantity': settings.figlioDelLupo,
-        //         'color': player_s.getColor(),
-        //         'description': player_s.getDescription()
-        //     });
-        // }
-        // if (settings.romeo > 0) {
-        //     var player_s = new Romeo();
-        //     temp.push({
-        //         'name': player_s.getName(),
-        //         'quantity': settings.romeo,
-        //         'color': player_s.getColor(),
-        //         'description': player_s.getDescription()
-        //     });
-        // }
+        if (settings.figlioDelLupo > 0) {
+            var player_s = new FiglioDelLupo();
+            temp.push({
+                'name': player_s.getName(),
+                'quantity': settings.figlioDelLupo,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
+            });
+        }
+        if (settings.romeo > 0) {
+            var player_s = new Romeo();
+            temp.push({
+                'name': player_s.getName(),
+                'quantity': settings.romeo,
+                'color': player_s.getColor(),
+                'description': player_s.getDescription()
+            });
+        }
         return temp;
     }
 
@@ -290,11 +293,7 @@ class LupusGame {
         /**
          * to be completed
          */
-        //console.log(settings);
-        //console.log(this._players);
 
-        // non so se è il modo giusto per farlo, ma mi è venuto in mente di farlo così
-        // creo array per assegnare ruoli
         var rolesArr = [];
         for (var i = 0; i < settings.lupi; i++)
             rolesArr.push(new Lupo());
@@ -314,8 +313,10 @@ class LupusGame {
             rolesArr.push(new RoseMary());
         for (var i = 0; i < settings.scemo; i++)
             rolesArr.push(new Scemo());
-        // for (var i = 0; i < settings.figlioDelLupo; i++)
-        //     rolesArr.push(new FiglioDelLupo());
+        for (var i = 0; i < settings.figlioDelLupo; i++)
+            rolesArr.push(new FiglioDelLupo());
+        for (var i = 0; i < settings.romeo; i++)
+            rolesArr.push(new Romeo());
         //! aggiugere ruoli
 
         //console.log(settings, rolesArr);
@@ -405,6 +406,8 @@ class LupusGame {
                 this._start();
             else
                 console.log("Waiting for: " + users);
+        } else{
+            this._log("[Socket Update] " + username);
         }
     }
 
@@ -435,20 +438,20 @@ class LupusGame {
         this._whoCanPlay.forEach((pl, i) => {
             if (pl == userVoting) {
                 this._hasConfirmed[i] = true;
-                if (this._roles[userVoting].getName() == 'Lupo') {
+                if (this._roles[userVoting].getName() == 'Lupo'||this._roles[userVoting].getName() == 'Figlio del lupo') {
                     this._whoCanPlay.forEach((pl2) => {
-                        if (this._roles[pl2].getName() == 'Lupo' && pl2 != userVoting)
+                        if ((this._roles[pl2].getName() == 'Lupo' || this._roles[pl2].getName() == 'Figlio del lupo')&& pl2 != userVoting)
                             this._roles[pl2].increment(userVoted);
                     })
                 }
                 this._roles[userVoting].onResponse(userVoted);
-                if (this._roles[userVoting].getName() == 'Lupo') {
+                if (this._roles[userVoting].getName() == 'Lupo'||this._roles[userVoting].getName() == 'Figlio del lupo') {
                     //console.log("Checking the wolves...")
                     if (!this._roles[userVoting].check()) {
                         //console.log("Fuck Wolves.");
                         _nightActions.removeAction(this._roles[userVoting].getName());
                         this._whoCanPlay.forEach((pl2, i) => {
-                            if (this._roles[pl2].getName() == 'Lupo' && pl2 != userVoting) {
+                            if ((this._roles[pl2].getName() == 'Lupo' || this._roles[pl2].getName() == 'Figlio del lupo') && pl2 != userVoting) {
                                 this._hasConfirmed[i] = false;
                                 this._roles[pl2].repeat();
                             }
@@ -647,19 +650,30 @@ class LupusGame {
         if (wolves_sel != 'none') {
             //FIGLIO DEL LUPO CHECK
             if (this._roles[wolves_sel].getName() == "Figlio del lupo") {
-                this._roles[wolves_sel].rebornAsWolf(this._connections[wolves_sel]);
+                this._roles[wolves_sel].toWolf();
+                this._roles[wolves_sel].rebornAsWolf(this._players.indexOf(wolves_sel),this._connections[wolves_sel],this._computeFriends(wolves_sel,"Figlio del lupo"));
                 this._newWolfTonight = true;
                 io.emit("new_wolf", "");
                 log_str+="\nNew Wolf: "+wolves_sel;
             } else {
                 //ROMEO CHECK
-                var romeo_sel = _nightActions.getActionsByRoleName("Romeo").length != 0 ? _nightActions.getActionsByRoleName("Romeo")[0] : 'none';
-                if (romeo_sel != 'none') {
-                    //to be done
-                    log_str+="\nRomeo ecc";
+                var giulietta = _nightActions.getActionsByRoleName("Romeo").length != 0 ? _nightActions.getActionsByRoleName("Romeo")[0] : 'none';
+                var romeo;
+                if (giulietta != 'none') {
+                    this._players.forEach(val =>{
+                        if(this._roles[val].getName()=='Romeo'){
+                            romeo=val;
+                        }
+                    });
                 }
-                deadCounter++;
+                if(wolves_sel==romeo){
+                    log_str+="\nWolves selected Romeo";
+                    this._killPlayer(this._players.indexOf(giulietta), 'night');
+                    deadCounter++;
+                    log_str+="\nRomeo: "+romeo+" - Giulietta: "+giulietta;
+                }
                 this._killPlayer(this._players.indexOf(wolves_sel), 'night');
+                deadCounter++;
             }
         }
 
@@ -676,7 +690,7 @@ class LupusGame {
             }
         });
 
-        if (deadCounter == 0)
+        if (deadCounter == 0&&!this._newWolfTonight)
             io.emit('dead_player', -1, null, 'night');
 
         this._log(log_str);
@@ -685,7 +699,11 @@ class LupusGame {
     _computeFriends(playerName, roleName) {
         var temp = [];
         for (let i = 0; i < this._players.length; i++) {
-            if (this._players[i] != playerName && this._roles[this._players[i]].isAlive() && this._roles[this._players[i]].getName() == roleName) {
+            if (this._players[i] != playerName && 
+                this._roles[this._players[i]].isAlive() && 
+                ( this._roles[this._players[i]].getName() == roleName || 
+                (roleName=='Figlio del lupo' && this._roles[playerName].alreadyWolf() && this._roles[this._players[i]].getName() == "Lupo") ||
+                (roleName=='Lupo' && this._roles[this._players[i]].getName() == "Figlio del lupo") && this._roles[this._players[i]].alreadyWolf())) {
                 temp.push({
                     'name': this._players[i],
                     'index': i,
