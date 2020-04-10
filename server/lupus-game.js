@@ -101,23 +101,23 @@ class LupusGame {
         str += "\n####################\n"
         str += "\nLOG:\n\n";
 
-        var fs = require('fs')
-        var logger = fs.createWriteStream(this._filename, {
-            flags: 'a' // 'a' means appending (old data will be preserved)
-        })
-        logger.write(str + "\n");
-        logger.end();
+        // var fs = require('fs')
+        // var logger = fs.createWriteStream(this._filename, {
+        //     flags: 'a' // 'a' means appending (old data will be preserved)
+        // })
+        // logger.write(str + "\n");
+        // logger.end();
     }
 
     _log(str) {
-        var fs = require('fs')
-        var logger = fs.createWriteStream(this._filename, {
-            flags: 'a' // 'a' means appending (old data will be preserved)
-        })
-        var today = new Date();
-        var datetime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + ":" + today.getMilliseconds();
-        logger.write("[" + datetime + "] " + str + "\n");
-        logger.end();
+        // var fs = require('fs')
+        // var logger = fs.createWriteStream(this._filename, {
+        //     flags: 'a' // 'a' means appending (old data will be preserved)
+        // })
+        // var today = new Date();
+        // var datetime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds() + ":" + today.getMilliseconds();
+        // logger.write("[" + datetime + "] " + str + "\n");
+        // logger.end();
     }
 
     _start() {
