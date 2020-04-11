@@ -28,16 +28,18 @@ class Romeo extends Role {
     }
 
     canAct() {
+        console.log('romeo vota',!this.giulietta_selected)
         return !this.giulietta_selected;
     }
 
     onResponse(username) {
-        
+
         _nightActions.addAction(this.getName(), username);
         io.to(this.connection).emit("romeo_response", username, this.players.indexOf(username));
 
-        //quando ho deciso chi è la mia giulietta, non posso più scegliere
-        this.giulietta_selected = true;
+        if (username != null)
+            //quando ho deciso chi è la mia giulietta, non posso più scegliere
+            this.giulietta_selected = true;
     }
 
     onTimeout() {
