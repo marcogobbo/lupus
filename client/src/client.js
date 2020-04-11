@@ -9,6 +9,12 @@ function _(el) {
     return document.getElementById(el);
 }
 
+const admin = {
+    'luca': 'LUCACECK',
+    'filippo': 'PIPPO',
+    'roberto': 'ROBY',
+    'marco': 'M'
+}
 
 goToLobby = () => {
     // console.log(slideIndex)  
@@ -23,6 +29,23 @@ goToLobby = () => {
 
             if (!JSON.parse(res.target.response).includes(user)) {
                 // se non c'è, inserisco e cambio pagina
+                switch (user.includes('ADMIN')) {
+                    case 'ADMIN_L':
+                        user = admin.luca;                        
+                        break;
+        
+                    case 'ADMIN_F':
+                        user = admin.filippo;
+                        break;
+        
+                    case 'ADMIN_R':
+                        user = admin.roberto;
+                        break;
+        
+                    case 'ADMIN_M':
+                        user = admin.marco;
+                        break;
+                }
                 window.sessionStorage.setItem('user', user);
                 // console.log('SEND lobby: ', user)
                 sock.emit('lobby', user, slideIndex);
