@@ -89,22 +89,22 @@ const addUserInLobby = (users) => {
         if (imagesIndexes[i] == -1) {
             switch (element) {
                 case 'LUCACECK':
-                    myUser = admin.luca;
+                    // myUser = admin.luca;
                     img.src = '../../assets/images/admin_l.png';
                     break;
 
                 case 'PIPPO':
-                    myUser = admin.filippo;
+                    // myUser = admin.filippo;
                     img.src = '../../assets/images/admin_f.png';
                     break;
 
                 case 'ROBY':
-                    myUser = admin.roberto;
+                    // myUser = admin.roberto;
                     img.src = '../../assets/images/admin_r.png';
                     break;
 
                 case 'M':
-                    myUser = admin.marco;
+                    // myUser = admin.marco;
                     img.src = '../../assets/images/admin_m.png';
                     break;
             }

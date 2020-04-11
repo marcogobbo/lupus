@@ -9,9 +9,9 @@ var imagesIndexes = [];
 var time;
 
 var canVote = false;
-var last_giulietta=undefined;
+var last_giulietta = undefined;
 
-window.onunload = () =>{
+window.onunload = () => {
     sock.emit('leaving_msg', myUser);
 }
 
@@ -48,52 +48,52 @@ const _setDeadPlayers = () => {
 }
 
 const _setLegend = () => {
-    var table=document.querySelector("#table-legend table");
-    for(let i=0;i<legend.length;i++){
+    var table = document.querySelector("#table-legend table");
+    for (let i = 0; i < legend.length; i++) {
 
-        var image=(legend[i].name!='Contadino'?legend[i].name:'contadino8')+".png";
-        var name=legend[i].name+" (x"+legend[i].quantity+")";
-        var color=legend[i].color==0?"BIANCA":"NERA";
-        var description=legend[i].description;
-        var txt=`
+        var image = (legend[i].name != 'Contadino' ? legend[i].name : 'contadino8') + ".png";
+        var name = legend[i].name + " (x" + legend[i].quantity + ")";
+        var color = legend[i].color == 0 ? "BIANCA" : "NERA";
+        var description = legend[i].description;
+        var txt = `
         <tr>
             <td>
                 <div id="user_role">
                     <div id="user_role_img">
-                        <img src="../../assets/images/`+image+
-                        `">
+                        <img src="../../assets/images/`+ image +
+            `">
                                 </div>
                                 <div id="user_details">
                                     <p id="user_role_card"><b>PERSONAGGIO: </b>
-                                        <span>`+name+
-                                        `</span>
+                                        <span>`+ name +
+            `</span>
                                     </p>
                                     <p id="user_role_faction"><b>CARTA: </b><span>
-                                    `+color+
-                                    `</span>
+                                    `+ color +
+            `</span>
                                     </p>
-                                    <p id="user_role_desc"><b>DESCRIZIONE: </b><span>`+description+
-                                    `</span>
+                                    <p id="user_role_desc"><b>DESCRIZIONE: </b><span>`+ description +
+            `</span>
                                     </p>
                                 </div>
                             </div>
                         </td>
         </tr>
       `;
-      table.innerHTML+=txt;
+        table.innerHTML += txt;
     }
 }
 
 const _setRole = () => {
-    document.getElementById("profile").innerHTML = '<span class="'+((myRole.color) ? "nera" : "bianca")+'">' + myRole.name + "</span>";
+    document.getElementById("profile").innerHTML = '<span class="' + ((myRole.color) ? "nera" : "bianca") + '">' + myRole.name + "</span>";
     //document.getElementById("user_role_faction").innerHTML += "<span>" + ((myRole.color) ? "Nera" : "Bianca") + "</span>";
     //document.getElementById("user_role_desc").innerHTML += "<span>" + myRole.description + "</span>";
     console.log(myRole)
-     if (myRole.name != 'Contadino') {
-         document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
+    if (myRole.name != 'Contadino') {
+        document.getElementById('me').children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
         //  document.getElementById('user_role_img').children[0].src = '../../assets/images/' + myRole.name + '.png';
-     } else
-         document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
+    } else
+        document.getElementById('user_role_img').children[0].src = '../../assets/images/contadino' + imagesIndexes[players.indexOf(myUser)] + '.png';
 }
 
 const _setPlayers = () => {
@@ -122,7 +122,27 @@ const _setPlayers = () => {
         userimg.className = 'user_img';
 
         const img = document.createElement('img');
-        img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
+        if (imagesIndexes[i] == -1) {
+            switch (element) {
+                case 'LUCACECK':
+                    img.src = '../../assets/images/admin_l.png';
+                    break;
+
+                case 'PIPPO':
+                    img.src = '../../assets/images/admin_f.png';
+                    break;
+
+                case 'ROBY':
+                    img.src = '../../assets/images/admin_r.png';
+                    break;
+
+                case 'M':
+                    img.src = '../../assets/images/admin_m.png';
+                    break;
+            }
+        }
+        else
+            img.src = '../../assets/images/contadino' + imagesIndexes[i] + '.png';
 
         const un = document.createElement('div');
         un.className = 'user_name';
@@ -462,9 +482,9 @@ function switchDay(dayTime) {
         if (dayTime == 'night') {
             vaiANotte();
             writeLog('Buonanotte. &#128564;', 'response');
-            if(myRole.name=="Romeo" && last_giulietta!=undefined){
+            if (myRole.name == "Romeo" && last_giulietta != undefined) {
                 document.getElementsByClassName('character')[last_giulietta.index].children[1].children[0].src = last_giulietta.pic;
-                last_giulietta=undefined;
+                last_giulietta = undefined;
             }
         }
         else
@@ -538,7 +558,7 @@ function disableAll() {
 }
 
 //! CONTROLLER ROLES //
-sock.on('veggente_response', (username,color) => {
+sock.on('veggente_response', (username, color) => {
     console.log(color);
     writeLog('<b>' + username + '</b>' + ' è una carta <b>' + (color == 0 ? 'BIANCA &#128519;' : 'NERA &#128520;') + '</b>', 'response')
 
@@ -553,7 +573,7 @@ sock.on('veggente_response', (username,color) => {
 sock.on('my_friends', whoLupi => {
     //cambiare le foto con quella dei lupi
     whoLupi.forEach(element => {
-        document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + (myRole.name=="Figlio del lupo"?"Lupo":myRole.name) + '.png';
+        document.getElementsByClassName('character')[element].children[1].children[0].src = '../../assets/images/' + (myRole.name == "Figlio del lupo" ? "Lupo" : myRole.name) + '.png';
     });
 
     if (whoLupi.length > 0) {
@@ -586,8 +606,8 @@ sock.on('gufo_response', username => {
 })
 
 sock.on('romeo_response', (username, idx) => {
-    writeLog('Per questa notte <b>'+username+'</b> è la tua Giulietta.', 'response');
-    last_giulietta={
+    writeLog('Per questa notte <b>' + username + '</b> è la tua Giulietta.', 'response');
+    last_giulietta = {
         'index': idx,
         'pic': document.getElementsByClassName('character')[idx].children[1].children[0].src
     }
@@ -608,7 +628,7 @@ sock.on('figlio_del_lupo', (idx) => {
     document.getElementsByClassName('character')[idx].children[1].children[0].src = '../../assets/images/' + "Lupo" + '.png';
 })
 
-sock.on('new_friend_wolf', (idx) =>{
+sock.on('new_friend_wolf', (idx) => {
     document.getElementsByClassName('character')[idx].children[1].children[0].src = '../../assets/images/' + myRole.name + '.png';
 });
 
@@ -620,15 +640,15 @@ sock.on('new_friend_wolf', (idx) =>{
 /**
  * INTERVAL UPDATE
  */
- sock.on('remaining_time',timeLeft => {
-    var min=Math.floor((timeLeft/1000)/60);
-    var sec= timeLeft/1000 - min*60;
-    document.getElementById("min").innerHTML=(min<10?"0":"")+min;
-    document.getElementById("sec").innerHTML=(sec<10?"0":"")+sec;
+sock.on('remaining_time', timeLeft => {
+    var min = Math.floor((timeLeft / 1000) / 60);
+    var sec = timeLeft / 1000 - min * 60;
+    document.getElementById("min").innerHTML = (min < 10 ? "0" : "") + min;
+    document.getElementById("sec").innerHTML = (sec < 10 ? "0" : "") + sec;
     //console.log(timeLeft);
- });
+});
 
- sock.on('timeout_alert',time => {
+sock.on('timeout_alert', time => {
     //console.log("time-out - "+time);
-    writeLog('<b>TIME-OUT</b> ('+time+')', time=='night'?'response':'info');
- });
+    writeLog('<b>TIME-OUT</b> (' + time + ')', time == 'night' ? 'response' : 'info');
+});

@@ -52,30 +52,31 @@ io.on('connection', (sock) => {
     sock.on('lobby', (username, imageIndex) => {
         //console.log(imageIndex)
 
-        switch (username) {
-            case 'ADMIN_L':
-                username = admin.luca;
-                imageIndex = -1;
-                break;
+        // switch (username) {
+        //     case 'ADMIN_L':
+        //         username = admin.luca;
+        //         imageIndex = -1;
+        //         break;
 
-            case 'ADMIN_F':
-                username = admin.filippo;
-                imageIndex = -1;
-                break;
+        //     case 'ADMIN_F':
+        //         username = admin.filippo;
+        //         imageIndex = -1;
+        //         break;
 
-            case 'ADMIN_R':
-                username = admin.roberto;
-                imageIndex = -1;
-                break;
+        //     case 'ADMIN_R':
+        //         username = admin.roberto;
+        //         imageIndex = -1;
+        //         break;
 
-            case 'ADMIN_M':
-                username = admin.marco;
-                imageIndex = -1;
-                break;
-        }
-
+        //     case 'ADMIN_M':
+        //         username = admin.marco;
+        //         imageIndex = -1;
+        //         break;
+        // }
+        
         userConnected.push(username);
         imagesIndexes.push(imageIndex);
+        console.log(imagesIndexes)
         //console.log(imagesIndexes)
         console.log('RECEIVED LOBBY:', username);
         io.emit('usersInLobby', userConnected, imagesIndexes);

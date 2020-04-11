@@ -1,10 +1,5 @@
 sock = io();
 
-
-
-
-
-
 function _(el) {
     return document.getElementById(el);
 }
@@ -20,35 +15,43 @@ goToLobby = () => {
     // console.log(slideIndex)  
 
     user = _('username').value.toUpperCase();
-    console.log(user)
+    console.log('selected username', user)
     if (user) {
         //controllo se username è già presente
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('loadend', (res) => {
             console.log(res.target.response)
 
+            switch (user) {
+                case 'ADMIN_L':
+                    user = admin.luca;
+                    slideIndex = -1;
+                    break;
+
+                case 'ADMIN_F':
+                    user = admin.filippo;
+                    slideIndex = -1;
+                    break;
+
+                case 'ADMIN_R':
+                    user = admin.roberto;
+                    slideIndex = -1;
+                    break;
+
+                case 'ADMIN_M':
+                    user = admin.marco;
+                    slideIndex = -1;
+                    break;
+            }
+
             if (!JSON.parse(res.target.response).includes(user)) {
+
                 // se non c'è, inserisco e cambio pagina
-                switch (user.includes('ADMIN')) {
-                    case 'ADMIN_L':
-                        user = admin.luca;                        
-                        break;
-        
-                    case 'ADMIN_F':
-                        user = admin.filippo;
-                        break;
-        
-                    case 'ADMIN_R':
-                        user = admin.roberto;
-                        break;
-        
-                    case 'ADMIN_M':
-                        user = admin.marco;
-                        break;
-                }
+                console.log(user,slideIndex);
                 window.sessionStorage.setItem('user', user);
                 // console.log('SEND lobby: ', user)
                 sock.emit('lobby', user, slideIndex);
+
                 window.location.href = 'pages/lobby/lobby.html';
             }
             else {
