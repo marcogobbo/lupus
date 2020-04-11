@@ -517,7 +517,7 @@ sock.on('found_winner', team => {
     var win;
 
 
-    writeLog('HANNO VINTO I ' + team);
+    writeLog('HANNO VINTO I ' + team.toUpperCase());
     disableAll()
 })
 
