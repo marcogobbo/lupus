@@ -1,7 +1,7 @@
 const Role = require("./role");
 
-class Romeo extends Role{
-    constructor(){
+class Romeo extends Role {
+    constructor() {
         super("Romeo", "Oh, Romeo Romeo, scegli la tua Giulietta e unitevi insieme fino alla morte: se vieni indicato dai Lupi, Giulietta muore con te.", "contadini", 0);
     }
 
@@ -10,6 +10,8 @@ class Romeo extends Role{
         this.roles = roles;
         this.connection = user.connection;
         this.username = user.username;
+
+        this.giulietta_selected = false;
 
         this.selezionabili = [];
         players.forEach((pl) => {
@@ -26,15 +28,19 @@ class Romeo extends Role{
     }
 
     canAct() {
-        return true;
+        return !this.giulietta_selected;
     }
 
     onResponse(username) {
+        
         _nightActions.addAction(this.getName(), username);
         io.to(this.connection).emit("romeo_response", username, this.players.indexOf(username));
+
+        //quando ho deciso chi è la mia giulietta, non posso più scegliere
+        this.giulietta_selected = true;
     }
 
-    onTimeout(){
+    onTimeout() {
         var i = Math.floor(Math.random() * this.selezionabili.length);
         this.onResponse(this.selezionabili[i]);
     }

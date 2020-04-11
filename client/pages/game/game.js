@@ -261,6 +261,11 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
     var elements = document.getElementsByClassName('character');
     if (canVote) {
 
+        if (myRole.name == 'Romeo')
+            _('romeo_btn').style.display = "inline";
+        else
+            _('romeo_btn').style.display = "none";
+
         document.querySelector('#box input[type="button"]').style.display = "inline";
 
         votoConfirmed = false;
@@ -290,7 +295,7 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
                     elements[i].classList.add('disabled');
                     elements[i].setAttribute('onclick', 'null')
                     // console.log(elements[i].classList);
-                    //! RIABILITARE TUTTI ALLA FINE DEL BALLOT
+                    //! RIABILITARE TUTTI ALLRE TUTTI ALLA FINE DEL BALLOT
                 }
         }
     }
@@ -415,6 +420,15 @@ function confermaVoto() {
     }
 }
 
+function confermaNessuno() {
+    res = confirm("Selezionando 'Nessuno', questa notte non sceglierai la tua Giulietta. Continuare?")
+    if (res) {
+        sock.emit('role_selection', myUser, null);
+        _('romeo_btn').style.display = "none";
+        document.querySelector('#box input[type="button"]').style.display = "none";
+    }
+}
+
 sock.on('game_time', (text) => {
     console.log('game_time');
     console.log('time:', time)
@@ -515,6 +529,7 @@ function vaiAGiorno() {
     // Cambio sfondo
     _("sky").style = "background: #B2EBF2;";
     document.body.style = "background: #7CB342;"
+    _('romeo_btn').style.display = "none";
     // Avvio suono
     // sun.play();
 }
