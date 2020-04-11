@@ -248,6 +248,10 @@ sock.on('ballot_time', (playersBallot) => {
 })
 
 sock.on('control_selection', (val, stato, chiPossoVotare) => {
+
+    _('conferma_voto').hidden = false;
+    _('romeo_btn').hidden = true;
+
     console.log('control_selection');
     // console.log('val:', val);
     console.log('chipossovotare:', chiPossoVotare);
@@ -261,12 +265,15 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
     var elements = document.getElementsByClassName('character');
     if (canVote) {
 
-        if (myRole.name == 'Romeo')
-            _('romeo_btn').style.display = "inline";
-        else
-            _('romeo_btn').style.display = "none";
-
-        document.querySelector('#box input[type="button"]').style.display = "inline";
+        if (myRole.name == 'Romeo') {
+            _('romeo_btn').hidden = false;
+            // _('romeo_btn').style.display = "inline";
+        }
+        else {
+            _('romeo_btn').hidden = true;
+            // _('romeo_btn').style.display = "none";
+        }
+        // document.querySelector('#box input[type="button"]').style.display = "inline";
 
         votoConfirmed = false;
         lastClicked = '';
@@ -287,7 +294,9 @@ sock.on('control_selection', (val, stato, chiPossoVotare) => {
 
 
     } else {
-        document.querySelector('#box input[type="button"]').style.display = "none";
+        _('conferma_voto').hidden = true;
+        // document.querySelector('#box input[type="button"]').style.display = "none";
+
         // vuol dire che sono al ballottaggio
         for (let i = 0; i < elements.length; i++) {
             if (!deadPlayers[i])
@@ -404,7 +413,10 @@ function confermaVoto() {
 
                 votoConfirmed = true;
                 document.getElementById("selected").setAttribute('id', 'confirmed');
-                document.querySelector('#box input[type="button"]').style.display = "none";
+
+                // document.querySelector('#box input[type="button"]').style.display = "none";
+                _('conferma_voto').hidden = true;
+                _('romeo_btn').hidden = true;
             }
     } else {
         //NOTTE
@@ -414,7 +426,10 @@ function confermaVoto() {
 
                 votoConfirmed = true;
                 document.getElementById("selected").setAttribute('id', 'confirmed');
-                document.querySelector('#box input[type="button"]').style.display = "none";
+
+                // document.querySelector('#box input[type="button"]').style.display = "none";
+                _('conferma_voto').hidden = true;
+                _('romeo_btn').hidden = true;
             }
         }
     }
@@ -424,8 +439,10 @@ function confermaNessuno() {
     res = confirm("Selezionando 'Nessuno', questa notte non sceglierai la tua Giulietta. Continuare?")
     if (res) {
         sock.emit('role_selection', myUser, null);
-        _('romeo_btn').style.display = "none";
-        document.querySelector('#box input[type="button"]').style.display = "none";
+        // _('romeo_btn').style.display = "none";
+        // document.querySelector('#box input[type="button"]').style.display = "none";
+        _('conferma_voto').hidden = true;
+        _('romeo_btn').hidden = true;
     }
 }
 
@@ -570,6 +587,9 @@ function disableAll() {
         ems[i].hidden = true;
         ems[i].innerHTML = '';
     }
+
+    _('conferma_voto').hidden = true;
+    _('romeo_btn').hidden = true;
 }
 
 //! CONTROLLER ROLES //
@@ -621,7 +641,10 @@ sock.on('gufo_response', username => {
 })
 
 sock.on('romeo_response', (username, idx) => {
-    writeLog('Per questa notte <b>' + username + '</b> è la tua Giulietta.', 'response');
+    if (username != null)
+        writeLog('Per questa notte <b>' + username + '</b> è la tua Giulietta.', 'response');
+    else
+        writeLog('Hai deciso di NON scegliere la tua Giulietta.', 'response');
     last_giulietta = {
         'index': idx,
         'pic': document.getElementsByClassName('character')[idx].children[1].children[0].src
