@@ -15,9 +15,9 @@ window.onunload = () => {
     sock.emit('leaving_msg', myUser);
 }
 
-/*window.onbeforeunload = () => {
+window.onbeforeunload = () => {
     return "Se lasci la pagina abbandoni la partita e non puoi più giocarci. Sei sicuro?";
-}*/
+}
 
 window.onload = () => {
     var xhr2 = new XMLHttpRequest();
