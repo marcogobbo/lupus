@@ -15,9 +15,9 @@ window.onunload = () => {
     sock.emit('leaving_msg', myUser);
 }
 
-window.onbeforeunload = () => {
+/*window.onbeforeunload = () => {
     return "Se lasci la pagina abbandoni la partita e non puoi più giocarci. Sei sicuro?";
-}
+}*/
 
 window.onload = () => {
     var xhr2 = new XMLHttpRequest();
@@ -570,7 +570,13 @@ sock.on('found_winner', team => {
 
 
     writeLog('HANNO VINTO I ' + team.toUpperCase());
-    disableAll()
+    disableAll();
+
+    // try sto reset all
+    window.sessionStorage.clear();
+    sock.emit('end');
+    sock.close();
+    window.location.href = "../../index.html";
 })
 
 function disableAll() {

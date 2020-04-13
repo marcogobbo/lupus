@@ -39,8 +39,9 @@ io.on('connection', (sock) => {
     //     io.emit('message', text);
     // });
 
-
-
+    sock.on('end', function (){
+        sock.disconnect();
+    });
 
     sock.on('updateSocketId', (username) => {
         //console.log('update of ' + username + ': [old:' + connections[username] + ' -> new:' + sock.id + ']');
