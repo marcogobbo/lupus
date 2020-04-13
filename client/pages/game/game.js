@@ -15,9 +15,9 @@ window.onunload = () => {
     sock.emit('leaving_msg', myUser);
 }
 
-window.onbeforeunload = () => {
-    return "Se lasci la pagina abbandoni la partita e non puoi più giocarci. Sei sicuro?";
-}
+//window.onbeforeunload = () => {
+//    return "Se lasci la pagina abbandoni la partita e non puoi più giocarci. Sei sicuro?";
+//}
 
 window.onload = () => {
     var xhr2 = new XMLHttpRequest();
@@ -575,10 +575,16 @@ sock.on('found_winner', team => {
     disableAll();
 
     // try sto reset all
-    window.sessionStorage.clear();
-    sock.emit('end');
-    sock.close();
-    window.location.href = "../../index.html";
+    // window.sessionStorage.clear();
+
+    window.setTimeout(function() {
+        var newGame = confirm("Vuoi partecipare a una nuova partita?");
+        if (newGame) {
+            window.location.href = "../lobby/lobby.html";
+        }
+        
+        sock.close();
+    }, 5000).then(()=> sock.emit('end'))
 })
 
 function disableAll() {

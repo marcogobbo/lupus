@@ -41,6 +41,7 @@ io.on('connection', (sock) => {
 
     sock.on('end', function (){
         sock.disconnect();
+        userConnected = [];
     });
 
     sock.on('updateSocketId', (username) => {

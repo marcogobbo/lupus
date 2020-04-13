@@ -10,7 +10,6 @@ const admin = {
 }
 
 window.onload = () => {
-
     myUser = sessionStorage.getItem('user');
     //send the update!
     sock.emit("updateSocketId", myUser);
