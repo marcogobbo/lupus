@@ -40,6 +40,7 @@ io.on('connection', (sock) => {
     // });
 
     sock.on('end', function (){
+        delete LG;
         sock.disconnect();
         userConnected = [];
     });

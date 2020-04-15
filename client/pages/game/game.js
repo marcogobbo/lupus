@@ -702,5 +702,5 @@ sock.on('remaining_time', timeLeft => {
 
 sock.on('timeout_alert', time => {
     //console.log("time-out - "+time);
-    writeLog('<b>TIME-OUT</b> (' + time + ')', time == 'night' ? 'response' : 'info');
+    writeLog('<b>TEMPO SCADUTO</b> (' + time + ')', time == 'night' ? 'response' : 'info');
 });
